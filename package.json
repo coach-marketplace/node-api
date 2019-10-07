@@ -1,0 +1,35 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start:local": "NODE_ENV=local cross-env npm run start",
+    "start:stg": "NODE_ENV=staging cross-env npm run start",
+    "start": "nodemon src/server.js",
+    "prettier": "prettier --config ./config/.prettierrc --write \"src/**/*.js\"",
+    "test": "NODE_ENV=test mocha --recursive || true"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.3.2",
+    "mongoose": "^5.7.1",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.2"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "chai-http": "^4.3.0",
+    "cross-env": "^6.0.0",
+    "eslint": "^6.2.1",
+    "mocha": "^6.2.1",
+    "nodemon": "^1.19.1",
+    "prettier": "1.18.2",
+    "supertest": "^4.0.2"
+  }
+}
