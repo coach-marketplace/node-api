@@ -1,7 +1,7 @@
 'use strict'
 
 require('dotenv').config({
- path: `${process.cwd()}/env/${process.env.NODE_ENV}.env`
+  path: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,
 })
 const express = require('express')
 const bodyParser = require('body-parser')

@@ -9,5 +9,5 @@ module.exports = {
   },
   compareHash: (encryptedString, stringToCompare) => {
     return bcrypt.compare(encryptedString, stringToCompare)
-  }
+  },
 }
