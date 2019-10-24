@@ -66,16 +66,12 @@ module.exports = {
   update: async (req, res) => {
     try {
       const userId = req.params.id
-      const newData = req.body
-      const user = (await userQueries.getById(userId))[0]
-      const updatedUser = {
-        _id: userId,
-        email: newData.email || user.email,
-        first_name: newData.firstName || user.first_name,
-        last_name: newData.lastName || user.last_name,
-        password: newData.password || user.password,
-      }
-      const newUser = await userQueries.update(userId, updatedUser)
+      const updatedData = {}
+      req.body.email && (updatedData.email = req.body.email)
+      req.body.firstName && (updatedData.first_name = req.body.firstName)
+      req.body.lastName && (updatedData.last_name = req.body.lastName)
+      req.body.password && (updatedData.password = await encryptString(req.body.password))
+      const newUser = await userQueries.update(userId, updatedData)
       res.status(200).json(newUser)
     } catch (error) {
       res.status(500).json({
