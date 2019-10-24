@@ -1,6 +1,6 @@
 'use strict'
 
-const { encryptString, isMatching } = require('../../_utils/hashing')
+const { encryptString, compareHash } = require('../../_utils/hashing')
 const { getSignedToken } = require('../../_utils/jwt')
 const userQueries = require('../user/queries.js')
 
@@ -39,7 +39,7 @@ module.exports = {
       if (!user) {
         throw new Error('Email or passord incorrect (1)')
       }
-      const isMatch = await isMatching(password, user.password)
+      const isMatch = await compareHash(password, user.password)
       if (!isMatch) {
         throw new Error('Email or passord incorrect (2)')
       }
