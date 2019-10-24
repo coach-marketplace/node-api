@@ -8,7 +8,13 @@ You need NodeJS  >= v10.15.1 installed on your machine
 
 ## Run the project
 
-In dev mode:
+Locally:
 ```
-npm run start
+npm run start:local
+```
+
+## Launch tests
+
+```
+npm run test
 ```
