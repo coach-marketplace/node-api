@@ -1,10 +1,11 @@
 'use strict'
 
-const userRouter = require('./users')
+const pingRouter = require('./ping')
 const authRouter = require('./auth')
+const userRouter = require('./users')
 
 module.exports = app => {
-  app.use('/ping', (req, res) => res.send('pong'))
-  app.use('/api/v1/users', userRouter)
-  app.use('/api/v1/auth', authRouter)
+  app.use('/ping', pingRouter)
+  app.use('/v1/auth', authRouter)
+  app.use('/v1/users', userRouter)
 }
