@@ -1,5 +1,6 @@
 'use strict'
 
+const { encryptString } = require('../../_utils/hashing')
 const userQueries = require('./queries.js')
 
 module.exports = {
@@ -8,11 +9,16 @@ module.exports = {
    */
   create: async (req, res) => {
     try {
+      const user = (await userQueries.getByEmail(req.body.email))[0]
+      if (user) {
+        throw new Error('Email already used')
+      }
+      const hashedPassword = await encryptString(req.body.password)
       const newUser = await userQueries.create({
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        password: req.body.password,
+        password: hashedPassword,
       })
       res.status(201).json(newUser)
     } catch (error) {
