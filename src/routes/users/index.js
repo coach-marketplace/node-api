@@ -2,7 +2,7 @@
 
 const userRouter = require('express').Router()
 
-const auth = require('../../middleware/isAuth')
+const auth = require('../../middleware/auth')
 const userController = require('../../controllers/user/index.js')
 
 userRouter.get('/', userController.readAll)
