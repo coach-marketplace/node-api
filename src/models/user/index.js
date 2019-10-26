@@ -1,6 +1,7 @@
 'use strict'
 
 const mongoose = require('mongoose')
+const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
@@ -22,6 +23,11 @@ const userSchema = new Schema({
     type: String,
     trim: true
   },
+})
+
+userSchema.plugin(timestamp, {
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
 })
 
 module.exports = mongoose.model('User', userSchema)
