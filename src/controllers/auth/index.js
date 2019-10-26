@@ -1,7 +1,7 @@
 'use strict'
 
 const { encryptString, compareHash } = require('../../_utils/hashing')
-const { getSignedToken } = require('../../_utils/jwt')
+const { signToken } = require('../../_utils/jwt')
 const userQueries = require('../user/queries.js')
 
 module.exports = {
@@ -43,7 +43,7 @@ module.exports = {
       if (!isMatch) {
         throw new Error('Email or passord incorrect (2)')
       }
-      const token = getSignedToken({ email: user.email, userId: user._id })
+      const token = signToken({ email: user.email, userId: user._id })
       res.status(201).json({ token })
     } catch (error) {
       res.status(500).json({
