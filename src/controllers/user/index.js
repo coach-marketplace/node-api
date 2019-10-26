@@ -9,17 +9,11 @@ module.exports = {
    */
   create: async (req, res) => {
     try {
-      const user = (await userQueries.getByEmail(req.body.email))[0]
-      if (user) {
-        throw new Error('Email already used')
-      }
-      const hashedPassword = await encryptString(req.body.password)
-      const newUser = await userQueries.create({
-        email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: hashedPassword,
-      })
+      const newUserData = { email: req.body.email }
+      req.body.firstName && (newUserData.firstName = req.body.firstName)
+      req.body.lastName && (newUserData.lastName = req.body.lastName)
+      req.body.password && (newUserData.password = await encryptString(req.body.password))
+      const newUser = await userQueries.create(newUserData)
       res.status(201).json(newUser)
     } catch (error) {
       res.status(500).json({
