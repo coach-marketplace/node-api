@@ -11,10 +11,6 @@ module.exports = {
       if (!email || !password) {
         throw new Error('Email and Password are required')
       }
-      const user = (await userQueries.getByEmail(email))[0]
-      if (user) {
-        throw new Error('This email is already used')
-      }
       const hashedPassword = await encryptString(password)
       const newUser = await userQueries.create({
         email,
