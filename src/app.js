@@ -4,6 +4,7 @@ require('dotenv').config({
   path: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,
 })
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
@@ -12,6 +13,7 @@ const errorController = require('./controllers/error')
 
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({}))
 app.use(morgan('dev'))
