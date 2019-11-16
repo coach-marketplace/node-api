@@ -7,13 +7,15 @@ const userQueries = require('../user/queries.js')
 module.exports = {
   signUp: async (req, res) => {
     try {
-      const { email, password } = req.body
+      const { email, firstName, lastName, password } = req.body
       if (!email || !password) {
         throw new Error('Email and Password are required')
       }
       const hashedPassword = await encryptString(password)
       const newUser = await userQueries.create({
         email,
+        firstName,
+        lastName,
         password: hashedPassword,
       })
       res.status(201).json(newUser)
