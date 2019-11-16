@@ -6,7 +6,7 @@
     "start:local": "NODE_ENV=local cross-env npm run start",
     "start:stg": "NODE_ENV=staging cross-env npm run start",
     "start": "nodemon src/server.js",
-    "prettier": "prettier --config ./config/.prettierrc --write \"src/**/*.js\"",
+    "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
     "test": "NODE_ENV=test mocha --recursive || true"
   },
   "keywords": [],
