@@ -1,5 +1,7 @@
 'use strict'
 
+const { pick } = require('lodash')
+
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { signToken } = require('../../_utils/jwt')
 const userQueries = require('../user/queries.js')
@@ -46,6 +48,22 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Email or password invalid',
+        debug_message: error.message,
+      })
+    }
+  },
+  getMe: async (req, res) => {
+    try {
+      const {
+        authUser: { userId },
+      } = req
+      const user = (await userQueries.getById(userId))[0]
+      res
+        .status(201)
+        .json({ user: pick(user, ['email', 'first_name', 'last_name']) })
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Unauthorized',
         debug_message: error.message,
       })
     }
