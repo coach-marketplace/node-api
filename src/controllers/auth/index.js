@@ -5,7 +5,7 @@ const { signToken } = require('../../_utils/jwt')
 const userQueries = require('../user/queries.js')
 
 module.exports = {
-  signUp: async (req, res) => {
+  register: async (req, res) => {
     try {
       const { email, firstName, lastName, password } = req.body
       if (!email || !password) {
@@ -27,7 +27,7 @@ module.exports = {
     }
   },
 
-  signIn: async (req, res) => {
+  login: async (req, res) => {
     try {
       const { email, password } = req.body
       if (!email || !password) {
