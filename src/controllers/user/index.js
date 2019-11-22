@@ -2,6 +2,7 @@
 
 const { encryptString } = require('../../_utils/hashing')
 const userQueries = require('./queries.js')
+const { getCoachByUserId } = require('../coach/queries.js')
 
 module.exports = {
   /**
@@ -83,6 +84,13 @@ module.exports = {
   del: async (req, res) => {
     try {
       const userId = req.params.id
+      const coach = (await getCoachByUserId(userId))[0]
+      if (coach) {
+        res.status(401).json({
+          public_message: 'Cannot delete the caoch user',
+        })
+        return
+      }
       await userQueries.deleteById(userId)
       res.status(200).json({ message: 'User deleted' })
     } catch (error) {

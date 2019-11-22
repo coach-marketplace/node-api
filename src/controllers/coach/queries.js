@@ -3,17 +3,18 @@
 const mongoose = require('mongoose')
 
 const Coach = require('../../models/coach')
+const { PUBLIC_FIELDS } = require('./constants')
 
 module.exports = {
   getCoaches() {
     return Coach.find()
-      .select('user description display_name')
+      .select(PUBLIC_FIELDS)
       .exec()
   },
 
   getCoachById(id) {
     return Coach.find({ _id: id })
-      .select('user description display_name')
+      .select(PUBLIC_FIELDS)
       .exec()
   },
 
@@ -37,5 +38,11 @@ module.exports = {
 
   removeCoachById(id) {
     return Coach.deleteOne({ _id: { $eq: id } })
+  },
+
+  getCoachByUserId(id) {
+    return Coach.find({ user: id })
+      .select(PUBLIC_FIELDS)
+      .exec()
   },
 }
