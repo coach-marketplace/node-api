@@ -12,7 +12,8 @@ module.exports = {
       const newUserData = { email: req.body.email }
       req.body.firstName && (newUserData.firstName = req.body.firstName)
       req.body.lastName && (newUserData.lastName = req.body.lastName)
-      req.body.password && (newUserData.password = await encryptString(req.body.password))
+      req.body.password &&
+        (newUserData.password = await encryptString(req.body.password))
       const newUser = await userQueries.create(newUserData)
       res.status(201).json(newUser)
     } catch (error) {
@@ -64,7 +65,8 @@ module.exports = {
       req.body.email && (updatedData.email = req.body.email)
       req.body.firstName && (updatedData.first_name = req.body.firstName)
       req.body.lastName && (updatedData.last_name = req.body.lastName)
-      req.body.password && (updatedData.password = await encryptString(req.body.password))
+      req.body.password &&
+        (updatedData.password = await encryptString(req.body.password))
       const newUser = await userQueries.update(userId, updatedData)
       res.status(200).json(newUser)
     } catch (error) {

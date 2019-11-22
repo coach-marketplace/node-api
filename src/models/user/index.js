@@ -9,25 +9,25 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique:true,
-    trim: true
+    unique: true,
+    trim: true,
   },
   first_name: {
     type: String,
-    trim: true
+    trim: true,
   },
   last_name: {
     type: String,
-    trim: true
+    trim: true,
   },
   password: {
-    type: String
+    type: String,
   },
 })
 
 userSchema.plugin(timestamp, {
   createdAt: 'created_at',
-  updatedAt: 'updated_at'
+  updatedAt: 'updated_at',
 })
 
 module.exports = mongoose.model('User', userSchema)
