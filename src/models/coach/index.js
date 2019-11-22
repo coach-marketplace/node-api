@@ -13,13 +13,18 @@ const coachSchema = new Schema({
     unique: true,
   },
   description: {
-    type: String
+    type: String,
+    trim: true,
+  },
+  display_name: {
+    type: String,
+    trim: true,
   },
 })
 
 coachSchema.plugin(timestamp, {
   createdAt: 'created_at',
-  updatedAt: 'updated_at'
+  updatedAt: 'updated_at',
 })
 
 module.exports = mongoose.model('Coach', coachSchema)
