@@ -8,16 +8,19 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
+const doc = require('../doc')
 const router = require('./routes')
 const errorController = require('./controllers/error')
 
 const app = express()
 
-app.use(cors())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json({}))
-app.use(morgan('dev'))
+app
+  .use(cors())
+  .use(bodyParser.urlencoded({ extended: false }))
+  .use(bodyParser.json({}))
+  .use(morgan('dev'))
 
+doc(app)
 router(app)
 
 app.use(errorController.send404)
