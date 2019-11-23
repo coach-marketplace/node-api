@@ -5,25 +5,25 @@ const mongoose = require('mongoose')
 const User = require('../../models/user')
 
 module.exports = {
-  getAll() {
+  getUsers() {
     return User.find()
       .select('_id email first_name last_name password')
       .exec()
   },
 
-  getById(userId) {
+  getUserById(userId) {
     return User.find({ _id: userId })
       .select('_id email first_name last_name password')
       .exec()
   },
 
-  getByEmail(userEmail) {
+  getUserByEmail(userEmail) {
     return User.find({ email: userEmail })
       .select('_id email first_name last_name password')
       .exec()
   },
 
-  create(newUserData) {
+  addUser(newUserData) {
     const newUser = new User({
       _id: new mongoose.Types.ObjectId(),
       email: newUserData.email,
@@ -34,13 +34,13 @@ module.exports = {
     return newUser.save()
   },
 
-  update(userId, newUserData) {
+  editUser(userId, newUserData) {
     return User.findOneAndUpdate({ _id: userId }, newUserData, {
       new: true,
     })
   },
 
-  deleteById(userId) {
+  removeUserById(userId) {
     return User.deleteOne({ _id: { $eq: userId } })
   },
 }

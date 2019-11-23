@@ -2,8 +2,8 @@
 
 const pingRouter = require('express').Router()
 
-const pingController = require('../../controllers/ping')
+const { ping } = require('../../controllers/ping')
 
-pingRouter.use(pingController.ping)
+pingRouter.use(ping)
 
 module.exports = pingRouter

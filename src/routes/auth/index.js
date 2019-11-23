@@ -2,11 +2,12 @@
 
 const authRouter = require('express').Router()
 
-const auth = require('../../middleware/auth')
-const authController = require('../../controllers/auth')
+const { isAuth } = require('../../middleware/auth')
+const { getMe, register, login } = require('../../controllers/auth')
 
-authRouter.get('/me', auth.isAuth, authController.getMe)
-authRouter.post('/register', authController.register)
-authRouter.post('/login', authController.login)
+authRouter
+  .get('/me', isAuth, getMe)
+  .post('/register', register)
+  .post('/login', login)
 
 module.exports = authRouter

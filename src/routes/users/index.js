@@ -2,12 +2,19 @@
 
 const userRouter = require('express').Router()
 
-const userController = require('../../controllers/user/index.js')
+const {
+  readUsers,
+  createUser,
+  readUser,
+  updateUser,
+  deleteUser,
+} = require('../../controllers/user/index.js')
 
-userRouter.get('/', userController.readAll)
-userRouter.post('/', userController.create)
-userRouter.get('/:id', userController.read)
-userRouter.put('/:id', userController.update)
-userRouter.delete('/:id', userController.del)
+userRouter
+  .get('/', readUsers)
+  .post('/', createUser)
+  .get('/:id', readUser)
+  .put('/:id', updateUser)
+  .delete('/:id', deleteUser)
 
 module.exports = userRouter
