@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict'
 
 require('dotenv').config({
@@ -18,7 +19,10 @@ app
   .use(cors())
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json({}))
-  .use(morgan('dev'))
+
+if (process.env.NODE_ENV === 'local') {
+  app.use(morgan('dev'))
+}
 
 doc(app)
 router(app)
