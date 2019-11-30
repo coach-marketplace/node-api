@@ -6,7 +6,7 @@ const {
   getUsers,
   getUserById,
   editUser,
-  deleteUserById,
+  removeUserById,
 } = require('./queries.js')
 const { getCoachByUserId } = require('../coach/queries.js')
 
@@ -97,7 +97,7 @@ module.exports = {
         })
         return
       }
-      await deleteUserById(id)
+      await removeUserById(id)
       res.status(200).json({ message: 'User deleted' })
     } catch (error) {
       res.status(500).json({
