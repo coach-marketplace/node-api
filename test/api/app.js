@@ -3,19 +3,20 @@
 
 const chai = require('chai')
 const { assert } = chai
-const request = require('supertest')
+const chaiHttp = require('chai-http')
+
+chai.use(chaiHttp)
 
 const app = require('../../src/app')
 
 describe('App', () => {
-  it('Ping the app', () => {
-    request(app)
+  it('Ping the app', () =>
+    chai
+      .request(app)
       .get('/ping')
-      .send()
       .then(res => {
         const result = res.text
         assert(result, 'pong')
       })
-      .catch(error => console.log(error))
-  })
+      .catch(error => console.log(error)))
 })
