@@ -4,7 +4,7 @@ const { pick } = require('lodash')
 
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { signToken } = require('../../_utils/jwt')
-const userQueries = require('../user/queries.js')
+const { addUser, getUserByEmail, getUserById } = require('../user/queries.js')
 
 module.exports = {
   register: async (req, res) => {
@@ -14,7 +14,7 @@ module.exports = {
         throw new Error('Email and Password are required')
       }
       const hashedPassword = await encryptString(password)
-      const newUser = await userQueries.create({
+      const newUser = await addUser({
         email,
         firstName,
         lastName,
@@ -35,7 +35,7 @@ module.exports = {
       if (!email || !password) {
         throw new Error('Email and Password are required')
       }
-      const user = (await userQueries.getByEmail(email))[0]
+      const user = (await getUserByEmail(email))[0]
       if (!user) {
         throw new Error('Email or passord incorrect (1)')
       }
@@ -57,7 +57,7 @@ module.exports = {
       const {
         authUser: { userId },
       } = req
-      const user = (await userQueries.getById(userId))[0]
+      const user = (await getUserById(userId))[0]
       res
         .status(201)
         .json({ user: pick(user, ['email', 'first_name', 'last_name']) })
