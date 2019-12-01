@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+'use strict'
+
 const mongoose = require('mongoose')
 
 module.exports = {

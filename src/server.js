@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+'use strict'
+
 const app = require('./app')
 const database = require('./database')
 const { PORT } = process.env
