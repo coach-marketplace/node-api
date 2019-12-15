@@ -17,6 +17,7 @@ const app = express()
 
 app
   .use(cors())
+  .use('/files', express.static('static'))
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json({}))
 
