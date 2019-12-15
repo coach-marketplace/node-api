@@ -23,6 +23,10 @@ const userSchema = new Schema({
   password: {
     type: String,
   },
+  avatar: {
+    type: String,
+    trim: true,
+  },
 })
 
 userSchema.plugin(timestamp, {
