@@ -106,4 +106,20 @@ module.exports = {
       })
     }
   },
+
+  /**
+   * Add avatar to user
+   */
+  addUserAvatar: async (req, res) => {
+    try {
+      const { id } = req.params
+      const newUser = await editUser(id, { avatar: true })
+      res.status(200).json(newUser)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Cannot add avatar',
+        debug_message: error.message,
+      })
+    }
+  },
 }
