@@ -60,7 +60,7 @@ module.exports = {
       const user = (await getUserById(userId))[0]
       res
         .status(201)
-        .json({ user: pick(user, ['email', 'first_name', 'last_name']) })
+        .json({ user: pick(user, ['email', 'first_name', 'last_name', '_id']) })
     } catch (error) {
       res.status(500).json({
         public_message: 'Unauthorized',
