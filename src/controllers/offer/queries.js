@@ -7,15 +7,16 @@ const Offer = require('../../models/offer')
 module.exports = {
 
   addOffer(newOfferData) {
-    const { coach, name, description, price } = newOfferData
+    console.log(newOfferData)
+    const { coach, title, description, price } = newOfferData
     const newOffer = new Offer({
       _id: new mongoose.Types.ObjectId(),
-      coach,
-      name,
-      decription,
-      price,
+      coach: new mongoose.Types.ObjectId(coach),
+      title,
+      description,
+      price: price,
     })
-
+    console.log('coucou')
     return newOffer.save()
   },
 

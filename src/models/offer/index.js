@@ -16,7 +16,7 @@ const offerSchema = new Schema({
     ref: 'Coach',
     required: true,
   },
-  name: {
+  title: {
     type: String,
     required: true,
     trim: true,

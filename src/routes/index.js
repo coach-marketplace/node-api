@@ -12,5 +12,5 @@ module.exports = app => {
     .use('/v1/auth', authRouter)
     .use('/v1/users', userRouter)
     .use('/v1/coaches', coachRouter)
-    .use('/v1/offers', offersRouter)
+    .use('/v1/offer', offersRouter)
 }

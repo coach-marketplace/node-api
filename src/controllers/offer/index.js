@@ -10,14 +10,15 @@ module.exports = {
    */
   createOffer: async (req, res) => {
     try {
-      const { coach, name, description, price } = req.body
+      const { coach, title, description, price } = req.body
       const newOfferData = {  coach: coach,
-                              name: name,
-                              decription: description,
+                              title: title,
+                              description: description,
                               price: price};
       /*description && (newCoachData.description = description)
       displayName && (newCoachData.displayName = displayName)*/
       const newOffer = await addOffer(newOfferData)
+      console.log("bizarre")
       res.status(201).json(newOffer)
     } catch (error) {
       res.status(500).json({
