@@ -6,7 +6,7 @@ const {
   getUsers,
   getUserById,
   editUser,
-  deleteUserById,
+  removeUserById,
 } = require('./queries.js')
 const { getCoachByUserId } = require('../coach/queries.js')
 
@@ -97,11 +97,27 @@ module.exports = {
         })
         return
       }
-      await deleteUserById(id)
+      await removeUserById(id)
       res.status(200).json({ message: 'User deleted' })
     } catch (error) {
       res.status(500).json({
         public_message: 'Cannot delete the user',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  /**
+   * Add avatar to user
+   */
+  addUserAvatar: async (req, res) => {
+    try {
+      const { id } = req.params
+      const newUser = await editUser(id, { avatar: true })
+      res.status(200).json(newUser)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Cannot add avatar',
         debug_message: error.message,
       })
     }

@@ -12,7 +12,7 @@ This backend is made with NodeJS
 Local:
 
 ```
-npm run start:local
+yarn run start:local
 ```
 
 Staging:
@@ -26,9 +26,21 @@ TBD...
 ## Launch tests
 
 ```
-npm run test
+yarn run test
+```
+
+## Run prettier to format code
+
+```
+yarn prettier
+```
+
+## Lint code
+
+```
+yarn lint
 ```
 
 ## Documentation
 
-We use Swagge to document the API, when the app is running, you can go on `/api-docs` to read it.
+We use Swagger to document the API, when the app is running, you can go on `http://localhost:5000/api-docs` to read it.
