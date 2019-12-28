@@ -8,7 +8,6 @@ const {
   editUser,
   removeUserById,
 } = require('./queries.js')
-const { getCoachByUserId } = require('../coach/queries.js')
 
 module.exports = {
   /**
@@ -90,13 +89,6 @@ module.exports = {
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params
-      const coach = (await getCoachByUserId(id))[0]
-      if (coach) {
-        res.status(401).json({
-          public_message: 'Cannot delete the caoch user',
-        })
-        return
-      }
       await removeUserById(id)
       res.status(200).json({ message: 'User deleted' })
     } catch (error) {
