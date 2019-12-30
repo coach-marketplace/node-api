@@ -2,19 +2,8 @@
 
 const coachRouter = require('express').Router()
 
-const {
-  readCoaches,
-  createCoach,
-  readCoach,
-  updateCoach,
-  deleteCoach,
-} = require('../../controllers/coach/index.js')
+const { readCoaches } = require('../../controllers/coach/index.js')
 
-coachRouter
-  .get('/', readCoaches)
-  .post('/', createCoach)
-  .get('/:id', readCoach)
-  .put('/:id', updateCoach)
-  .delete('/:id', deleteCoach)
+coachRouter.get('/', readCoaches)
 
 module.exports = coachRouter
