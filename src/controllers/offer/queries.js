@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const Offer = require('../../models/offer')
 
 module.exports = {
-
   addOffer(newOfferData) {
     console.log(newOfferData)
     const { coach, title, description, price } = newOfferData
@@ -21,7 +20,6 @@ module.exports = {
   },
 
   getAllOffers() {
-    return Offer.find();
-  }
-
+    return Offer.find()
+  },
 }
