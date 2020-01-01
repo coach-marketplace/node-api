@@ -1,0 +1,15 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run prettier
+      run: npm run prettier
