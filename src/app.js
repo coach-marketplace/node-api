@@ -9,7 +9,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
-const doc = require('../doc')
+const doc = require('./doc')
 const router = require('./routes')
 const errorController = require('./controllers/error')
 
