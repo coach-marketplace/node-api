@@ -5,6 +5,7 @@ const authRouter = require('./auth')
 const userRouter = require('./users')
 const coachRouter = require('./coach')
 const offersRouter = require('./offer')
+const sportsRouter = require('./sport')
 
 module.exports = app => {
   app
@@ -13,4 +14,5 @@ module.exports = app => {
     .use('/v1/users', userRouter)
     .use('/v1/coaches', coachRouter)
     .use('/v1/offer', offersRouter)
+    .use('/v1/sport', sportsRouter)
 }
