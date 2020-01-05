@@ -23,5 +23,10 @@ module.exports = {
       },
     ],
   },
-  apis: ['./src/models/user/index.js', './src/routes/users/index.js'],
+  apis: [
+    './src/models/user/index.js',
+    './src/routes/users/index.js',
+    './src/models/sport/index.js',
+    './src/routes/sport/index.js',
+  ],
 }
