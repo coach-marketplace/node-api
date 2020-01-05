@@ -3,7 +3,8 @@
 const {
   getSports,
   addSport,
-  getSport,
+  getSportById,
+  getSportByName,
   updateSport,
   deleteSport,
 } = require('./queries.js')
@@ -42,12 +43,28 @@ module.exports = {
   },
 
   /**
-   * Get one sport
+   * Get one sport by id
    */
-  getSport: async (req, res) => {
+  getSportById: async (req, res) => {
     try {
       const sportId = req.params.id
-      const sport = (await getSport(sportId))[0]
+      const sport = (await getSportById(sportId))[0]
+      res.status(200).json(sport)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Sport not found',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  /**
+   * Get one sport by name
+   */
+  getSportByName: async (req, res) => {
+    try {
+      const name = req.params.name
+      const sport = (await getSportByName(name))[0]
       res.status(200).json(sport)
     } catch (error) {
       res.status(500).json({

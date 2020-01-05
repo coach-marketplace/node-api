@@ -12,7 +12,7 @@ module.exports = {
       .exec()
   },
 
-  getUserById(sportId) {
+  getSportById(sportId) {
     return Sport.find({ _id: sportId })
       .select('_id name')
       .exec()

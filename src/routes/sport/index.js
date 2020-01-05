@@ -5,7 +5,8 @@ const sportsRouter = require('express').Router()
 const {
   getSports,
   addSport,
-  getSport,
+  getSportByName,
+  getSportById,
   updateSport,
   deleteSport,
 } = require('../../controllers/sport/index.js')
@@ -70,23 +71,43 @@ sportsRouter
   /**
    * @swagger
    * path:
-   *  /users/:id:
+   *  /sport/:id:
    *    get:
-   *      summary: Get one user
-   *      tags: [Users]
+   *      summary: Get one sport by id
+   *      tags: [Sports]
    *      parameters:
    *        - in: path
-   *          name: userId
+   *          id: sportId
    *          required: true
    *      responses:
    *        "200":
-   *          description: Get an object with the user data
+   *          description: Get an object with the sport data
    *          content:
    *            application/json:
    *              schema:
-   *                $ref: '#/components/schemas/User'
+   *                $ref: '#/components/schemas/Sport'
    */
-  .get('/:id', getSport)
+  .get('/:id', getSportById)
+  /**
+   * @swagger
+   * path:
+   *  /sport/:name/byname:
+   *    get:
+   *      summary: Get one sport by name
+   *      tags: [Sports]
+   *      parameters:
+   *        - in: path
+   *          name: name
+   *          required: true
+   *      responses:
+   *        "200":
+   *          description: Get an object with the sport data
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Sport'
+   */
+  .get('/:name/byname', getSportByName)
   .put('/:id', updateSport)
   .delete('/:id', deleteSport)
 
