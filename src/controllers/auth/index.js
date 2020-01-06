@@ -1,6 +1,9 @@
 'use strict'
 
 const { pick } = require('lodash')
+const https = require('https')
+const querystring = require('querystring')
+const rp = require('request-promise')
 
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { signToken } = require('../../_utils/jwt')
@@ -52,6 +55,7 @@ module.exports = {
       })
     }
   },
+
   getMe: async (req, res) => {
     try {
       const {
@@ -64,6 +68,71 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Unauthorized',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  googleLogin: async (req, res) => {
+    try {
+      const { code } = req.body
+      console.log('code : ', code)
+      if (!code) {
+        throw new Error('No code provided')
+      }
+      // const data = {
+      //   code: '4/P7q7W91a-oMsCeLvIaQm6bTrgtp7',
+      //   client_id: process.env.GOOGLE_CLIENT_ID,
+      //   client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      //   redirect_uri: '',
+      //   grant_type: req.body.code,
+      // }
+
+      const options = {
+        // method: 'GET',
+        // uri: 'https://jsonplaceholder.typicode.com/posts/1',
+        method: 'POST',
+        uri: 'https://www.googleapis.com/oauth2/v4/token',
+        // headers: {
+        //   'Content-Type': 'application/x-www-form-urlencoded',
+        // },
+        json: true,
+        body: {
+          code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: 'http://localhost:3000/callback',
+          grant_type: 'authorization_code',
+        },
+      }
+      console.log('++')
+
+      rp(options)
+        .then(function(result) {
+          // POST succeeded...
+          console.log('ok', result)
+          res.status(201).json({ ok: 'ok' })
+        })
+        .catch(function(err) {
+          // POST failed...
+          console.log('erro', err.message)
+          res.status(201).json({ error: err.message })
+        })
+      console.log('====')
+      // const post_req = https.request(options, function(res) {
+      //   res.setEncoding('utf8')
+      //   res.on('data', function(chunk) {
+      //     console.log('Response: ' + chunk)
+      //   })
+      // })
+
+      // post_req.write(data)
+      // post_req.end()
+
+      // res.status(201).json({ ok: 'ok' })
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Impossible to connect via google',
         debug_message: error.message,
       })
     }
