@@ -20,8 +20,8 @@ authRouter
     '/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
-      res.status(200).json({ data: req.user })
-      // res.redirect('http://localhost:3000/')
+      // res.status(200).json({ data: req.user })
+      res.redirect('http://localhost:3000/')
     },
   )
 
