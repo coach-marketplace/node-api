@@ -4,23 +4,25 @@ const authRouter = require('express').Router()
 const passport = require('passport')
 
 const { isAuth } = require('../../middleware/auth')
-const {
-  getMe,
-  register,
-  login,
-  googleLogin,
-} = require('../../controllers/auth')
+const { getMe, register, login } = require('../../controllers/auth')
 
 authRouter
   .get('/me', isAuth, getMe)
   .post('/register', register)
   .post('/login', login)
-  .post(
+  .get(
     '/google',
     passport.authenticate('google', {
-      scope: ['https://www.googleapis.com/auth/plus.login'],
+      scope: ['profile', 'email'],
     }),
-    googleLogin,
+  )
+  .get(
+    '/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+      res.status(200).json({ data: req.user })
+      // res.redirect('http://localhost:3000/')
+    },
   )
 
 module.exports = authRouter

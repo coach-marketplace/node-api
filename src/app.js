@@ -8,6 +8,8 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+require('./_utils/passport/googlePassportConfig')
+const passport = require('passport')
 
 const doc = require('./doc')
 const router = require('./routes')
@@ -15,13 +17,13 @@ const errorController = require('./controllers/error')
 
 const app = express()
 
-require('./_utils/passport/googlePassportConfig')
-
 app
   .use(cors())
   .use('/files', express.static('static'))
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json({}))
+  .use(passport.initialize())
+  .use(passport.session())
 
 if (process.env.NODE_ENV === 'local') {
   app.use(morgan('dev'))
