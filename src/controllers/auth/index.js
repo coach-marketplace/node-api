@@ -1,9 +1,9 @@
 'use strict'
 
 const { pick } = require('lodash')
-const https = require('https')
-const querystring = require('querystring')
-const rp = require('request-promise')
+// const https = require('https')
+// const querystring = require('querystring')
+// const rp = require('request-promise')
 
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { signToken } = require('../../_utils/jwt')
@@ -75,11 +75,12 @@ module.exports = {
 
   googleLogin: async (req, res) => {
     try {
-      const { code } = req.body
-      console.log('code : ', code)
-      if (!code) {
-        throw new Error('No code provided')
-      }
+      // const { code } = req.body
+      // console.log('code : ', code)
+      // if (!code) {
+      //   throw new Error('No code provided')
+      // }
+      res.send('ok...')
       // const data = {
       //   code: '4/P7q7W91a-oMsCeLvIaQm6bTrgtp7',
       //   client_id: process.env.GOOGLE_CLIENT_ID,
@@ -107,18 +108,18 @@ module.exports = {
       }
       console.log('++')
 
-      rp(options)
-        .then(function(result) {
-          // POST succeeded...
-          console.log('ok', result)
-          res.status(201).json({ ok: 'ok' })
-        })
-        .catch(function(err) {
-          // POST failed...
-          console.log('erro', err.message)
-          res.status(201).json({ error: err.message })
-        })
-      console.log('====')
+      // rp(options)
+      //   .then(function(result) {
+      //     // POST succeeded...
+      //     console.log('ok', result)
+      //     res.status(201).json({ ok: 'ok' })
+      //   })
+      //   .catch(function(err) {
+      //     // POST failed...
+      //     console.log('erro', err.message)
+      //     res.status(201).json({ error: err.message })
+      //   })
+      // console.log('====')
       // const post_req = https.request(options, function(res) {
       //   res.setEncoding('utf8')
       //   res.on('data', function(chunk) {

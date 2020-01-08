@@ -15,6 +15,8 @@ const errorController = require('./controllers/error')
 
 const app = express()
 
+require('./_utils/passport/googlePassportConfig')
+
 app
   .use(cors())
   .use('/files', express.static('static'))

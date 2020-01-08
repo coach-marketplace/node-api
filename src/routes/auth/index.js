@@ -1,6 +1,7 @@
 'use strict'
 
 const authRouter = require('express').Router()
+const passport = require('passport')
 
 const { isAuth } = require('../../middleware/auth')
 const {
@@ -14,6 +15,12 @@ authRouter
   .get('/me', isAuth, getMe)
   .post('/register', register)
   .post('/login', login)
-  .post('/login-with-google', googleLogin)
+  .post(
+    '/google',
+    passport.authenticate('google', {
+      scope: ['https://www.googleapis.com/auth/plus.login'],
+    }),
+    googleLogin,
+  )
 
 module.exports = authRouter
