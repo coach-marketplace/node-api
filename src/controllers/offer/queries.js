@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const Offer = require('../../models/offer')
 
 module.exports = {
-
   addOffer(newOfferData) {
     console.log(newOfferData)
     const { coach, title, description, price } = newOfferData
@@ -26,5 +25,6 @@ module.exports = {
   getOffer(id) {
       return Offer.findOne({_id:new mongoose.Types.ObjectId(id)});
   },
+
 
 }

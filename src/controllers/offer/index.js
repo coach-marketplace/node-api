@@ -13,10 +13,12 @@ module.exports = {
   createOffer: async (req, res) => {
     try {
       const { coach, title, description, price } = req.body
-      const newOfferData = {  coach: coach,
-                              title: title,
-                              description: description,
-                              price: price};
+      const newOfferData = {
+        coach: coach,
+        title: title,
+        description: description,
+        price: price,
+      }
       /*description && (newCoachData.description = description)
       displayName && (newCoachData.displayName = displayName)*/
       const newOffer = await addOffer(newOfferData)
@@ -34,8 +36,8 @@ module.exports = {
    */
   readOffers: async (req, res) => {
     try {
-      const offers = await getAllOffers();
-      res.status(201).json(offers);
+      const offers = await getAllOffers()
+      res.status(201).json(offers)
     } catch (error) {
       res.status(500).json({
         public_message: 'Error in getting all offers',

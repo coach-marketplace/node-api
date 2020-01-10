@@ -43,4 +43,4 @@ yarn lint
 
 ## Documentation
 
-We use Swagger to document the API, when the app is running, you can go on `http://localhost:5000/api-docs` to read it.
+We use Swagger to document the API, when the app is running, you can go on `http://localhost:5555/doc` to read it.

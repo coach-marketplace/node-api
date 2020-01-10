@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 
 module.exports = {
   connect: () => {
-    console.log(process.env.MONGO_DB_URI);
     return mongoose
       .connect(process.env.MONGO_DB_URI, {
         useNewUrlParser: true,
@@ -17,6 +16,6 @@ module.exports = {
       .catch(error => {
         console.log('Database connexion error:', error.message)
       })
-    },
+  },
   close: () => mongoose.disconnect(),
 }

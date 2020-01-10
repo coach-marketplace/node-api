@@ -2,18 +2,14 @@
 
 const mongoose = require('mongoose')
 
-const Coach = require('../coach'),
-      coachSchema = mongoose.model('Coach').schema;
-
-
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
 const offerSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  coach: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Coach',
+    ref: 'User',
     required: true,
   },
   title: {
