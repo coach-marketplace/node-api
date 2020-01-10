@@ -2,6 +2,8 @@
 
 const {
   addOffer,
+  getAllOffers,
+  getOffer,
 } = require('./queries.js')
 
 module.exports = {
@@ -18,12 +20,11 @@ module.exports = {
       /*description && (newCoachData.description = description)
       displayName && (newCoachData.displayName = displayName)*/
       const newOffer = await addOffer(newOfferData)
-      console.log("bizarre")
       res.status(201).json(newOffer)
     } catch (error) {
       res.status(500).json({
         public_message: 'Error in offer creation',
-        debug_message: error.message,
+        debug_message: error.message
       })
     }
   },
@@ -42,4 +43,21 @@ module.exports = {
       })
     }
   },
+
+  /**
+  * Find offer by id
+  **/
+  getOfferById: async (req, res) => {
+    try{
+      const offer = await getOffer(req.params.id);
+      res.status(201).json(offer);
+    } catch(error) {
+      res.status(500).json({
+        public_message: 'Error in getting all offers',
+        debug_message: error.message,
+      })
+    }
+  }
+
+
 }

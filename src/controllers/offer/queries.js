@@ -16,12 +16,15 @@ module.exports = {
       description,
       price: price,
     })
-    console.log('coucou')
     return newOffer.save()
   },
 
   getAllOffers() {
     return Offer.find();
-  }
+  },
+
+  getOffer(id) {
+      return Offer.findOne({_id:new mongoose.Types.ObjectId(id)});
+  },
 
 }
