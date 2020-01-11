@@ -1,6 +1,7 @@
 'use strict'
 
 const { verifyToken } = require('../_utils/jwt')
+const passport = require('passport')
 
 module.exports = {
   isAuth: (req, res, next) => {
@@ -16,4 +17,8 @@ module.exports = {
       })
     }
   },
+  auth: passport.authenticate('google', {
+    scope: ['profile', 'email'],
+  }),
+  isAuth2: passport.authenticate('google'),
 }

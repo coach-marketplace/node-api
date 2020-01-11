@@ -1,13 +1,22 @@
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 
-passport.serializeUser((data, done) => {
-  done(null, data)
+const {
+  addUser,
+  getUserByEmail,
+  editUser,
+  getUserById,
+} = require('../../controllers/user/queries')
+
+passport.serializeUser((user, done) => {
+  done(null, user._id)
 })
 
-passport.deserializeUser((data, done) => {
-  done(null, data)
+passport.deserializeUser(async (userId, done) => {
+  const user = await getUserById(userId)
+  done(null, user)
 })
 
 passport.use(
@@ -17,8 +26,45 @@ passport.use(
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: 'http://localhost:5555/v1/auth/google/callback',
     },
-    (accessToken, refreshToken, profile, done) => {
-      done(null, { accessToken, refreshToken, profile })
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        if (!profile._json && !profile._json.email) {
+          throw new Error('No email in google profile')
+        }
+        const results = await getUserByEmail(profile._json.email)
+        if (results.length) {
+          const user = results[0]
+          if (user.google && user.google.id) {
+            done(null, user)
+          } else {
+            const newUserData = {
+              google: { id: profile.id },
+            }
+            if (profile._json.picture) {
+              newUserData.google = {
+                ...newUserData.google,
+                picture: profile._json.picture,
+              }
+            }
+            const updatedUser = await editUser(user._id, newUserData)
+            done(null, updatedUser)
+          }
+        } else {
+          const newUserData = {
+            email: profile._json && profile._json.email,
+            firstName: profile.name && profile.name.givenName,
+            lastName: profile.name && profile.name.familyName,
+            google_id: profile.id,
+          }
+          profile._json.picture &&
+            (newUserData.google_avatar = profile._json.picture)
+          const newUser = await addUser(newUserData)
+          done(null, newUser)
+        }
+      } catch (error) {
+        // TODO: handle errors... because here the api send back an plain text error
+        done(error, null)
+      }
     },
   ),
 )

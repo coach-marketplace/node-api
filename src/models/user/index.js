@@ -61,6 +61,16 @@ const userSchema = new Schema({
     type: String,
     trim: true,
   },
+  google: {
+    id: {
+      type: String,
+      trim: true,
+    },
+    picture: {
+      type: String,
+      trim: true,
+    },
+  },
 })
 
 userSchema.plugin(timestamp, {

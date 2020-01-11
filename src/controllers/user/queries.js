@@ -5,16 +5,18 @@ mongoose.set('useFindAndModify', false)
 
 const User = require('../../models/user')
 
+const exposeFields = '_id email first_name last_name google'
+
 module.exports = {
   getUsers() {
     return User.find()
-      .select('_id email first_name last_name password')
+      .select(exposeFields)
       .exec()
   },
 
   getUserById(userId) {
     return User.find({ _id: userId })
-      .select('_id email first_name last_name password')
+      .select(exposeFields)
       .exec()
   },
 
@@ -24,14 +26,23 @@ module.exports = {
       .exec()
   },
 
-  addUser(newUserData) {
-    const newUser = new User({
-      _id: new mongoose.Types.ObjectId(),
-      email: newUserData.email,
-      first_name: newUserData.firstName || '',
-      last_name: newUserData.lastName || '',
-      password: newUserData.password,
-    })
+  addUser(data) {
+    const newUserId = new mongoose.Types.ObjectId()
+    const newUserData = {
+      _id: newUserId,
+      email: data.email,
+    }
+    data.firstName && (newUserData.first_name = data.firstName)
+    data.lastName && (newUserData.last_name = data.lastName)
+    data.password && (newUserData.password = data.password)
+    if (data.google_id) {
+      const google = { id: data.google_id }
+      data.google_avatar && (google.picture = data.google_avatar)
+      newUserData.google = google
+    }
+
+    const newUser = new User(newUserData)
+
     return newUser.save()
   },
 
