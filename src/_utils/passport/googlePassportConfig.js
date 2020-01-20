@@ -1,5 +1,8 @@
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+const LocalStrategy = require('passport-local').Strategy
+const { signToken } = require('../../_utils/jwt')
+const { encryptString, compareHash } = require('../../_utils/hashing')
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 
@@ -11,13 +14,41 @@ const {
 } = require('../../controllers/user/queries')
 
 passport.serializeUser((user, done) => {
+  console.log('serializeUser', user)
   done(null, user._id)
 })
 
 passport.deserializeUser(async (userId, done) => {
+  console.log('deserializeUser')
   const user = await getUserById(userId)
   done(null, user)
 })
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: 'email' },
+    async (email, password, done) => {
+      try {
+        const user = (await getUserByEmail(email, { withPassword: true }))[0]
+        if (!user) {
+          throw new Error('Email or password incorrect')
+        }
+        if (!user.password) {
+          throw new Error('Email or password incorrect')
+        }
+        const isMatch = await compareHash(password, user.password)
+        console.log('isMatch', isMatch)
+        if (!isMatch) {
+          throw new Error('Email or password incorrect')
+        }
+        user.token = signToken({ email: user.email, userId: user._id })
+        return done(null, user)
+      } catch (error) {
+        return done(error)
+      }
+    },
+  ),
+)
 
 passport.use(
   new GoogleStrategy(

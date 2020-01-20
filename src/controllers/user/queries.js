@@ -5,24 +5,30 @@ mongoose.set('useFindAndModify', false)
 
 const User = require('../../models/user')
 
-const exposeFields = '_id email first_name last_name google'
+const getExposedFields = (options = {}) => {
+  let fieldToExpose = '_id email first_name last_name google'
+  if (options.withPassword) {
+    fieldToExpose += ' password'
+  }
+  return fieldToExpose
+}
 
 module.exports = {
-  getUsers() {
+  getUsers(options = {}) {
     return User.find()
-      .select(exposeFields)
+      .select(getExposedFields(options))
       .exec()
   },
 
-  getUserById(userId) {
+  getUserById(userId, options = {}) {
     return User.find({ _id: userId })
-      .select(exposeFields)
+      .select(getExposedFields(options))
       .exec()
   },
 
-  getUserByEmail(userEmail) {
+  getUserByEmail(userEmail, options = {}) {
     return User.find({ email: userEmail })
-      .select('_id email first_name last_name password')
+      .select(getExposedFields(options))
       .exec()
   },
 

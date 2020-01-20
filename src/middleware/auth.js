@@ -21,4 +21,5 @@ module.exports = {
     scope: ['profile', 'email'],
   }),
   isAuth2: passport.authenticate('google'),
+  authLocal: passport.authenticate('local'),
 }

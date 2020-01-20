@@ -7,7 +7,12 @@ const { pick } = require('lodash')
 
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { signToken } = require('../../_utils/jwt')
-const { addUser, getUserByEmail, getUserById } = require('../user/queries.js')
+const {
+  addUser,
+  getUserByEmail,
+  getUserById,
+  editUser,
+} = require('../user/queries.js')
 
 module.exports = {
   register: async (req, res) => {
@@ -16,14 +21,23 @@ module.exports = {
       if (!email || !password) {
         throw new Error('Email and Password are required')
       }
-      const hashedPassword = await encryptString(password)
-      const newUser = await addUser({
-        email,
-        firstName,
-        lastName,
-        password: hashedPassword,
-      })
-      res.status(201).json(newUser)
+      let user = (await getUserByEmail(email, { withPassword: true }))[0]
+      if (user && user.password) {
+        throw new Error('Already register')
+      }
+      if (user && !user.password) {
+        user = await editUser(user._id, {
+          password: await encryptString(password),
+        })
+      } else if (!user) {
+        user = await addUser({
+          email,
+          firstName,
+          lastName,
+          password: await encryptString(password),
+        })
+      }
+      res.status(201).json(user)
     } catch (error) {
       res.status(500).json({
         public_message: 'Error while trying to sign up',

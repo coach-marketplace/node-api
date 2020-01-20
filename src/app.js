@@ -9,7 +9,8 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const passport = require('passport')
-const cookieSession = require('cookie-session')
+const session = require('express-session')
+// const cookieSession = require('cookie-session')
 
 // Setup passport authentication
 require('./_utils/passport/googlePassportConfig')
@@ -21,13 +22,20 @@ const app = express()
 
 app
   .use(cors())
+  .use('/files', express.static('static'))
   .use(
-    cookieSession({
-      maxAge: 24 * 60 * 60 * 1000,
-      keys: [process.env.COOKIE_KEY],
+    session({
+      secret: process.env.SESSION_KEY,
+      resave: false,
+      saveUninitialized: false,
     }),
   )
-  .use('/files', express.static('static'))
+  // .use(
+  //   cookieSession({
+  //     maxAge: 24 * 60 * 60 * 1000,
+  //     keys: [process.env.COOKIE_KEY],
+  //   }),
+  // )
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json({}))
   .use(passport.initialize())
