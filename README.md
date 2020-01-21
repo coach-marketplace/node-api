@@ -23,6 +23,10 @@ Production:
 
 TBD...
 
+## Run  locally with Docker
+
+`docker build -t kevtss/coach-marketplace.api .` -- WIP
+
 ## Launch tests
 
 ```
