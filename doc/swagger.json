@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Coach marktplace API",
+    "description": "Coach marketplace API is where stand the logic",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5555/",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/v1/users": {
+      "get": {
+        "summary": "Return list of users",
+        "description": "Get the entire list of users from database",
+        "response": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a user",
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "response": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/{userId}": {
+      "get": {
+        "summary": "Return a single user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": "true"
+          }
+        ],
+        "response": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "email": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

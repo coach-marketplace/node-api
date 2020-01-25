@@ -15,8 +15,10 @@ module.exports = {
    */
   addSport: async (req, res) => {
     try {
-      const name = req.body
+      const { name } = req.body
       const newSportData = { name }
+      console.log('test', req.body)
+      console.log('test', newSportData)
       const newSport = await addSport(newSportData)
       res.status(201).json(newSport)
     } catch (error) {

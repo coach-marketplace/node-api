@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 mongoose.set('useFindAndModify', false)
 
-const Sport = require('../../models/user')
+const Sport = require('../../models/sport')
 
 module.exports = {
   getSports() {
