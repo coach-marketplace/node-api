@@ -34,6 +34,7 @@
  *           email: john.doe@email.com
  */
 
+const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
@@ -77,5 +78,27 @@ userSchema.plugin(timestamp, {
   createdAt: 'created_at',
   updatedAt: 'updated_at',
 })
+
+userSchema.methods = {
+  createToken() {
+    return jwt.sign(
+      {
+        _id: this._id,
+      },
+      // eslint-disable-next-line no-undef
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1h',
+      },
+    )
+  },
+  toAuthJSON() {
+    return {
+      _id: this._id,
+      email: this.email,
+      token: `Bearer ${this.createToken()}`,
+    }
+  },
+}
 
 module.exports = mongoose.model('User', userSchema)

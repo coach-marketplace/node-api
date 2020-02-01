@@ -17,9 +17,11 @@ module.exports = {
       })
     }
   },
-  auth: passport.authenticate('google', {
+  authGoogle: passport.authenticate('google', {
     scope: ['profile', 'email'],
   }),
-  isAuth2: passport.authenticate('google'),
-  authLocal: passport.authenticate('local'),
+  authLocal: passport.authenticate('local', {
+    session: false,
+  }),
+  authJWT: passport.authenticate('jwt', { session: false }),
 }

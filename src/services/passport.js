@@ -1,17 +1,20 @@
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const LocalStrategy = require('passport-local').Strategy
-const { signToken } = require('../../_utils/jwt')
-const { encryptString, compareHash } = require('../../_utils/hashing')
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
+const { signToken } = require('../_utils/jwt')
+const { encryptString, compareHash } = require('../_utils/hashing')
+
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env
 
 const {
   addUser,
   getUserByEmail,
   editUser,
   getUserById,
-} = require('../../controllers/user/queries')
+} = require('../controllers/user/queries')
 
 passport.serializeUser((user, done) => {
   console.log('serializeUser', user)
@@ -20,13 +23,40 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (userId, done) => {
   console.log('deserializeUser')
-  const user = await getUserById(userId)
-  done(null, user)
+  try {
+    const user = await getUserById(userId)
+    done(null, user)
+  } catch (error) {
+    done(error)
+  }
 })
 
 passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: JWT_SECRET,
+    },
+    async (payload, done) => {
+      try {
+        const user = (await getUserById(payload._id))[0]
+        if (!user) {
+          return done(null, false)
+        }
+        return done(null, user)
+      } catch (error) {
+        return done(error, false)
+      }
+    },
+  ),
+)
+
+passport.use(
   new LocalStrategy(
-    { usernameField: 'email' },
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+    },
     async (email, password, done) => {
       try {
         const user = (await getUserByEmail(email, { withPassword: true }))[0]
@@ -37,7 +67,6 @@ passport.use(
           throw new Error('Email or password incorrect')
         }
         const isMatch = await compareHash(password, user.password)
-        console.log('isMatch', isMatch)
         if (!isMatch) {
           throw new Error('Email or password incorrect')
         }
