@@ -70,8 +70,15 @@ passport.use(
         if (!isMatch) {
           throw new Error('Email or password incorrect')
         }
-        user.token = signToken({ email: user.email, userId: user._id })
-        return done(null, user)
+        user.token = signToken({
+          email: user.email,
+          userId: user._id,
+        })
+
+        /**
+         * getSoftData is define into the mongoose model
+         */
+        return done(null, user.getSoftData())
       } catch (error) {
         return done(error)
       }

@@ -38,7 +38,7 @@ module.exports = {
   },
 
   login: async (req, res) => {
-    res.status(201).json(req.user.toAuthJSON())
+    res.status(201).json(req.user)
   },
 
   getMe: async (req, res) => {

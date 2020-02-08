@@ -92,10 +92,13 @@ userSchema.methods = {
       },
     )
   },
-  toAuthJSON() {
+  getSoftData() {
     return {
       _id: this._id,
       email: this.email,
+      first_name: this.first_name,
+      last_name: this.last_name,
+      google: this.google,
       token: `Bearer ${this.createToken()}`,
     }
   },
