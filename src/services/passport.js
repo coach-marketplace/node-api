@@ -17,12 +17,10 @@ const {
 } = require('../controllers/user/queries')
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser', user)
   done(null, user._id)
 })
 
 passport.deserializeUser(async (userId, done) => {
-  console.log('deserializeUser')
   try {
     const user = await getUserById(userId)
     done(null, user)
