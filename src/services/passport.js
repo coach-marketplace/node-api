@@ -5,8 +5,9 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 
 const { signToken } = require('../_utils/jwt')
-const { encryptString, compareHash } = require('../_utils/hashing')
+const { compareHash } = require('../_utils/hashing')
 
+// eslint-disable-next-line no-undef
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env
 
 const {

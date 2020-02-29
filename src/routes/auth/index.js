@@ -2,7 +2,7 @@
 
 const authRouter = require('express').Router()
 
-const { authJWT, authLocal, authGoogle } = require('../../middleware/auth')
+const { authJWT, authLocal } = require('../../middleware/auth')
 const { getMe, register, login } = require('../../controllers/auth')
 
 authRouter

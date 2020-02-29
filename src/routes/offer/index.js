@@ -5,14 +5,14 @@ const offersRouter = require('express').Router()
 const {
   createOffer,
   readOffers,
-  getOfferById
+  getOfferById,
 } = require('../../controllers/offer/index.js')
 
-offersRouter 
+offersRouter
   .get('/', readOffers)
   .post('/', createOffer)
   .get('/:id', getOfferById)
-  /*.put('/:id', updateUser)
+/*.put('/:id', updateUser)
   /*.get('/:id', readUser)
   .delete('/:id', deleteUser)*/
 

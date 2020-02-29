@@ -19,12 +19,10 @@ module.exports = {
   },
 
   getAllOffers() {
-    return Offer.find();
+    return Offer.find()
   },
 
   getOffer(id) {
-      return Offer.findOne({_id:new mongoose.Types.ObjectId(id)});
+    return Offer.findOne({ _id: new mongoose.Types.ObjectId(id) })
   },
-
-
 }
