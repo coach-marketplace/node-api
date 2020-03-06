@@ -4,6 +4,7 @@ const {
   addOffer,
   getAllOffers,
   getOffer,
+  searchOffers
 } = require('./queries.js')
 
 module.exports = {
@@ -59,7 +60,29 @@ module.exports = {
         debug_message: error.message,
       })
     }
+  },
+
+  /**
+  * Search offers with query
+  **/
+ searchOffers: async (req, res) => {
+  try{
+    var offers = null;
+    const {query} = req.body
+    if (!query) {
+      offers = await getAllOffers()
+    }
+    else {
+      offers = await searchOffers(query);
+    }
+    res.status(201).json(offers);
+  } catch(error) {
+    res.status(500).json({
+      public_message: 'Error in searching offers',
+      debug_message: error.message,
+    })
   }
+}
 
 
 }

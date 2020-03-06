@@ -24,11 +24,13 @@ const offerSchema = new Schema({
   price: {
     type: Number,
   },
-})
+});
 
 offerSchema.plugin(timestamp, {
   createdAt: 'created_at',
   updatedAt: 'updated_at',
-})
+});
+
+offerSchema.index({"title":"text", "description":"text"});
 
 module.exports = mongoose.model('Offer', offerSchema)
