@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose')
 
-const Offer = require('../../models/offer')
+const Offer = require('../../models/service')
 
 module.exports = {
   addOffer(newOfferData) {

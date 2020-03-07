@@ -1,5 +1,9 @@
 'use strict'
 
+// eslint-disable-next-line no-undef
+const { JWT_SECRET } = process.env
+const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
+
 /**
  * @swagger
  *  components:
@@ -24,10 +28,6 @@
  *            type: string
  *            format: email
  *            description: Email for the user, needs to be unique.
- *          avatar:
- *            type: string
- *          password:
- *            type: string
  *        example:
  *           first_name: John
  *           last_name: Doe
@@ -41,37 +41,57 @@ const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
+
   email: {
     type: String,
     required: true,
     unique: true,
     trim: true,
   },
+
   first_name: {
     type: String,
     trim: true,
   },
+
   last_name: {
     type: String,
     trim: true,
   },
-  password: {
-    type: String,
-  },
-  avatar: {
-    type: String,
-    trim: true,
-  },
-  google: {
-    id: {
-      type: String,
-      trim: true,
+
+  /**
+   * Account is optionnal, and if you have one, you can have many possibilities
+   * like `local`which is the normal `email` + `password` authentication way.
+   * You also can have a google account then in that cas you get an id and
+   * an avatar
+   */
+  accounts: [
+    {
+      type: {
+        type: String,
+        enum: USER_ACCOUNT_TYPES,
+      },
+
+      /**
+       * Generally the google id (if `google` type)
+       */
+      id: {
+        type: String,
+      },
+
+      /**
+       * Only if type is `local`
+       */
+      password: {
+        type: String,
+      },
+
+      avatar: {
+        type: String,
+        trim: true,
+      },
     },
-    picture: {
-      type: String,
-      trim: true,
-    },
-  },
+  ],
 })
 
 userSchema.plugin(timestamp, {
@@ -85,8 +105,7 @@ userSchema.methods = {
       {
         _id: this._id,
       },
-      // eslint-disable-next-line no-undef
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       {
         expiresIn: '1h',
       },
@@ -98,7 +117,6 @@ userSchema.methods = {
       email: this.email,
       first_name: this.first_name,
       last_name: this.last_name,
-      google: this.google,
       token: `Bearer ${this.createToken()}`,
     }
   },

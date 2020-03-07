@@ -2,7 +2,7 @@
 
 const coachRouter = require('express').Router()
 
-const { readCoaches } = require('../../controllers/coach/index.js')
+const { readCoaches } = require('../controllers/coach/index.js')
 
 coachRouter.get('/', readCoaches)
 

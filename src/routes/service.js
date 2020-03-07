@@ -1,14 +1,14 @@
 'use strict'
 
-const offersRouter = require('express').Router()
+const serviceRouter = require('express').Router()
 
 const {
   createOffer,
   readOffers,
   getOfferById,
-} = require('../../controllers/offer/index.js')
+} = require('../controllers/offer/index.js')
 
-offersRouter
+serviceRouter
   .get('/', readOffers)
   .post('/', createOffer)
   .get('/:id', getOfferById)
@@ -16,4 +16,4 @@ offersRouter
   /*.get('/:id', readUser)
   .delete('/:id', deleteUser)*/
 
-module.exports = offersRouter
+module.exports = serviceRouter

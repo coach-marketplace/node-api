@@ -2,16 +2,16 @@
 
 const userRouter = require('express').Router()
 
-const { uploadUserAvatar } = require('../../middleware/file-upload')
+// const { uploadUserAvatar } = require('../middleware/file-upload')
 
 const {
-  readUsers,
   createUser,
-  readUser,
+  retrieveUsers,
+  retrieveUser,
   updateUser,
   deleteUser,
-  addUserAvatar,
-} = require('../../controllers/user/index.js')
+  // addUserAvatar,
+} = require('../controllers/user')
 
 /**
  * @swagger
@@ -21,23 +21,6 @@ const {
  */
 
 userRouter
-  /**
-   * @swagger
-   * path:
-   *  /users:
-   *    get:
-   *      summary: Get all users
-   *      tags: [Users]
-   *      responses:
-   *        "200":
-   *          description: Get an array of users from database
-   *          content:
-   *            application/json:
-   *              schema:
-   *                $ref: '#/components/schemas/User'
-   */
-  .get('/', readUsers)
-
   /**
    * @swagger
    * path:
@@ -73,6 +56,23 @@ userRouter
   /**
    * @swagger
    * path:
+   *  /users:
+   *    get:
+   *      summary: Get all users
+   *      tags: [Users]
+   *      responses:
+   *        "200":
+   *          description: Get an array of users from database
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/User'
+   */
+  .get('/', retrieveUsers)
+
+  /**
+   * @swagger
+   * path:
    *  /users/:id:
    *    get:
    *      summary: Get one user
@@ -89,9 +89,10 @@ userRouter
    *              schema:
    *                $ref: '#/components/schemas/User'
    */
-  .get('/:id', readUser)
+  .get('/:id', retrieveUser)
+
   .put('/:id', updateUser)
   .delete('/:id', deleteUser)
-  .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
+// .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
 
 module.exports = userRouter

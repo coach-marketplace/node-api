@@ -3,31 +3,47 @@
 const { pick } = require('lodash')
 
 const { encryptString } = require('../../_utils/hashing')
-const { addUser, getUserByEmail, editUser } = require('../user/queries.js')
+const { create, read, editUser } = require('../user/queries.js')
+const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 
 module.exports = {
-  register: async (req, res) => {
+  registerLocal: async (req, res) => {
     try {
-      const { email, firstName, lastName, password } = req.body
+      const {
+        body: { email, first_name, last_name, password },
+      } = req
       if (!email || !password) {
         throw new Error('Email and Password are required')
       }
-      let user = (await getUserByEmail(email, { withPassword: true }))[0]
-      if (user && user.password) {
-        throw new Error('Already register')
-      }
-      if (user && !user.password) {
-        user = await editUser(user._id, {
+      let user = (await read({ email }, { withPassword: true }))[0]
+
+      if (user) {
+        if (
+          user.accounts &&
+          user.accounts.find(({ type }) => type === USER_ACCOUNT_TYPE.LOCAL)
+        ) {
+          throw new Error('User already have a local account')
+        }
+        first_name && (user.first_name = first_name)
+        last_name && (user.last_name = last_name)
+        const newLocalAccount = {
+          type: USER_ACCOUNT_TYPE.LOCAL,
           password: await encryptString(password),
-        })
-      } else if (!user) {
-        user = await addUser({
+        }
+        if (!user.accounts) {
+          user.accounts = []
+        }
+        user.accounts.push(newLocalAccount)
+        user = await editUser(user._id, user)
+      } else {
+        user = await create({
           email,
-          firstName,
-          lastName,
+          first_name,
+          last_name,
           password: await encryptString(password),
         })
       }
+
       res.status(201).json(user)
     } catch (error) {
       res.status(500).json({

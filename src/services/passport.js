@@ -6,13 +6,14 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 
 const { signToken } = require('../_utils/jwt')
 const { compareHash } = require('../_utils/hashing')
+const { USER_ACCOUNT_TYPE } = require('../_utils/constants')
 
 // eslint-disable-next-line no-undef
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env
 
 const {
   addUser,
-  getUserByEmail,
+  read,
   editUser,
   getUserById,
 } = require('../controllers/user/queries')
@@ -58,14 +59,17 @@ passport.use(
     },
     async (email, password, done) => {
       try {
-        const user = (await getUserByEmail(email, { withPassword: true }))[0]
-        if (!user) {
+        const user = (await read({ email }, { withPassword: true }))[0]
+        if (!user || !user.accounts || !user.accounts.length) {
           throw new Error('Email or password incorrect')
         }
-        if (!user.password) {
+        const localAccount = user.accounts.find(
+          ({ type }) => type === USER_ACCOUNT_TYPE.LOCAL,
+        )
+        if (!user.accounts && !user.accounts.length && !localAccount) {
           throw new Error('Email or password incorrect')
         }
-        const isMatch = await compareHash(password, user.password)
+        const isMatch = await compareHash(password, localAccount.password)
         if (!isMatch) {
           throw new Error('Email or password incorrect')
         }
