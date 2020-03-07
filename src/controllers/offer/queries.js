@@ -19,10 +19,11 @@ module.exports = {
   },
 
   getAllOffers() {
-    return Offer.find();
+    return Offer.find()
   },
 
   getOffer(id) {
+<<<<<<< HEAD
     return Offer.findOne({_id:new mongoose.Types.ObjectId(id)});
   },
 
@@ -30,7 +31,8 @@ module.exports = {
     var query  = Offer.find( { $text: { $search: query } } );
     var offers = await query.exec().then(results => {return results}); 
     return offers;
+=======
+    return Offer.findOne({ _id: new mongoose.Types.ObjectId(id) })
+>>>>>>> 2f096211f61c0874938c6f5d01fa924bc06b74ae
   },
-
-
 }
