@@ -5,12 +5,12 @@ const currencyRouter = require('express').Router()
 const {
   retrieveCurrencies,
   createCurrency,
-  retireveCurrency,
+  retrieveCurrency,
 } = require('../controllers/currency')
 
 currencyRouter
   .get('/', retrieveCurrencies)
   .post('/', createCurrency)
-  .get('/:id', retireveCurrency)
+  .get('/:id', retrieveCurrency)
 
 module.exports = currencyRouter
