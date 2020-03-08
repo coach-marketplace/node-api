@@ -15,6 +15,11 @@ const Schema = mongoose.Schema
 
 const currencySchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
+
+  /**
+   * Name is the unique name base on ISO
+   * e.g. => 'EUR'
+   */
   name: {
     type: String,
     required: true,
@@ -22,11 +27,25 @@ const currencySchema = new Schema({
     uppercase: true,
     unique: true,
   },
+
+  /**
+   * Label is the label that we want to display
+   */
   label: {
     type: String,
     required: true,
     trim: true,
     unique: true,
+  },
+
+  /**
+   * Symbol is the sign of the currency
+   * e.g. '€'
+   */
+  symbol: {
+    type: String,
+    required: true,
+    trim: true,
   },
 })
 

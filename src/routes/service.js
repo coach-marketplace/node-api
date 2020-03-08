@@ -3,17 +3,14 @@
 const serviceRouter = require('express').Router()
 
 const {
-  createOffer,
-  readOffers,
-  getOfferById,
-} = require('../controllers/offer/index.js')
+  createService,
+  readServices,
+  getServiceById,
+} = require('../controllers/service')
 
 serviceRouter
-  .get('/', readOffers)
-  .post('/', createOffer)
-  .get('/:id', getOfferById)
-/*.put('/:id', updateUser)
-  /*.get('/:id', readUser)
-  .delete('/:id', deleteUser)*/
+  .get('/', readServices)
+  .post('/', createService)
+  .get('/:id', getServiceById)
 
 module.exports = serviceRouter

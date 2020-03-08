@@ -16,11 +16,7 @@ module.exports = {
     return newCurrency.save()
   },
 
-  getAll() {
-    return Currency.find()
-  },
-
-  getById(id) {
-    return Currency.findOne({ _id: new mongoose.Types.ObjectId(id) })
+  read(query = {}) {
+    return Currency.find(query)
   },
 }

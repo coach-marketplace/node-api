@@ -21,6 +21,10 @@ const serviceSchema = new Schema({
     type: String,
     trim: true,
   },
+  /**
+   * Price is store in cent
+   * so 1€ is store like this: 100
+   */
   price: {
     type: Number,
   },
@@ -36,4 +40,4 @@ serviceSchema.plugin(timestamp, {
   updatedAt: 'updated_at',
 })
 
-module.exports = mongoose.model('Offer', serviceSchema)
+module.exports = mongoose.model('Service', serviceSchema)

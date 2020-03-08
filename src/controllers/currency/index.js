@@ -1,6 +1,6 @@
 'use strict'
 
-const { getAll, getById, create } = require('./queries')
+const { read, create } = require('./queries')
 
 module.exports = {
   createCurrency: async (req, res) => {
@@ -24,7 +24,7 @@ module.exports = {
 
   retrieveCurrencies: async (req, res) => {
     try {
-      const currencies = await getAll()
+      const currencies = await read()
 
       res.status(201).json(currencies)
     } catch (error) {
@@ -41,7 +41,7 @@ module.exports = {
         params: { id },
       } = req
 
-      const currency = await getById(id)
+      const currency = (await read({ _id: id }))[0]
 
       res.status(201).json(currency)
     } catch (error) {
