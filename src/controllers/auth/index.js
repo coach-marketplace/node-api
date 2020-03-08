@@ -60,7 +60,7 @@ module.exports = {
   getMe: async (req, res) => {
     try {
       res.status(201).json({
-        user: pick(req.user, ['email', 'first_name', 'last_name', '_id']),
+        ...pick(req.user, ['email', 'first_name', 'last_name', '_id']),
       })
     } catch (error) {
       res.status(500).json({
