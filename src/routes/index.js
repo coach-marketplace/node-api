@@ -6,6 +6,7 @@ const userRouter = require('./user')
 // const coachRouter = require('./coach')
 const serviceRouter = require('./service')
 const currencyRouter = require('./currency')
+const langRouter = require('./lang')
 
 module.exports = app => {
   app
@@ -15,4 +16,7 @@ module.exports = app => {
     // .use('/v1/coach', coachRouter)
     .use('/v1/service', serviceRouter)
     .use('/v1/currency', currencyRouter)
+    // Admin routes
+    // TODO: secure admin route by using middleware
+    .use('/v1/lang', langRouter)
 }
