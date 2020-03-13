@@ -59,6 +59,11 @@ const userSchema = new Schema({
     trim: true,
   },
 
+  phone: {
+    type: String,
+    trim: true,
+  },
+
   /**
    * Account is optionnal, and if you have one, you can have many possibilities
    * like `local`which is the normal `email` + `password` authentication way.
