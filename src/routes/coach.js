@@ -2,8 +2,8 @@
 
 const coachRouter = require('express').Router()
 
-const { readCoaches } = require('../controllers/coach/index.js')
+const { retrieveCoaches } = require('../controllers/coach')
 
-coachRouter.get('/', readCoaches)
+coachRouter.get('/', retrieveCoaches)
 
 module.exports = coachRouter

@@ -26,7 +26,7 @@ const contactSchema = new Schema({
   },
 
   /**
-   * Lead is the contact
+   * Lead is the contact that the owner has
    */
   lead: {
     type: mongoose.Schema.Types.ObjectId,

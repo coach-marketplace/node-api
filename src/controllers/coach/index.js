@@ -6,7 +6,7 @@ module.exports = {
    *
    * A coach is a user which at least one listing
    */
-  readCoaches: async (_req, res) => {
+  retrieveCoaches: async (_req, res) => {
     try {
       res.status(200).json([]) // Actually there is no listing set so no coach
     } catch (error) {
