@@ -80,4 +80,23 @@ module.exports = {
       })
     }
   },
+
+  getCoachCustomers: async (req, res) => {
+    try {
+      const { user: coach } = req
+
+      const leads = await readContact({ owner: coach._id })
+
+      const ids = leads.map(contact => contact.lead)
+
+      const customers = await readUser({ _id: { $in: ids } })
+
+      res.status(200).json(customers)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Error in adding customer to coach',
+        debug_message: error.message,
+      })
+    }
+  },
 }

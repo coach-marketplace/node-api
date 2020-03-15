@@ -2,10 +2,17 @@
 
 const coachRouter = require('express').Router()
 
-const { retrieveCoaches, addCustomerToCoach } = require('../controllers/coach')
+const { authJWT } = require('../middleware/auth')
+const { onlyMe } = require('../middleware/accessRight')
+const {
+  retrieveCoaches,
+  addCustomerToCoach,
+  getCoachCustomers,
+} = require('../controllers/coach')
 
 coachRouter
   .get('/', retrieveCoaches)
-  .post('/:id/add-customer', addCustomerToCoach)
+  .get('/:id/customers', authJWT, onlyMe, getCoachCustomers)
+  .post('/:id/customers', authJWT, onlyMe, addCustomerToCoach)
 
 module.exports = coachRouter
