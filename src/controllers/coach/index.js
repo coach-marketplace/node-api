@@ -107,24 +107,24 @@ module.exports = {
         params: { customerId },
       } = req
 
-      const lead = (
+      const contact = (
         await readContact({ owner: coach._id, lead: customerId })
       )[0]
 
-      if (!lead) {
-        throw new Error('Customer not found')
+      if (!contact) {
+        throw new Error('Customer not found 1')
       }
 
-      const customer = (await readUser({ _id: lead._id }))[0]
+      const customer = (await readUser({ _id: contact.lead }))[0]
 
       if (!customer) {
-        throw new Error('Customer not found')
+        throw new Error('Customer not found 2')
       }
 
       res.status(200).json(customer)
     } catch (error) {
       res.status(500).json({
-        public_message: 'Error in adding customer to coach',
+        public_message: 'Error in getting customer to coach',
         debug_message: error.message,
       })
     }
