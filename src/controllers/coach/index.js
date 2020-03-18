@@ -99,4 +99,34 @@ module.exports = {
       })
     }
   },
+
+  getCoachCustomer: async (req, res) => {
+    try {
+      const {
+        user: coach,
+        params: { customerId },
+      } = req
+
+      const lead = (
+        await readContact({ owner: coach._id, lead: customerId })
+      )[0]
+
+      if (!lead) {
+        throw new Error('Customer not found')
+      }
+
+      const customer = (await readUser({ _id: lead._id }))[0]
+
+      if (!customer) {
+        throw new Error('Customer not found')
+      }
+
+      res.status(200).json(customer)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Error in adding customer to coach',
+        debug_message: error.message,
+      })
+    }
+  },
 }
