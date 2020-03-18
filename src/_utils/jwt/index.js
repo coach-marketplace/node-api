@@ -7,7 +7,7 @@ const secret = process.env.JWT_SECRET
 module.exports = {
   signToken: data => {
     return jwt.sign(data, secret, {
-      expiresIn: '24h',
+      expiresIn: 60 * 60 * 24,
     })
   },
   verifyToken: token => jwt.verify(token, secret),
