@@ -10,7 +10,7 @@ chai.use(chaiHttp)
 const app = require('../../src/app')
 
 describe('App', () => {
-  it('Ping the app', () =>
+  it('Should ping the app', () =>
     chai
       .request(app)
       .get('/ping')

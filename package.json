@@ -8,7 +8,7 @@
     "start:stg": "NODE_ENV=staging cross-env npm run start",
     "start": "nodemon src/server.js",
     "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
-    "test": "NODE_ENV=test mocha --recursive || true"
+    "test": "NODE_ENV=test mocha --config .mocharc.js"
   },
   "license": "ISC",
   "dependencies": {
