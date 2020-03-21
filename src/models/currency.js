@@ -18,7 +18,7 @@ const currencySchema = new Schema({
 
   /**
    * Name is the unique name base on ISO
-   * e.g. => 'EUR'
+   * e.g. => 'USD'
    */
   name: {
     type: String,
@@ -30,6 +30,7 @@ const currencySchema = new Schema({
 
   /**
    * Label is the label that we want to display
+   * e.g => United States dollar
    */
   label: {
     type: String,
