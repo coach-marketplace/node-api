@@ -5,10 +5,12 @@
   "scripts": {
     "lint": "eslint src/**",
     "start:local": "NODE_ENV=local cross-env npm run start",
+    "start:dev": "NODE_ENV=dev cross-env npm run start",
     "start:stg": "NODE_ENV=staging cross-env npm run start",
     "start": "nodemon --inspect src/server.js",
     "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
-    "test": "NODE_ENV=test mocha --config .mocharc.js"
+    "test:local": "NODE_ENV=test mocha --config .mocharc.js",
+    "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js"
   },
   "license": "ISC",
   "dependencies": {
