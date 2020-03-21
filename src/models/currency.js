@@ -41,7 +41,7 @@ const currencySchema = new Schema({
 
   /**
    * Symbol is the sign of the currency
-   * e.g. '€'
+   * e.g. '$'
    */
   symbol: {
     type: String,
