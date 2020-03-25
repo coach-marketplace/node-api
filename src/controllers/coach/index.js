@@ -62,8 +62,7 @@ module.exports = {
        * If the contact already exist, just send it back
        */
       if (leadAsCoachContact) {
-        res.status(200).json(leadAsCoachContact)
-        return
+        throw new Error('This contact is already your customer')
       }
 
       const newContact = await createContact({
