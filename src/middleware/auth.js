@@ -4,6 +4,7 @@ const { verifyToken } = require('../_utils/jwt')
 const passport = require('passport')
 
 module.exports = {
+  // TODO: ==> rename requireAuth
   isAuth: (req, res, next) => {
     try {
       const token = req.headers.authorization.split(' ')[1]
@@ -23,5 +24,6 @@ module.exports = {
   authLocal: passport.authenticate('local', {
     session: false,
   }),
+  // TODO: ==> rename requireAuth
   authJWT: passport.authenticate('jwt', { session: false }),
 }
