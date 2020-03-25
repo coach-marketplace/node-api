@@ -5,7 +5,7 @@ const userRouter = require('express').Router()
 // const { uploadUserAvatar } = require('../middleware/file-upload')
 
 const {
-  createUser,
+  createNewUser,
   retrieveUsers,
   retrieveUser,
   updateUser,
@@ -51,7 +51,7 @@ userRouter
    *              schema:
    *                $ref: '#/components/schemas/User'
    */
-  .post('/', createUser)
+  .post('/', createNewUser)
 
   /**
    * @swagger

@@ -3,10 +3,10 @@
 const authRouter = require('express').Router()
 
 const { authJWT, authLocal } = require('../middleware/auth')
-const { getMe, registerLocal, login } = require('../controllers/auth')
+const { registerLocal, login } = require('../controllers/auth')
 
 authRouter
-  .get('/me', authJWT, getMe)
+  // .get('/me', authJWT, getMe)
   .post('/register-local', registerLocal)
   .post('/login-local', authLocal, login)
 // .get('/login-google', authGoogle)

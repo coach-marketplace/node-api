@@ -1,25 +1,25 @@
 'use strict'
 
-const { encryptString } = require('../../_utils/hashing')
+// const { encryptString } = require('../../_utils/hashing')
 const {
-  create,
+  // create,
   getUsers,
   getUserById,
   editUser,
   removeUserById,
 } = require('./queries.js')
+const { createUser, retrieveUsers } = require('./handlers')
 
 module.exports = {
-  createUser: async (req, res) => {
+  createNewUser: async (req, res) => {
     try {
-      const { email, firstName, lastName, password } = req.body
+      const users = await retrieveUsers({ email: req.body.email })
 
-      const newUserData = { email }
-      firstName && (newUserData.first_name = firstName)
-      lastName && (newUserData.last_name = lastName)
-      password && (newUserData.password = await encryptString(password))
+      if (users.length) {
+        throw new Error('User already created')
+      }
 
-      const newUser = await create(newUserData)
+      const newUser = await createUser(req.body)
 
       res.status(201).json(newUser)
     } catch (error) {
