@@ -1,7 +1,7 @@
 'use strict'
 
 // eslint-disable-next-line no-undef
-const { JWT_SECRET } = process.env
+// const { JWT_SECRET } = process.env
 const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
 
 /**
@@ -11,30 +11,27 @@ const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
  *      User:
  *        type: object
  *        required:
- *          - _id
  *          - email
  *        properties:
  *          _id:
  *            type: objectId
- *          created_at:
+ *          createdAt:
  *            type: timestamp
- *          updated_at:
+ *          updatedAt:
  *            type: timestamp
- *          first_name:
+ *          firstName:
  *            type: string
- *          last_name:
+ *          lastName:
  *            type: string
- *          email:
- *            type: string
- *            format: email
- *            description: Email for the user, needs to be unique.
+ *          accounts:
+ *            type: array
  *        example:
- *           first_name: John
- *           last_name: Doe
  *           email: john.doe@email.com
+ *           firstName: John
+ *           lastName: Doe
  */
 
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
@@ -49,12 +46,12 @@ const userSchema = new Schema({
     trim: true,
   },
 
-  first_name: {
+  firstName: {
     type: String,
     trim: true,
   },
 
-  last_name: {
+  lastName: {
     type: String,
     trim: true,
   },
@@ -65,7 +62,7 @@ const userSchema = new Schema({
   },
 
   /**
-   * Account is optionnal, and if you have one, you can have many possibilities
+   * Account is optional, and if you have one, you can have many possibilities
    * like `local`which is the normal `email` + `password` authentication way.
    * You also can have a google account then in that cas you get an id and
    * an avatar
@@ -99,30 +96,17 @@ const userSchema = new Schema({
   ],
 })
 
-userSchema.plugin(timestamp, {
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-})
+userSchema.plugin(timestamp)
 
 userSchema.methods = {
-  createToken() {
-    return jwt.sign(
-      {
-        _id: this._id,
-      },
-      JWT_SECRET,
-      {
-        expiresIn: '1h',
-      },
-    )
-  },
-  getSoftData() {
+  getLightData() {
     return {
-      _id: this._id,
+      id: this._id,
       email: this.email,
-      first_name: this.first_name,
-      last_name: this.last_name,
-      token: `Bearer ${this.createToken()}`,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      phone: this.phone,
+      accounts: this.accounts,
     }
   },
 }
