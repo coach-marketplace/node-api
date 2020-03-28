@@ -12,9 +12,9 @@ const {
 } = require('../controllers/coach')
 
 coachRouter
-  .get('/', retrieveCoaches)
-  .get('/:id/customers', authJWT, onlyMe, getCoachCustomers)
-  .post('/:id/customers', authJWT, onlyMe, addCustomerToCoach)
-  .get('/:id/customers/:customerId', authJWT, onlyMe, getCoachCustomer)
+// .get('/', retrieveCoaches)
+// .get('/:id/customers', authJWT, onlyMe, getCoachCustomers)
+// .post('/:id/customers', authJWT, onlyMe, addCustomerToCoach)
+// .get('/:id/customers/:customerId', authJWT, onlyMe, getCoachCustomer)
 
 module.exports = coachRouter

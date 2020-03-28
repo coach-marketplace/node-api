@@ -10,5 +10,5 @@ module.exports = {
       expiresIn: '7d',
     })
   },
-  verifyToken: token => jwt.verify(token, secret),
+  // verifyToken: token => jwt.verify(token, secret),
 }
