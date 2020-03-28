@@ -7,20 +7,24 @@ const Schema = mongoose.Schema
 
 const serviceSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
+
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
+
   title: {
     type: String,
     required: true,
     trim: true,
   },
+
   description: {
     type: String,
     trim: true,
   },
+
   /**
    * Price is store in cent
    * so 1€ is store like this: 100
@@ -28,6 +32,7 @@ const serviceSchema = new Schema({
   price: {
     type: Number,
   },
+
   currency: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Currency',
@@ -35,9 +40,6 @@ const serviceSchema = new Schema({
   },
 })
 
-serviceSchema.plugin(timestamp, {
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-})
+serviceSchema.plugin(timestamp)
 
 module.exports = mongoose.model('Service', serviceSchema)

@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read } = require('./queries')
+const { create, read, searchServices } = require('./queries')
 const { read: readCurrency } = require('../currency/queries')
 const { read: readUser } = require('../user/queries')
 
@@ -96,6 +96,27 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Error in getting all offers',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  /**
+   * Search offers with query
+   **/
+  searchOffers: async (req, res) => {
+    try {
+      let services = null
+      const { query } = req.body
+      if (!query) {
+        services = await read()
+      } else {
+        services = await searchServices(query)
+      }
+      res.status(201).json(services)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Error in searching services',
         debug_message: error.message,
       })
     }

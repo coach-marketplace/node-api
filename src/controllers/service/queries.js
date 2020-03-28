@@ -22,4 +22,12 @@ module.exports = {
   read(query = {}) {
     return Service.find(query)
   },
+
+  async searchServices(query) {
+    const q = Service.find({ $text: { $search: query } })
+    const services = await q.exec().then(results => {
+      return results
+    })
+    return services
+  },
 }
