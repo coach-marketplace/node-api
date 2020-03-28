@@ -11,11 +11,13 @@ const { getUserById } = require('../controllers/user/queries')
 const { log } = require('../controllers/auth/handlers')
 
 passport.serializeUser((user, done) => {
+  console.log('serializeUser', user)
   done(null, user._id)
 })
 
 passport.deserializeUser(async (userId, done) => {
   try {
+    console.log('deserializeUser', userId)
     const user = await getUserById(userId)
     done(null, user)
   } catch (error) {
@@ -31,11 +33,7 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const user = (await getUserById(payload._id))[0]
-        if (!user) {
-          return done(null, false)
-        }
-        return done(null, user)
+        return done(null, payload)
       } catch (error) {
         return done(error, false)
       }
@@ -55,6 +53,7 @@ passport.use(
 
         return done(null, user)
       } catch (error) {
+        console.log('+++')
         return done(error)
       }
     },
