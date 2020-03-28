@@ -11,35 +11,50 @@ const app = require('../../../src/app')
 
 chai.use(chaiHttp)
 
+// TODO: fix set token to continue testing
 class HTTP {
   static init() {
+    this.client = chai
     this.baseUrl = `/v1/`
+    this.token = null
+    this.clientWithAuthorization = function() {
+      if (this.token) {
+        console.log('CLIENT', this.client)
+        return this.client.set('authorization', this.token)
+      }
+      return this.client
+    }
+  }
+
+  static setToken(token) {
+    this.token = token
   }
 
   static ping() {
-    return chai.request(app).get(`ping`)
+    return this.client.request(app).get(`ping`)
   }
 
   static get(endPoint) {
-    return chai.request(app).get(`${this.baseUrl}${endPoint}`)
+    return this.clientWithAuthorization()
+      .request(app)
+      .get(`${this.baseUrl}${endPoint}`)
   }
 
   static post(endPoint, body) {
-    return chai
+    return this.clientWithAuthorization()
       .request(app)
       .post(`${this.baseUrl}${endPoint}`)
       .send(body)
   }
 
   static put(endPoint, body) {
-    return chai
-      .request(app)
+    return this.clientWithAuthorization()
       .put(`${this.baseUrl}${endPoint}`)
       .send(body)
   }
 
   static delete(endPoint) {
-    return chai.request(app).delete(`${this.baseUrl}${endPoint}`)
+    return this.clientWithAuthorization().delete(`${this.baseUrl}${endPoint}`)
   }
 }
 
