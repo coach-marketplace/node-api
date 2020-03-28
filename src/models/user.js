@@ -101,7 +101,7 @@ userSchema.plugin(timestamp)
 userSchema.methods = {
   getLightData() {
     return {
-      id: this._id,
+      _id: this._id,
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
