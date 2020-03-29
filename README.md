@@ -9,38 +9,60 @@ This backend is made with NodeJS
 
 ## Run the project
 
-Local:
+You can run the project using different environment mode.
+
+#### Local:
+
+> In this case you need to have mongodb running on `27017`, you don't need to
+> have an internet connection to make it work except for some services like
+> Google.
 
 ```
-yarn run start:local
+npm run start:local
 ```
 
-Staging:
+#### Dev:
 
-TBD...
+> Dev is the same of local but the difference is the DB is on Mongo Atlas so
+> you don't need to have it running locally.
 
-Production:
-
-TBD...
+```
+npm run start:dev
+```
 
 ## Launch tests
 
+#### Local:
+
+> Running the test locally, you need to have mongodb running on `27017` and you
+> don't need an internet connection
+
 ```
-yarn run test
+npm run test:local
+```
+
+#### Cloud:
+
+> Running test using the database on Mongo Atlas, use for Github actions
+
+```
+npm run test:cloud
 ```
 
 ## Run prettier to format code
 
 ```
-yarn prettier
+npm run prettier
 ```
 
 ## Lint code
 
 ```
-yarn lint
+npm run lint
 ```
 
 ## Documentation
 
-We use Swagger to document the API, when the app is running, you can go on `http://localhost:5555/doc` to read it.
+We use Swagger to document the API, when the app is running locally, you can go on `http://localhost:5555/doc` to read it.
+
+You will also find documentation on the Wiki.
