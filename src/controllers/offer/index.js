@@ -1,5 +1,7 @@
 'use strict'
 
+const axios = require('axios');
+
 const {
   addOffer,
   getAllOffers,
@@ -13,15 +15,21 @@ module.exports = {
    */
   createOffer: async (req, res) => { 
     try {
-      const { coach, title, description, price } = req.body
+      const { coach, title, description, price, address } = req.body
+      //get lon and lat from address
+      axios.get("https://nominatim.openstreetmap.org/search/q="+address+"?format=json")
+        .then(response => 
+            console.log(response)
+        );
+
       const newOfferData = {
         coach: coach,
         title: title,
         description: description,
         price: price,
+        address: address,
+        location: [50.8270397,4.3721979], //test: this is Flagey square, Ixelles
       }
-      /*description && (newCoachData.description = description)
-      displayName && (newCoachData.displayName = displayName)*/
       const newOffer = await addOffer(newOfferData)
       res.status(201).json(newOffer)
     } catch (error) {

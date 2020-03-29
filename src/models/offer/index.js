@@ -24,6 +24,20 @@ const offerSchema = new Schema({
   price: {
     type: Number,
   },
+  adress: {
+    type: String,
+  },
+  location: {
+    type: {
+      type: String, 
+      enum: ['Point'], 
+      required: true
+    },
+    coordinates: {
+      type: [Number], //always [long, lat]
+      required: true
+    }
+  }
 });
 
 offerSchema.plugin(timestamp, {
