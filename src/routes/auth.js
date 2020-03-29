@@ -2,13 +2,13 @@
 
 const authRouter = require('express').Router()
 
-const { authJWT, authLocal } = require('../../middleware/auth')
-const { getMe, register, login } = require('../../controllers/auth')
+const { requireJWTAuth, authLocal } = require('../middleware/auth')
+const { registerLocal, login, getAuthUser } = require('../controllers/auth')
 
 authRouter
-  .get('/me', authJWT, getMe)
-  .post('/register', register)
-  .post('/login', authLocal, login)
+  .get('/me', requireJWTAuth, getAuthUser)
+  .post('/register-local', registerLocal)
+  .post('/login-local', authLocal, login)
 // .get('/login-google', authGoogle)
 // .get('/google/callback', authGoogle, (req, res) => {
 // console.log('USER', req.user)
