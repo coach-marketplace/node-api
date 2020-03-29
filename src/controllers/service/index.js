@@ -29,20 +29,21 @@ module.exports = {
         throw new Error('Error in coach')
       }
 
+      // Todo: re add the currency check
       /**
        * Check if currency name is correct in DB
        */
-      const curr = await readCurrency({ name: currency })
-      if (!curr.length) {
-        throw new Error('Error in currency')
-      }
+      // const curr = await readCurrency({ name: currency })
+      // if (!curr.length) {
+      //   throw new Error('Error in currency')
+      // }
 
       const newServiceData = {
         user: user[0]._id,
         title: title,
         description: description,
         price: price,
-        currency: curr[0]._id,
+        // currency: curr[0]._id,
       }
 
       const newService = await create(newServiceData)

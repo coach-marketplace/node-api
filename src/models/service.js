@@ -33,10 +33,10 @@ const serviceSchema = new Schema({
     type: Number,
   },
 
+  // TODO: Make the currency required
   currency: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Currency',
-    required: true,
   },
 })
 
