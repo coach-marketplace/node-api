@@ -18,7 +18,15 @@ module.exports = {
   //     })
   //   }
   // },
-  requireJWTAuth: passport.authenticate('jwt', { session: false }),
+  requireJWTAuth: function (req, res, next) {
+    passport.authenticate('jwt', function (_err, user) {
+      if (!user) {
+        res.status(401).json({ message: 'Unauthorized' })
+      }
+      req.user = user
+      return next()
+    })(req, res, next)
+  },
   authGoogle: passport.authenticate('google', { scope: ['profile', 'email'] }),
   authLocal: passport.authenticate('local', { session: false }),
 }
