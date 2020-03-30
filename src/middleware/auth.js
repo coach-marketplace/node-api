@@ -1,32 +1,28 @@
 'use strict'
 
-// const { verifyToken } = require('../_utils/jwt')
 const passport = require('passport')
 
 module.exports = {
-  // TODO: ==> rename requireAuth
-  // isAuth: (req, res, next) => {
-  //   try {
-  //     const token = req.headers.authorization.split(' ')[1]
-  //     const decoded = verifyToken(token)
-  //     req.authUser = decoded
-  //     next()
-  //   } catch (error) {
-  //     res.status(401).json({
-  //       public_message: 'Unauthorized',
-  //       debug_message: error.message,
-  //     })
-  //   }
-  // },
-  requireJWTAuth: function (req, res, next) {
-    passport.authenticate('jwt', function (_err, user) {
+  requireJWTAuth: (req, res, next) => {
+    passport.authenticate('jwt', (_err, user) => {
       if (!user) {
         res.status(401).json({ message: 'Unauthorized' })
       }
       req.user = user
+
       return next()
     })(req, res, next)
   },
+
   authGoogle: passport.authenticate('google', { scope: ['profile', 'email'] }),
-  authLocal: passport.authenticate('local', { session: false }),
+
+  authLocal: (req, res, next) => {
+    passport.authenticate('local', { session: false }, (error) => {
+      if (error) {
+        res.status(500).json({ message: error.message })
+      }
+
+      return next()
+    })(req, res, next)
+  },
 }
