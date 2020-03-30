@@ -17,10 +17,11 @@ module.exports = {
   authGoogle: passport.authenticate('google', { scope: ['profile', 'email'] }),
 
   authLocal: (req, res, next) => {
-    passport.authenticate('local', { session: false }, (error) => {
+    passport.authenticate('local', { session: false }, (error, user) => {
       if (error) {
         res.status(500).json({ message: error.message })
       }
+      req.user = user
 
       return next()
     })(req, res, next)
