@@ -67,13 +67,14 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       const {
-        body: { email, firstName, lastName },
+        body: { email, firstName, lastName, phone },
         params: { id },
       } = req
       const updatedData = {}
       email && (updatedData.email = email)
-      firstName && (updatedData.first_name = firstName)
-      lastName && (updatedData.last_name = lastName)
+      firstName && (updatedData.firstName = firstName)
+      lastName && (updatedData.lastName = lastName)
+      phone && (updatedData.phone = phone);
       // password && (updatedData.password = await encryptString(password))
       const newUser = await editUser(id, updatedData)
       res.status(200).json(newUser)
