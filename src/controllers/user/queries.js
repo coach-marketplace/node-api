@@ -71,9 +71,10 @@ module.exports = {
   },
 
   editUser(userId, newUserData) {
-    return User.findOneAndUpdate({ _id: userId }, newUserData, {
-      new: true,
-    })
+    return User.findOneAndUpdate({ _id: userId }, 
+      {$set:newUserData}, 
+      {new: true}
+      )
   },
 
   delOne(query) {

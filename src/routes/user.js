@@ -91,7 +91,7 @@ userRouter
    */
   .get('/:id', retrieveUser)
 
-  .put('/:id', updateUser)
+  .post('/:id', updateUser)
   .delete('/:id', deleteUser)
 // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
 
