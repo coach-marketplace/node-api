@@ -18,7 +18,7 @@ const currencies = [
   },
 ]
 
-const queries = currencies.map(curr => ({
+const queries = currencies.map((curr) => ({
   updateOne: {
     filter: {
       name: curr.name,
@@ -41,12 +41,10 @@ module.exports = {
         useUnifiedTopology: true,
       })
       .then(async () => {
-        console.log(process.env.MONGO_DB_URI)
-
         await mongoose.model('Currency').bulkWrite(queries, { ordered: true })
         console.log('Database connected!')
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Database connection error:', error.message)
       })
   },
