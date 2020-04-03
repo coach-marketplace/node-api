@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 'use strict'
 
+global.log = require('./_utils/helpers').log
+
 require('dotenv').config({
   path: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,
 })
