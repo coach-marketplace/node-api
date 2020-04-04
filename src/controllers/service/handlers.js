@@ -1,6 +1,8 @@
 'use strict'
 
-const { create } = require('./queries')
+const ObjectId = require('mongoose').Types.ObjectId
+
+const { create, read } = require('./queries')
 const { CURRENCY } = require('../../_utils/constants')
 
 module.exports = {
@@ -11,6 +13,10 @@ module.exports = {
       throw new Error('Invalid currency')
     }
 
+    if (!ObjectId.isValid(owner)) {
+      throw new Error('Owner id is incorrect')
+    }
+
     const normalizedCurrency = {
       name: CURRENCY[data.currency].NAME,
       label: CURRENCY[data.currency].LABEL,
@@ -18,6 +24,7 @@ module.exports = {
     }
 
     const response = await create({
+      owner: data.owner,
       title: data.title,
       description: data.description,
       price: data.price,
@@ -25,6 +32,12 @@ module.exports = {
       coordinates: data.coordinates,
       currency: normalizedCurrency,
     })
+
+    return response
+  },
+
+  retrieveCoachServices: async (coachId) => {
+    const response = await read({ owner: coachId })
 
     return response
   },

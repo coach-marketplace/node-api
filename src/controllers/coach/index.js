@@ -1,6 +1,6 @@
 'use strict'
 
-const ObjectId = require('mongoose').Types.ObjectId
+// const ObjectId = require('mongoose').Types.ObjectId
 
 // const { read: readUser, create: createUser } = require('../user/queries')
 // const {
@@ -8,7 +8,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 //   create: createContact,
 // } = require('../contact/queries')
 // const { CONTACT_TYPES } = require('../../_utils/constants')
-const { addService } = require('../service/handlers')
+const { addService, retrieveCoachServices } = require('../service/handlers')
 
 module.exports = {
   addServiceToCoach: async (req, res) => {
@@ -31,6 +31,19 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Service can not be added',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  getCoachServices: async (req, res) => {
+    try {
+      const response = await retrieveCoachServices(req.user._id)
+
+      res.status(200).json(response)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Services can not be found',
         debug_message: error.message,
       })
     }
