@@ -5,7 +5,7 @@ const { save, read, delOne } = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 
 module.exports = {
-  createUser: async data => {
+  createUser: async (data) => {
     const { email, firstName, lastName, password } = data
 
     if (!email) throw new Error('Email is required')
@@ -27,13 +27,19 @@ module.exports = {
     return newUser
   },
 
-  retrieveUsers: async query => {
+  retrieveUsers: async (query) => {
     const users = await read(query)
 
     return users
   },
 
-  deleteUserById: async userId => {
+  retrieveUserById: async (id) => {
+    const user = await read({ _id: id })
+
+    return user
+  },
+
+  deleteUserById: async (userId) => {
     const response = await delOne({ _id: { $eq: userId } })
 
     return response
