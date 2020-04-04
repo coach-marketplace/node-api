@@ -13,7 +13,7 @@ module.exports = {
       throw new Error('Invalid currency')
     }
 
-    if (!ObjectId.isValid(owner)) {
+    if (!ObjectId.isValid(data.owner)) {
       throw new Error('Owner id is incorrect')
     }
 
