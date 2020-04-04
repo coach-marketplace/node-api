@@ -8,14 +8,11 @@
  * https://www.iso.org/iso-4217-currency-codes.html
  */
 
-const mongoose = require('mongoose')
+const Schema = require('mongoose').Schema
 
-const timestamp = require('mongoose-timestamp')
-const Schema = mongoose.Schema
+const { CURRENCY } = require('../_utils/constants')
 
 const currencySchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-
   /**
    * Name is the unique name base on ISO
    * e.g. => 'USD'
@@ -23,9 +20,7 @@ const currencySchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
-    uppercase: true,
-    unique: true,
+    enum: Object.keys(CURRENCY).map((key) => CURRENCY[key].NAME),
   },
 
   /**
@@ -35,8 +30,7 @@ const currencySchema = new Schema({
   label: {
     type: String,
     required: true,
-    trim: true,
-    unique: true,
+    enum: Object.keys(CURRENCY).map((key) => CURRENCY[key].LABEL),
   },
 
   /**
@@ -46,13 +40,8 @@ const currencySchema = new Schema({
   symbol: {
     type: String,
     required: true,
-    trim: true,
+    enum: Object.keys(CURRENCY).map((key) => CURRENCY[key].SYMBOL),
   },
 })
 
-currencySchema.plugin(timestamp, {
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-})
-
-module.exports = mongoose.model('Currency', currencySchema)
+module.exports = currencySchema

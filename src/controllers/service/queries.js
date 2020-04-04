@@ -6,16 +6,30 @@ const Service = require('../../models/service')
 
 module.exports = {
   create(data) {
-    console.log('data', data)
-    const { user, title, description, price, currency } = data
+    const {
+      owner,
+      title,
+      description,
+      price,
+      address,
+      coordinates,
+      currency,
+    } = data
+
     const newService = new Service({
       _id: new mongoose.Types.ObjectId(),
-      user: new mongoose.Types.ObjectId(user),
+      owner: new mongoose.Types.ObjectId(owner),
       title,
       description,
       price: Number(price),
-      currency: new mongoose.Types.ObjectId(currency),
+      address,
+      location: {
+        type: 'Point',
+        coordinates,
+      },
+      currency,
     })
+
     return newService.save()
   },
 
@@ -25,7 +39,7 @@ module.exports = {
 
   async searchServices(query) {
     const q = Service.find({ $text: { $search: query } })
-    const services = await q.exec().then(results => {
+    const services = await q.exec().then((results) => {
       return results
     })
     return services

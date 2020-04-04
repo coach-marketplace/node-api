@@ -2,16 +2,17 @@
 
 const coachRouter = require('express').Router()
 
-const { authJWT } = require('../middleware/auth')
-const { onlyMe } = require('../middleware/accessRight')
+const { requireJWTAuth } = require('../middleware/auth')
+// const { onlyMe } = require('../middleware/accessRight')
 const {
-  retrieveCoaches,
-  addCustomerToCoach,
-  getCoachCustomers,
-  getCoachCustomer,
+  // retrieveCoaches,
+  // addCustomerToCoach,
+  // getCoachCustomers,
+  // getCoachCustomer,
+  addServiceToCoach,
 } = require('../controllers/coach')
 
-coachRouter
+coachRouter.post('/:id/services/add', requireJWTAuth, addServiceToCoach)
 // .get('/', retrieveCoaches)
 // .get('/:id/customers', authJWT, onlyMe, getCoachCustomers)
 // .post('/:id/customers', authJWT, onlyMe, addCustomerToCoach)
