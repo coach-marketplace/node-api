@@ -10,7 +10,8 @@
     "start": "nodemon --inspect src/server.js",
     "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
     "test:local": "NODE_ENV=test mocha --config .mocharc.js",
-    "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js"
+    "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js",
+    "build": "NODE_ENV=production cross-env node src/server.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -43,5 +44,8 @@
     "mocha": "^7.1.0",
     "nodemon": "^2.0.0",
     "prettier": "2.0.2"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
