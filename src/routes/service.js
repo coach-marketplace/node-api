@@ -12,6 +12,6 @@ serviceRouter
   .get('/', readServices)
   .post('/', createService)
   .get('/:id', getServiceById)
-  .post('/search', getServiceById)
+  .post('/search', getServiceById) // TODO: use the right controller
 
 module.exports = serviceRouter

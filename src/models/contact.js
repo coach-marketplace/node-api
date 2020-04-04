@@ -1,6 +1,6 @@
 'use strict'
 
-const { CONTACT_TYPES } = require('../_utils/constants')
+const { CONTACT_TYPE } = require('../_utils/constants')
 
 /**
  * Contact represent a lead for a coach
@@ -40,7 +40,7 @@ const contactSchema = new Schema({
    */
   type: {
     type: String,
-    enum: CONTACT_TYPES,
+    enum: Object.values(CONTACT_TYPE),
   },
 })
 

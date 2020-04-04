@@ -5,10 +5,12 @@ const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
+const currencySchema = require('./currency')
+
 const serviceSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
 
-  user: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
@@ -33,10 +35,22 @@ const serviceSchema = new Schema({
     type: Number,
   },
 
-  // TODO: Make the currency required
-  currency: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Currency',
+  currency: currencySchema,
+
+  address: {
+    type: String,
+  },
+
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+    },
+    coordinates: {
+      type: [Number], //always [long, lat]
+      required: true,
+    },
   },
 })
 

@@ -102,7 +102,7 @@ module.exports = {
     }
   },
 
-  /**
+  /** // TODO: rename this to service
    * Search offers with query
    **/
   searchOffers: async (req, res) => {

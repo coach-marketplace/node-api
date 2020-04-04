@@ -2,36 +2,32 @@
 'use strict'
 
 const mongoose = require('mongoose')
-// const Currency = require('../models/currency')
 
-// TODO: refactor the hydratation to separate into files
-const currencies = [
-  {
-    name: 'EUR',
-    label: 'EURO',
-    symbol: '€',
-  },
-  {
-    name: 'USD',
-    label: 'UNITED STATES DOLLAR',
-    symbol: '$',
-  },
-]
+// TODO: create the hydration to separate into files
+// const currencies = [
+//   {
+//     name: 'EUR',
+//     label: 'EURO',
+//     symbol: '€',
+//   },
+//   {
+//     name: 'USD',
+//     label: 'UNITED STATES DOLLAR',
+//     symbol: '$',
+//   },
+// ]
 
-const queries = currencies.map((curr) => ({
-  updateOne: {
-    filter: {
-      name: curr.name,
-    },
-    update: {
-      $set: curr,
-    },
-    upsert: true,
-  },
-}))
-
-// coachmarketplace-z98zp.mongodb.net:27017
-// MONGO_DB_URI=mongodb://localhost:27017/coachmarketplace
+// const queries = currencies.map(curr => ({
+//   updateOne: {
+//     filter: {
+//       name: curr.name,
+//     },
+//     update: {
+//       $set: curr,
+//     },
+//     upsert: true,
+//   },
+// }))
 
 module.exports = {
   connect: () => {
@@ -41,7 +37,7 @@ module.exports = {
         useUnifiedTopology: true,
       })
       .then(async () => {
-        await mongoose.model('Currency').bulkWrite(queries, { ordered: true })
+        // await mongoose.model('Currency').bulkWrite(queries, { ordered: true })
         console.log('Database connected!')
       })
       .catch((error) => {
