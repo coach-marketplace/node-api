@@ -6,12 +6,12 @@
     "lint": "eslint src/**",
     "start:local": "NODE_ENV=local cross-env npm run start",
     "start:dev": "NODE_ENV=dev cross-env npm run start",
+    "start:prod": "cross-env node src/server.js",
     "start:stg": "NODE_ENV=staging cross-env npm run start",
     "start": "nodemon --inspect src/server.js",
     "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
     "test:local": "NODE_ENV=test mocha --config .mocharc.js",
-    "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js",
-    "build": "NODE_ENV=production cross-env node src/server.js"
+    "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -46,6 +46,7 @@
     "prettier": "2.0.2"
   },
   "engines": {
-    "node": "10.x"
+    "node": "12.13.0",
+    "npm": "6.12.0"
   }
 }
