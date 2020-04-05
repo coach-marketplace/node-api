@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
-const currencySchema = require('./currency')
+const currencySchema = require('./schemas/currency')
 
 const serviceSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
