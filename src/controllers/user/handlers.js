@@ -33,7 +33,10 @@ module.exports = {
     return users
   },
 
-  retrieveUserById: async (id) => {
+  /**
+   * @param {string} id User id
+   */
+  getUserById: async (id) => {
     const user = await read({ _id: id })
 
     return user
