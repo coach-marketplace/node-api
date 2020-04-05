@@ -36,15 +36,10 @@ module.exports = {
   /**
    * @param {string} id User id
    */
-  getUserById: async (id) => {
-    const user = await read({ _id: id })
+  getUserById: async (id) => await read({ _id: id }),
 
-    return user
-  },
-
-  deleteUserById: async (userId) => {
-    const response = await delOne({ _id: { $eq: userId } })
-
-    return response
-  },
+  /**
+   * @param {string} id User id
+   */
+  deleteUserById: async (id) => await delOne({ _id: { $eq: id } }),
 }
