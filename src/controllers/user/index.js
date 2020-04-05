@@ -8,12 +8,12 @@ const {
   editUser,
   removeUserById,
 } = require('./queries.js')
-const { createUser, retrieveUsers } = require('./handlers')
+const { createUser, getAllUsers } = require('./handlers')
 
 module.exports = {
   createNewUser: async (req, res) => {
     try {
-      const users = await retrieveUsers({ email: req.body.email })
+      const users = await getAllUsers({ email: req.body.email })
 
       if (users.length) {
         throw new Error('User already created')
@@ -74,7 +74,7 @@ module.exports = {
       email && (updatedData.email = email)
       firstName && (updatedData.firstName = firstName)
       lastName && (updatedData.lastName = lastName)
-      phone && (updatedData.phone = phone);
+      phone && (updatedData.phone = phone)
       // password && (updatedData.password = await encryptString(password))
       const newUser = await editUser(id, updatedData)
       res.status(200).json(newUser)

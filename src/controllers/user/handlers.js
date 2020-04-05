@@ -27,19 +27,21 @@ module.exports = {
     return newUser
   },
 
-  retrieveUsers: async (query) => {
-    const users = await read(query)
-
-    return users
-  },
+  /**
+   * @param {object} query Mongo query object
+   * @return Mongoose query object
+   */
+  getAllUsers: async (query = {}) => await read(query),
 
   /**
    * @param {string} id User id
+   * @return Mongoose query object
    */
   getUserById: async (id) => await read({ _id: id }),
 
   /**
    * @param {string} id User id
+   * @return Mongoose query object
    */
   deleteUserById: async (id) => await delOne({ _id: { $eq: id } }),
 }
