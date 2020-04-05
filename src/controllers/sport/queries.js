@@ -41,7 +41,7 @@ module.exports = {
   },
 
   /**
-   * @param {object} data { sport, lang, name }
+   * @param {object} query Mongo query object
    * @return Mongoose query object
    */
   readSportContent(query = {}) {
