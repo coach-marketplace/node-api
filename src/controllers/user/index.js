@@ -1,12 +1,14 @@
 'use strict'
 
-// const { encryptString } = require('../../_utils/hashing')
+const { encryptString, compareHash } = require('../../_utils/hashing')
 const {
   // create,
   getUsers,
   getUserById,
   editUser,
   removeUserById,
+  editUserPassword,
+  getUserPassword,
 } = require('./queries.js')
 const { createUser, retrieveUsers } = require('./handlers')
 
@@ -99,6 +101,39 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Cannot delete the user',
+        debug_message: error.message,
+      })
+    }
+  },
+
+
+  /**
+   * Update password for one user
+   */
+  updateUserPassword: async (req, res) => {
+    //TODO check if old password is okay
+    try {
+      const {
+        body: { currentPassword, newPassword },
+        params: { id },
+      } = req
+      var userinfos = await getUserPassword(id);
+      var encryptedCurrentPassword = userinfos.accounts[0].password
+      var pwdComparison = await compareHash(encryptedCurrentPassword, currentPassword);
+      if(!pwdComparison){
+        res.status(500).json({
+          public_message: 'Password invalid',
+          debug_message: 'Password invalid',
+        })
+      } 
+      else {
+        var encryptedNewPassword = await encryptString(newPassword);
+        const newUser = await editUserPassword(id, encryptedNewPassword)
+        res.status(200).json(newUser)
+      }
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Cannot update the user password',
         debug_message: error.message,
       })
     }

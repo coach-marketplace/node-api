@@ -10,6 +10,7 @@ const {
   retrieveUser,
   updateUser,
   deleteUser,
+  updateUserPassword,
   // addUserAvatar,
 } = require('../controllers/user')
 
@@ -94,5 +95,6 @@ userRouter
   .post('/:id', updateUser)
   .delete('/:id', deleteUser)
 // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
+  .post('/password/:id', updateUserPassword)
 
 module.exports = userRouter
