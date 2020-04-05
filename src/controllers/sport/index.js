@@ -38,8 +38,12 @@ module.exports = {
     try {
       const { name, lang } = req.body
 
-      if (!name || !lang) {
-        throw new Error('Incomplete data')
+      if (!name) {
+        throw new Error('Name is required')
+      }
+
+      if (!lang) {
+        throw new Error('Lang is required')
       }
 
       const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
