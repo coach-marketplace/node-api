@@ -8,6 +8,7 @@ const serviceRouter = require('./service')
 const langRouter = require('./lang')
 const contactRouter = require('./contact')
 const geoSpatialRouter = require('./geo-spatial')
+const sportRouter = require('./sport')
 
 module.exports = (app) => {
   app
@@ -18,6 +19,7 @@ module.exports = (app) => {
     .use('/v1/service', serviceRouter)
     .use('/v1/contact', contactRouter)
     .use('/v1/geo-spatial', geoSpatialRouter)
+    .use('/v1/sport', sportRouter)
 
     // Admin routes
     // TODO: secure admin route by using middleware
