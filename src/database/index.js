@@ -3,31 +3,7 @@
 
 const mongoose = require('mongoose')
 
-// TODO: create the hydration to separate into files
-// const currencies = [
-//   {
-//     name: 'EUR',
-//     label: 'EURO',
-//     symbol: '€',
-//   },
-//   {
-//     name: 'USD',
-//     label: 'UNITED STATES DOLLAR',
-//     symbol: '$',
-//   },
-// ]
-
-// const queries = currencies.map(curr => ({
-//   updateOne: {
-//     filter: {
-//       name: curr.name,
-//     },
-//     update: {
-//       $set: curr,
-//     },
-//     upsert: true,
-//   },
-// }))
+const hydrate = require('./hydration')
 
 module.exports = {
   connect: () => {
@@ -37,7 +13,7 @@ module.exports = {
         useUnifiedTopology: true,
       })
       .then(async () => {
-        // await mongoose.model('Currency').bulkWrite(queries, { ordered: true })
+        await hydrate()
         console.log('Database connected!')
       })
       .catch((error) => {
