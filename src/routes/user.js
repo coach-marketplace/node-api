@@ -2,6 +2,7 @@
 
 const userRouter = require('express').Router()
 
+// TODO: upload avatar for local account
 // const { uploadUserAvatar } = require('../middleware/file-upload')
 
 const {
@@ -91,7 +92,7 @@ userRouter
    */
   .get('/:id', retrieveUser)
 
-  .post('/:id', updateUser)
+  .put('/:id', updateUser)
   .delete('/:id', deleteUser)
 // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
 
