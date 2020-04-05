@@ -45,9 +45,6 @@ const langSchema = new Schema({
   },
 })
 
-langSchema.plugin(timestamp, {
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-})
+langSchema.plugin(timestamp)
 
 module.exports = mongoose.model('Lang', langSchema)
