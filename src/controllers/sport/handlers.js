@@ -26,11 +26,7 @@ module.exports = {
     }
 
     const newSport = await createSport()
-    const newSportContent = await createSportContent({
-      sport: newSport._id,
-      lang: langId,
-      name,
-    })
+    const newSportContent = await createSportContent(newSport._id, langId, name)
 
     return { newSport, newSportContent }
   },
@@ -40,6 +36,7 @@ module.exports = {
    * @param {string} lang Language ISO_639_1 (e.g. 'en')
    * @return {object} Sport
    */
+  // eslint-disable-next-line no-undef
   getSportById: async (id, lang = DEFAULT_LANG) => {
     if (!id) {
       throw new Error('SportId is required')

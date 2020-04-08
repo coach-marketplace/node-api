@@ -18,15 +18,17 @@ module.exports = {
   },
 
   /**
-   * @param {object} data { sport, lang, name }
+   * @param {string} sportId Sport id
+   * @param {string} langId Lang id
+   * @param {string} name Name of sport
    * @return {object} Mongoose query object
    */
-  createSportContent(data) {
+  createSportContent(sportId, langId, name) {
     const newSportContent = new SportContent({
       _id: new mongoose.Types.ObjectId(),
-      sport: new mongoose.Types.ObjectId(data.sport),
-      lang: new mongoose.Types.ObjectId(data.lang),
-      name: data.name,
+      sport: new mongoose.Types.ObjectId(sportId),
+      lang: new mongoose.Types.ObjectId(langId),
+      name: name,
     })
 
     return newSportContent.save()
