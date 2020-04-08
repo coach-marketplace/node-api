@@ -7,7 +7,7 @@ const SportContent = require('../../models/sport/sport-content')
 
 module.exports = {
   /**
-   * @return Mongoose query object
+   * @return {object} Mongoose query object
    */
   createSport() {
     const newSport = new Sport({
