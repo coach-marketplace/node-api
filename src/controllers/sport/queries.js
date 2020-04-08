@@ -19,7 +19,7 @@ module.exports = {
 
   /**
    * @param {object} data { sport, lang, name }
-   * @return Mongoose query object
+   * @return {object} Mongoose query object
    */
   createSportContent(data) {
     const newSportContent = new SportContent({
