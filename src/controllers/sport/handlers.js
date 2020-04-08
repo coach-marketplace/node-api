@@ -12,7 +12,7 @@ const {
 module.exports = {
   /**
    * @param {object} data {name, langId}
-   * @return Created sport
+   * @return {object} Created sport
    */
   createSport: async (data) => {
     const { name, langId } = data
