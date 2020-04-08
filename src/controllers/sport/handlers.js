@@ -38,7 +38,7 @@ module.exports = {
   /**
    * @param {string} id Sport ID
    * @param {string} lang Language ISO_639_1 (e.g. 'en')
-   * @return Sport
+   * @return {object} Sport
    */
   getSportById: async (id, lang = DEFAULT_LANG) => {
     if (!id) {
