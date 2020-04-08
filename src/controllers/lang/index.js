@@ -7,7 +7,7 @@ module.exports = {
     try {
       const langs = await read()
 
-      res.status(209).json(langs)
+      res.status(200).json(langs)
     } catch (error) {
       res.status(500).json({
         public_message: 'Error in getting all langs',
