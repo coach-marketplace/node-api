@@ -34,7 +34,7 @@ module.exports = {
 
   /**
    * @param {object} query Mongo query object
-   * @return Mongoose query object
+   * @return {object} Mongoose query object
    */
   readSport(query = {}) {
     return Sport.find(query)
