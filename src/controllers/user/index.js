@@ -1,6 +1,5 @@
 'use strict'
 
-const { encryptString, compareHash } = require('../../_utils/hashing')
 const {
   getAllUsers,
   getUserById,
@@ -10,6 +9,9 @@ const {
   editUserPassword,
   getUserPassword,
 } = require('./handlers')
+const { log } = require('../auth/handlers')
+const { encryptString, compareHash } = require('../../_utils/hashing')
+const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 
 module.exports = {
   createNewUser: async (req, res) => {
@@ -107,35 +109,53 @@ module.exports = {
     }
   },
 
-  /**
-   * Update password for one user
-   */
-  updateUserPassword: async (req, res) => {
+  changeUserPassword: async (req, res) => {
     //TODO check if old password is okay
     try {
       const {
-        body: { currentPassword, newPassword },
+        body: { current: currentPassword, new: newPassword },
         params: { id },
+        user,
       } = req
-      var userinfos = await getUserPassword(id)
-      var encryptedCurrentPassword = userinfos.accounts[0].password
-      var pwdComparison = await compareHash(
-        encryptedCurrentPassword,
-        currentPassword,
+
+      if (!currentPassword) throw new Error('Password is required')
+      if (!newPassword) throw new Error('New password is required')
+
+      const localUserAccount = user.accounts.find(
+        (account) => account.type === USER_ACCOUNT_TYPE.LOCAL,
       )
-      if (!pwdComparison) {
-        res.status(500).json({
-          public_message: 'Password invalid',
-          debug_message: 'Password invalid',
-        })
-      } else {
-        var encryptedNewPassword = await encryptString(newPassword)
-        const newUser = await editUserPassword(id, encryptedNewPassword)
-        res.status(200).json(newUser)
-      }
+      const encryptedCurrentPassword = await encryptString(currentPassword)
+      const encryptedCurrentPassword2 = await encryptString('azerty')
+
+      const isMatcha = await compareHash('azerty', encryptedCurrentPassword2)
+      const isMatch = compareHash(currentPassword, localUserAccount.password)
+      console.log('1', encryptedCurrentPassword)
+      console.log('1', encryptedCurrentPassword2)
+      console.log('1', localUserAccount.password)
+      console.log('+', isMatcha)
+      console.log('+', isMatch)
+
+      // var userinfos = await getUserPassword(id)
+      // var encryptedCurrentPassword = userinfos.accounts[0].password
+      // var pwdComparison = await compareHash(
+      //   encryptedCurrentPassword,
+      //   currentPassword,
+      // )
+      // if (!pwdComparison) {
+      //   res.status(500).json({
+      //     public_message: 'Password invalid',
+      //     debug_message: 'Password invalid',
+      //   })
+      // } else {
+      //   var encryptedNewPassword = await encryptString(newPassword)
+      //   const newUser = await editUserPassword(id, encryptedNewPassword)
+
+      //   res.status(200).json(newUser)
+      // }
+      res.status(200).json('ok')
     } catch (error) {
       res.status(500).json({
-        public_message: 'Cannot update the user password',
+        public_message: 'Cannot change the user password',
         debug_message: error.message,
       })
     }
