@@ -75,24 +75,8 @@ module.exports = {
   getAllExercises: async () => await readExercise(),
 
   getExercisesByCoachId: async (coachId) => {
-    const r = await aggregateExerciseContent([
-      {
-        $lookup: {
-          from: 'exercise',
-          localField: 'exercise',
-          foreignField: '_id',
-          as: 'a',
-        },
-      },
-      { $match: {} },
-    ])
+    const results = await readExercise({ userOwner: coachId })
 
-    // const exerciseContents = await readExerciseContent({ exercise: id })
-    //   .populate({ path: 'lang', select: '_id ISO_639_1' })
-    //   .populate({ path: 'exercise', select: '-__v' })
-    //   .select('-_id -__v -createdAt -updatedAt')
-    //   .lean()
-
-    return r
+    return results
   },
 }

@@ -8,6 +8,7 @@
 //   create: createContact,
 // } = require('../contact/queries')
 // const { CONTACT_TYPES } = require('../../_utils/constants')
+const { getExercisesByCoachId } = require('../exercise/handlers')
 const { addService, retrieveCoachServices } = require('../service/handlers')
 
 module.exports = {
@@ -39,6 +40,19 @@ module.exports = {
   getCoachServices: async (req, res) => {
     try {
       const response = await retrieveCoachServices(req.user._id)
+
+      res.status(200).json(response)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Services can not be found',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  retrieveCoachExercises: async (req, res) => {
+    try {
+      const response = await getExercisesByCoachId(req.user._id)
 
       res.status(200).json(response)
     } catch (error) {
