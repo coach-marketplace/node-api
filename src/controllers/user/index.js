@@ -2,26 +2,36 @@
 
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const {
-  // create,
-  getUsers,
+  getAllUsers,
   getUserById,
+  getUserByEmail,
+  deleteUserById,
   editUser,
-  removeUserById,
   editUserPassword,
   getUserPassword,
-} = require('./queries.js')
-const { createUser, retrieveUsers } = require('./handlers')
+} = require('./handlers')
 
 module.exports = {
   createNewUser: async (req, res) => {
     try {
-      const users = await retrieveUsers({ email: req.body.email })
+      const { email, firstName, lastName, phone, password, isCoach } = req.body
 
-      if (users.length) {
-        throw new Error('User already created')
+      if (!email) throw new Error('email is required')
+
+      const user = await getUserByEmail(email)
+
+      if (user) {
+        throw new Error('This email is already used')
       }
 
-      const newUser = await createUser(req.body)
+      const newUser = await createUser(
+        email,
+        firstName,
+        lastName,
+        phone,
+        password,
+        isCoach,
+      )
 
       res.status(201).json(newUser)
     } catch (error) {
@@ -34,26 +44,25 @@ module.exports = {
 
   retrieveUsers: async (_req, res) => {
     try {
-      const users = await getUsers()
+      const users = await getAllUsers()
 
       res.status(200).json(users)
     } catch (error) {
       res.status(500).json({
-        public_message: 'No users',
+        public_message: 'Error to retrieves users',
         debug_message: error.message,
       })
     }
   },
 
-  /**
-   * Get one user
-   */
   retrieveUser: async (req, res) => {
     try {
       const {
         params: { id },
       } = req
-      const user = (await getUserById(id))[0]
+
+      const user = await getUserById(id)
+
       res.status(200).json(user)
     } catch (error) {
       res.status(500).json({
@@ -63,22 +72,15 @@ module.exports = {
     }
   },
 
-  /**
-   * Update one user
-   */
   updateUser: async (req, res) => {
     try {
       const {
-        body: { email, firstName, lastName, phone },
+        body,
         params: { id },
       } = req
-      const updatedData = {}
-      email && (updatedData.email = email)
-      firstName && (updatedData.firstName = firstName)
-      lastName && (updatedData.lastName = lastName)
-      phone && (updatedData.phone = phone);
-      // password && (updatedData.password = await encryptString(password))
-      const newUser = await editUser(id, updatedData)
+
+      const newUser = await editUser(id, body)
+
       res.status(200).json(newUser)
     } catch (error) {
       res.status(500).json({
@@ -88,15 +90,14 @@ module.exports = {
     }
   },
 
-  /**
-   * Delete one user
-   */
   deleteUser: async (req, res) => {
     try {
       const {
         params: { id },
       } = req
-      await removeUserById(id)
+
+      await deleteUserById(id)
+
       res.status(200).json({ message: 'User deleted' })
     } catch (error) {
       res.status(500).json({
@@ -105,7 +106,6 @@ module.exports = {
       })
     }
   },
-
 
   /**
    * Update password for one user
@@ -117,17 +117,19 @@ module.exports = {
         body: { currentPassword, newPassword },
         params: { id },
       } = req
-      var userinfos = await getUserPassword(id);
+      var userinfos = await getUserPassword(id)
       var encryptedCurrentPassword = userinfos.accounts[0].password
-      var pwdComparison = await compareHash(encryptedCurrentPassword, currentPassword);
-      if(!pwdComparison){
+      var pwdComparison = await compareHash(
+        encryptedCurrentPassword,
+        currentPassword,
+      )
+      if (!pwdComparison) {
         res.status(500).json({
           public_message: 'Password invalid',
           debug_message: 'Password invalid',
         })
-      } 
-      else {
-        var encryptedNewPassword = await encryptString(newPassword);
+      } else {
+        var encryptedNewPassword = await encryptString(newPassword)
         const newUser = await editUserPassword(id, encryptedNewPassword)
         res.status(200).json(newUser)
       }

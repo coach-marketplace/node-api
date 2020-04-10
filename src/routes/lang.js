@@ -2,15 +2,8 @@
 
 const langRouter = require('express').Router()
 
-const {
-  retrieveLangs,
-  createLang,
-  retrieveLang,
-} = require('../controllers/lang')
+const { retrieveLangs, retrieveLang } = require('../controllers/lang')
 
-langRouter
-  .get('/', retrieveLangs)
-  .post('/', createLang)
-  .get('/:id', retrieveLang)
+langRouter.get('/', retrieveLangs).get('/:id', retrieveLang)
 
 module.exports = langRouter

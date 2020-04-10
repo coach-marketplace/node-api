@@ -1,3 +1,5 @@
+const TokenGenerator = require('uuid-token-generator')
+
 const { CONSOLE_LOG_CODE } = require('../constants')
 
 module.exports = {
@@ -14,5 +16,15 @@ module.exports = {
     }
 
     return console.log(style, logValue)
+  },
+
+  /**
+   * @param {number} size Token size
+   * @return {string} Generated token
+   */
+  generateUniqueToken: (size = 256) => {
+    const token = new TokenGenerator(size, TokenGenerator.BASE62)
+
+    return token.generate()
   },
 }

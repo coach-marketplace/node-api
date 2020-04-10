@@ -6,7 +6,7 @@
     "lint": "eslint src/**",
     "start:local": "NODE_ENV=local cross-env npm run start",
     "start:dev": "NODE_ENV=dev cross-env npm run start",
-    "start:prod": "cross-env node src/server.js",
+    "start:prod": "node src/server.js",
     "start:stg": "NODE_ENV=staging cross-env npm run start",
     "start": "nodemon --inspect src/server.js",
     "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
@@ -34,7 +34,8 @@
     "passport-local": "^1.0.0",
     "request-promise": "^4.2.5",
     "swagger-jsdoc": "^4.0.0",
-    "swagger-ui-express": "^4.1.2"
+    "swagger-ui-express": "^4.1.2",
+    "uuid-token-generator": "^1.0.0"
   },
   "devDependencies": {
     "chai": "*",
@@ -43,7 +44,7 @@
     "eslint": "^6.2.1",
     "mocha": "^7.1.0",
     "nodemon": "^2.0.0",
-    "prettier": "2.0.2"
+    "prettier": "2.0.4"
   },
   "engines": {
     "node": "12.13.0",

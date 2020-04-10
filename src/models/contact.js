@@ -44,9 +44,6 @@ const contactSchema = new Schema({
   },
 })
 
-contactSchema.plugin(timestamp, {
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-})
+contactSchema.plugin(timestamp)
 
 module.exports = mongoose.model('Contact', contactSchema)
