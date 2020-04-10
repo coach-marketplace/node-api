@@ -3,10 +3,9 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const {
-  createExerciseContent,
   createExercise,
   readExercise,
-  readExerciseContent,
+  aggregateExerciseContent,
 } = require('./queries')
 
 module.exports = {
@@ -40,16 +39,17 @@ module.exports = {
 
     if (!name) throw new Error('name is required')
 
-    const newExercise = await createExercise(userOwnerId, sportId, isPrivate)
-    const newExerciseContent = await createExerciseContent(
-      newExercise._id.toString(),
+    const newExercise = await createExercise(
+      userOwnerId,
+      sportId,
       langId.toString(),
       name,
       instructions,
       videoUrl,
+      isPrivate,
     )
 
-    return { newExercise, newExerciseContent }
+    return { newExercise }
   },
 
   /**
@@ -57,38 +57,42 @@ module.exports = {
    * @param {string} lang Language ISO_639_1 (e.g. 'en')
    * @return Sport
    */
-  // eslint-disable-next-line no-undef
-  getExerciseById: async (id, lang = DEFAULT_LANG) => {
+  getExerciseById: async (id) => {
     if (!id) throw new Error('Id is required')
 
     if (!ObjectId.isValid(id)) throw new Error('Id is incorrect')
 
-    const exerciseContents = await readExerciseContent({ exercise: id })
-      .populate({ path: 'lang', select: '_id ISO_639_1' })
-      .populate({ path: 'exercise', select: '-__v' })
-      .select('-_id -__v -createdAt -updatedAt')
-      .lean()
+    const exercises = await readExercise({ _id: id }).lean()
 
-    if (!exerciseContents.length) return null
+    if (!exercises.length) return []
 
-    const exerciseContent = exerciseContents.find(
-      (item) => item.lang.ISO_639_1 === lang,
-    )
-
-    /**
-     * We have to recreate the sport object
-     */
-    const exercise = {
-      ...exerciseContent,
-      ...exerciseContent.exercise,
-    }
-    delete exercise.exercise
-
-    return exercise
+    return exercises[0]
   },
 
   /**
    * @return List of exercises
    */
   getAllExercises: async () => await readExercise(),
+
+  getExercisesByCoachId: async (coachId) => {
+    const r = await aggregateExerciseContent([
+      {
+        $lookup: {
+          from: 'exercise',
+          localField: 'exercise',
+          foreignField: '_id',
+          as: 'a',
+        },
+      },
+      { $match: {} },
+    ])
+
+    // const exerciseContents = await readExerciseContent({ exercise: id })
+    //   .populate({ path: 'lang', select: '_id ISO_639_1' })
+    //   .populate({ path: 'exercise', select: '-__v' })
+    //   .select('-_id -__v -createdAt -updatedAt')
+    //   .lean()
+
+    return r
+  },
 }
