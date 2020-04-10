@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
-const exerciseContentSchema = require('../../schemas/exerciseContent')
+const exerciseContentSchema = require('../schemas/exerciseContent')
 
 const exerciseSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,

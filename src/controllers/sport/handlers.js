@@ -2,12 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const {
-  createSportContent,
-  createSport,
-  readSport,
-  readSportContent,
-} = require('./queries')
+const { createSport, readSport } = require('./queries')
 
 module.exports = {
   /**
@@ -25,10 +20,9 @@ module.exports = {
       throw new Error('Lang id is incorrect')
     }
 
-    const newSport = await createSport()
-    const newSportContent = await createSportContent(newSport._id, langId, name)
+    const newSport = await createSport(langId, name)
 
-    return { newSport, newSportContent }
+    return newSport
   },
 
   /**
@@ -36,8 +30,7 @@ module.exports = {
    * @param {string} lang Language ISO_639_1 (e.g. 'en')
    * @return {object} Sport
    */
-  // eslint-disable-next-line no-undef
-  getSportById: async (id, lang = DEFAULT_LANG) => {
+  getSportById: async (id) => {
     if (!id) {
       throw new Error('SportId is required')
     }
@@ -46,30 +39,11 @@ module.exports = {
       throw new Error('Lang id is incorrect')
     }
 
-    const sportContents = await readSportContent({ sport: id })
-      .populate({ path: 'lang', select: '_id ISO_639_1' })
-      .populate({ path: 'sport', select: '-__v' })
-      .select('-_id -__v -createdAt -updatedAt')
-      .lean()
+    const sports = await readSport({ _id: id }).lean()
 
-    if (!sportContents.length) {
-      return null
-    }
+    if (!sports.length) return []
 
-    const sportContent = sportContents.find(
-      (item) => item.lang.ISO_639_1 === lang,
-    )
-
-    /**
-     * We have to recreate the sport object
-     */
-    const sport = {
-      ...sportContent,
-      ...sportContent.sport,
-    }
-    delete sport.sport
-
-    return sport
+    return sports[0]
   },
 
   /**

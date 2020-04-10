@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose')
 
-const Exercise = require('../../models/exercise/index')
+const Exercise = require('../../models/exercise')
 
 module.exports = {
   /**
