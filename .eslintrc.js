@@ -14,6 +14,7 @@ module.exports = {
   },
   rules: {
     'no-unused-vars': 1,
-    'no-undef': 0,
+    'no-undef': 1,
+    'no-prototype-builtins': 0,
   },
 }

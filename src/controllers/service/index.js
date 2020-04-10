@@ -3,7 +3,6 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, read, searchServices } = require('./queries')
-const { read: readCurrency } = require('../currency/queries')
 const { read: readUser } = require('../user/queries')
 
 module.exports = {
@@ -28,15 +27,6 @@ module.exports = {
       if (!user.length) {
         throw new Error('Error in coach')
       }
-
-      // Todo: re add the currency check
-      /**
-       * Check if currency name is correct in DB
-       */
-      // const curr = await readCurrency({ name: currency })
-      // if (!curr.length) {
-      //   throw new Error('Error in currency')
-      // }
 
       const newServiceData = {
         user: user[0]._id,

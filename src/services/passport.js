@@ -7,7 +7,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 // eslint-disable-next-line no-undef
 const { /*GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,*/ JWT_SECRET } = process.env
 
-const { retrieveUserById } = require('../controllers/user/handlers')
+const { getUserById } = require('../controllers/user/handlers')
 const { log } = require('../controllers/auth/handlers')
 
 passport.serializeUser((user, done) => {
@@ -18,7 +18,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (userId, done) => {
   try {
     console.log('deserializeUser', userId)
-    const user = await retrieveUserById(userId)
+    const user = await getUserById(userId)
     done(null, user)
   } catch (error) {
     done(error)

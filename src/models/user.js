@@ -1,7 +1,5 @@
 'use strict'
 
-// eslint-disable-next-line no-undef
-// const { JWT_SECRET } = process.env
 const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
 
 /**
@@ -31,7 +29,6 @@ const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
  *           lastName: Doe
  */
 
-// const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
@@ -59,6 +56,30 @@ const userSchema = new Schema({
   phone: {
     type: String,
     trim: true,
+  },
+
+  isArchived: {
+    type: Boolean,
+    default: false,
+  },
+
+  isCoach: {
+    type: Boolean,
+    default: false,
+  },
+
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+
+  emailConfirmedAt: {
+    type: String,
+    default: null,
+  },
+
+  emailToken: {
+    type: String,
   },
 
   /**

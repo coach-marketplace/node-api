@@ -13,6 +13,16 @@ const CURRENCY = {
   USD: { NAME: 'USD', LABEL: 'United States dollar', SYMBOL: '$' },
 }
 
+/**
+ * Language are following these:
+ * - (lang) ISO 639-1 : https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+ * - (country) Alpha-2 code: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+ */
+const LANG = {
+  FRENCH: { NAME: 'FR', COUNTRY: 'FR' },
+  ENGLISH: { NAME: 'EN', COUNTRY: 'US' },
+}
+
 const CONSOLE_LOG_CODE = {
   RESET: '\x1b[0m',
   FONT_COLOR: {
@@ -25,4 +35,5 @@ module.exports = {
   CONTACT_TYPE,
   CONSOLE_LOG_CODE,
   CURRENCY,
+  LANG,
 }
