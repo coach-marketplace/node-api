@@ -38,17 +38,17 @@ module.exports = {
    */
   requireAccessMyData: (req, res, next) => {
     if (!req.params.id) {
-      res.status(401).json({ message: 'Unauthorized' })
+      res.status(401).json({ message: 'Unauthorized to access user data' })
       return
     }
 
     if (!req.user) {
-      res.status(401).json({ message: 'Unauthorized' })
+      res.status(401).json({ message: 'Unauthorized for un-auth user' })
       return
     }
 
     if (req.user._id !== req.params.id) {
-      res.status(401).json({ message: 'Unauthorized' })
+      res.status(401).json({ message: 'Unauthorized to access these data' })
       return
     }
 

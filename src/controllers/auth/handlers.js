@@ -37,7 +37,7 @@ module.exports = {
     return user
   },
 
-  register: async data => {
+  register: async (data) => {
     const { email, password, firstName, lastName, phone } = data
 
     if (!email || !password) {
