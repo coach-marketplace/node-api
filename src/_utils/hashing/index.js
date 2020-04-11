@@ -14,14 +14,14 @@ module.exports = {
   },
 
   /**
-   * @param {string} encryptedString Encrypted string
    * @param {string} stringToCompare String to compare
+   * @param {string} encryptedString Encrypted string
    * @return {object} Promise
    */
-  compareHash: async (encryptedString, stringToCompare) => {
+  compareHash: async (stringToCompare, encryptedString) => {
     const areStringMatch = await bcrypt.compare(
-      stringToCompare,
       encryptedString,
+      stringToCompare,
     )
 
     return areStringMatch
