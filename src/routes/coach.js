@@ -11,6 +11,7 @@ const {
   // getCoachCustomer,
   getCoachServices,
   addServiceToCoach,
+  addExerciseToCoach,
   retrieveCoachExercises,
 } = require('../controllers/coach')
 
@@ -28,12 +29,12 @@ coachRouter
     requireAccessMyData,
     retrieveCoachExercises,
   )
-// .post(
-//   '/:id/exercises/add',
-//   requireJWTAuth,
-//   requireAccessMyData,
-//   addExerciseToCoach,
-// )
+  .post(
+    '/:id/exercises/add',
+    requireJWTAuth,
+    requireAccessMyData,
+    addExerciseToCoach,
+  )
 // .get('/', retrieveCoaches)
 // .get('/:id/customers', authJWT, onlyMe, getCoachCustomers)
 // .post('/:id/customers', authJWT, onlyMe, addCustomerToCoach)

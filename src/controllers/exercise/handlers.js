@@ -2,11 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const {
-  createExercise,
-  readExercise,
-  aggregateExerciseContent,
-} = require('./queries')
+const { createExercise, readExercise } = require('./queries')
 
 module.exports = {
   /**
@@ -49,7 +45,7 @@ module.exports = {
       isPrivate,
     )
 
-    return { newExercise }
+    return newExercise
   },
 
   /**

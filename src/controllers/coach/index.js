@@ -8,8 +8,13 @@
 //   create: createContact,
 // } = require('../contact/queries')
 // const { CONTACT_TYPES } = require('../../_utils/constants')
-const { getExercisesByCoachId } = require('../exercise/handlers')
+const { getLangByISO } = require('../lang/handlers')
+const {
+  getExercisesByCoachId,
+  createExercise,
+} = require('../exercise/handlers')
 const { addService, retrieveCoachServices } = require('../service/handlers')
+const { LANG } = require('../../_utils/constants')
 
 module.exports = {
   addServiceToCoach: async (req, res) => {
@@ -58,6 +63,43 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Services can not be found',
+        debug_message: error.message,
+      })
+    }
+  },
+
+  addExerciseToCoach: async (req, res) => {
+    try {
+      const {
+        body: { name, lang, instructions, videoUrl, isPrivate },
+        user,
+      } = req
+
+      if (!name) throw new Error('Name is required')
+      if (!lang) throw new Error('Lang is required')
+
+      const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
+        LANG[k].NAME.toLowerCase(),
+      )
+
+      if (!acceptedLanguagesValue.includes(lang))
+        throw new Error('Lang is invalid')
+
+      const language = await getLangByISO(lang)
+      const newExercise = await createExercise(
+        user._id,
+        language._id.toString(),
+        name,
+        null,
+        instructions,
+        videoUrl,
+        isPrivate,
+      )
+
+      res.status(201).json(newExercise)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Exercise can not be added',
         debug_message: error.message,
       })
     }
