@@ -6,13 +6,12 @@ const { requireJWTAuth, requireAccessMyData } = require('../middleware/auth')
 // const { onlyMe } = require('../middleware/accessRight')
 const {
   // retrieveCoaches,
-  // addCustomerToCoach,
-  // getCoachCustomers,
-  // getCoachCustomer,
+  addCustomerToCoach,
   getCoachServices,
   addServiceToCoach,
   addExerciseToCoach,
   retrieveCoachExercises,
+  retrieveCoachCustomers,
 } = require('../controllers/coach')
 
 coachRouter
@@ -35,9 +34,19 @@ coachRouter
     requireAccessMyData,
     addExerciseToCoach,
   )
-// .get('/', retrieveCoaches)
-// .get('/:id/customers', authJWT, onlyMe, getCoachCustomers)
-// .post('/:id/customers', authJWT, onlyMe, addCustomerToCoach)
+  // .get('/', retrieveCoaches)
+  .get(
+    '/:id/customers',
+    requireJWTAuth,
+    requireAccessMyData,
+    retrieveCoachCustomers,
+  )
+  .post(
+    '/:id/customers',
+    requireJWTAuth,
+    requireAccessMyData,
+    addCustomerToCoach,
+  )
 // .get('/:id/customers/:customerId', authJWT, onlyMe, getCoachCustomer)
 
 module.exports = coachRouter
