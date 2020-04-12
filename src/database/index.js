@@ -3,6 +3,8 @@
 
 const mongoose = require('mongoose')
 
+const hydrate = require('./hydration')
+
 module.exports = {
   connect: () => {
     return mongoose
@@ -10,11 +12,11 @@ module.exports = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })
-      .then(() => {
-        console.log('Database connected!')
+      .then(async () => {
+        await hydrate()
       })
-      .catch(error => {
-        console.log('Database connexion error:', error.message)
+      .catch((error) => {
+        console.log('Database connection error:', error.message)
       })
   },
   close: () => mongoose.disconnect(),

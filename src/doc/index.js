@@ -3,7 +3,7 @@ const swaggerJsdoc = require('swagger-jsdoc')
 
 const mainDoc = require('./mainDocumentation')
 
-module.exports = app => {
+module.exports = (app) => {
   app.use(
     '/doc',
     swaggerUi.serve,

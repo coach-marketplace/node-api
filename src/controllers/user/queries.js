@@ -1,47 +1,47 @@
 'use strict'
 
 const mongoose = require('mongoose')
-mongoose.set('useFindAndModify', false)
 
 const User = require('../../models/user')
 
 module.exports = {
-  getUsers() {
-    return User.find()
-      .select('_id email first_name last_name password')
-      .exec()
+  /**
+   * @param {string} query Mongo query
+   * @return Mongoose query object
+   */
+  read(query = {}) {
+    return User.find(query)
   },
 
-  getUserById(userId) {
-    return User.find({ _id: userId })
-      .select('_id email first_name last_name password')
-      .exec()
-  },
-
-  getUserByEmail(userEmail) {
-    return User.find({ email: userEmail })
-      .select('_id email first_name last_name password')
-      .exec()
-  },
-
-  addUser(newUserData) {
+  /**
+   * @param {object} data User data
+   */
+  create(data) {
     const newUser = new User({
       _id: new mongoose.Types.ObjectId(),
-      email: newUserData.email,
-      first_name: newUserData.firstName || '',
-      last_name: newUserData.lastName || '',
-      password: newUserData.password,
+      ...data,
     })
+
     return newUser.save()
   },
 
-  editUser(userId, newUserData) {
-    return User.findOneAndUpdate({ _id: userId }, newUserData, {
-      new: true,
-    })
+  /**
+   * @param {string} userId Id of the user to update
+   * @param {object} newData Data to update
+   */
+  updateOne(userId, newData) {
+    return User.findOneAndUpdate(
+      { _id: userId },
+      { $set: newData },
+      { new: true }, // new is use to return the document after updating
+    )
   },
 
-  removeUserById(userId) {
-    return User.deleteOne({ _id: { $eq: userId } })
+  /**
+   * @param {string} id User id
+   * @return Mongoose query object
+   */
+  deleteOne(id) {
+    return User.deleteOne({ _id: { $eq: id } })
   },
 }

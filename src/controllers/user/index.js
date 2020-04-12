@@ -1,26 +1,36 @@
 'use strict'
 
-const { encryptString } = require('../../_utils/hashing')
 const {
-  addUser,
-  getUsers,
+  createUser,
+  getAllUsers,
   getUserById,
+  getUserByEmail,
+  deleteUserById,
   editUser,
-  removeUserById,
-} = require('./queries.js')
+} = require('./handlers')
 
 module.exports = {
-  /**
-   * Create a user
-   */
-  createUser: async (req, res) => {
+  createNewUser: async (req, res) => {
     try {
-      const { email, firstName, lastName, password } = req.body
-      const newUserData = { email }
-      firstName && (newUserData.firstName = firstName)
-      lastName && (newUserData.lastName = lastName)
-      password && (newUserData.password = await encryptString(password))
-      const newUser = await addUser(newUserData)
+      const { email, firstName, lastName, phone, password, isCoach } = req.body
+
+      if (!email) throw new Error('email is required')
+
+      const user = await getUserByEmail(email)
+
+      if (user) {
+        throw new Error('This email is already used')
+      }
+
+      const newUser = await createUser(
+        email,
+        firstName,
+        lastName,
+        phone,
+        password,
+        isCoach,
+      )
+
       res.status(201).json(newUser)
     } catch (error) {
       res.status(500).json({
@@ -30,28 +40,27 @@ module.exports = {
     }
   },
 
-  /**
-   * Get all users
-   */
-  readUsers: async (_req, res) => {
+  retrieveUsers: async (_req, res) => {
     try {
-      const response = await getUsers()
-      res.status(200).json(response)
+      const users = await getAllUsers()
+
+      res.status(200).json(users)
     } catch (error) {
       res.status(500).json({
-        public_message: 'No users',
+        public_message: 'Error to retrieves users',
         debug_message: error.message,
       })
     }
   },
 
-  /**
-   * Get one user
-   */
-  readUser: async (req, res) => {
+  retrieveUser: async (req, res) => {
     try {
-      const userId = req.params.id
-      const user = (await getUserById(userId))[0]
+      const {
+        params: { id },
+      } = req
+
+      const user = await getUserById(id)
+
       res.status(200).json(user)
     } catch (error) {
       res.status(500).json({
@@ -61,19 +70,15 @@ module.exports = {
     }
   },
 
-  /**
-   * Update one user
-   */
   updateUser: async (req, res) => {
     try {
-      const { email, firstName, lastName, password } = req.body
-      const { id } = req.params
-      const updatedData = {}
-      email && (updatedData.email = email)
-      firstName && (updatedData.first_name = firstName)
-      lastName && (updatedData.last_name = lastName)
-      password && (updatedData.password = await encryptString(password))
-      const newUser = await editUser(id, updatedData)
+      const {
+        body,
+        params: { id },
+      } = req
+
+      const newUser = await editUser(id, body)
+
       res.status(200).json(newUser)
     } catch (error) {
       res.status(500).json({
@@ -83,33 +88,18 @@ module.exports = {
     }
   },
 
-  /**
-   * Delete one user
-   */
   deleteUser: async (req, res) => {
     try {
-      const { id } = req.params
-      await removeUserById(id)
+      const {
+        params: { id },
+      } = req
+
+      await deleteUserById(id)
+
       res.status(200).json({ message: 'User deleted' })
     } catch (error) {
       res.status(500).json({
         public_message: 'Cannot delete the user',
-        debug_message: error.message,
-      })
-    }
-  },
-
-  /**
-   * Add avatar to user
-   */
-  addUserAvatar: async (req, res) => {
-    try {
-      const { id } = req.params
-      const newUser = await editUser(id, { avatar: true })
-      res.status(200).json(newUser)
-    } catch (error) {
-      res.status(500).json({
-        public_message: 'Cannot add avatar',
         debug_message: error.message,
       })
     }
