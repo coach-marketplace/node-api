@@ -16,12 +16,59 @@ const getAllConversations = async () => {
 }
 
 /**
+ * @param {string} participantId User id
+ * @return {array} List of conversations
+ */
+const getConversationsByParticipantId = async (participantId) => {
+  if (!participantId) throw new Error('participantId is required')
+
+  if (!ObjectId.isValid(participantId))
+    throw new Error('participantId is invalid')
+
+  const conversations = await read({
+    participants: { $elemMatch: { user: participantId } },
+  })
+
+  return conversations
+}
+
+/**
+ * @param {[string]} participantIds User id
+ * @return {object} Conversation
+ */
+const getConversationByParticipantsIds = async (participantIds) => {
+  if (!participantIds) throw new Error('participantIds is required')
+
+  if (!participantIds.length >= 2)
+    throw new Error('A conversation should have at least 2 participants')
+
+  // Check is all ids are valid
+  if (participantIds.some((id) => !ObjectId.isValid(id)))
+    throw new Error('Participants ids are not valid')
+
+  // Get all conversations containing at least minimum the 2 first users
+  const conversations = await read({
+    participants: {
+      $elemMatch: { user: { $in: [participantIds[0], participantIds[1]] } },
+    },
+  })
+
+  if (!conversations.length) return []
+
+  const matchedConversation = conversations.filter((conv) => {
+    const ids = conv.participants.map((p) => p.user)
+    return ids.sort().toString() === participantIds.sort().toString()
+  })
+
+  return matchedConversation[0]
+}
+
+/**
  * @param {string} ownerId Id of the contact owner
  * @param {[string]} memberIds List of member ids
- * @param {string} messageText First message
  * @return {object} New contact
  */
-const createConversation = async (ownerId, memberIds, messageText) => {
+const createConversation = async (ownerId, memberIds) => {
   if (!ownerId) throw new Error('OwnerId is required')
   if (!ObjectId.isValid(ownerId)) throw new Error('OwnerId is invalid')
   if (!memberIds.length) throw new Error('At least one member is required')
@@ -37,26 +84,12 @@ const createConversation = async (ownerId, memberIds, messageText) => {
   /**
    * Check is the conversation with same participant already exist
    */
-  const newConversationParticipantIds = [
+  const conversation = await getConversationByParticipantsIds([
     owner._id,
     ...members.map((m) => m._id),
-  ]
-    .sort()
-    .toString()
+  ])
 
-  const conversations = await getAllConversations()
-  // Only keep the participant ids array
-  const participantIds = conversations.reduce(
-    (acc, curr) => [...acc, curr.participants.map((p) => p.user)],
-    [],
-  )
-  // Convert each array as a sorted string => ready to be compare to the new one
-  const participantIdsAsArrayStrings = participantIds.map((tab) =>
-    tab.sort().toString(),
-  )
-
-  if (participantIdsAsArrayStrings.includes(newConversationParticipantIds))
-    throw new Error('Conversation already exist with these participants')
+  if (conversation) return conversation
 
   const participants = [
     {
@@ -71,15 +104,7 @@ const createConversation = async (ownerId, memberIds, messageText) => {
     })),
   ]
 
-  const messages = []
-  if (messageText) {
-    messages.push({
-      user: ObjectId(owner._id),
-      message: messageText,
-    })
-  }
-
-  const newConversation = await create(participants, messages)
+  const newConversation = await create(participants)
 
   return newConversation
 }
@@ -87,4 +112,6 @@ const createConversation = async (ownerId, memberIds, messageText) => {
 module.exports = {
   createConversation,
   getAllConversations,
+  getConversationsByParticipantId,
+  getConversationByParticipantsIds,
 }

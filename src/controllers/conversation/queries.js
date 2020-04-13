@@ -7,14 +7,12 @@ const Conversation = require('../../models/conversation')
 module.exports = {
   /**
    * @param {[object]} participants List of participants
-   * @param {[object]} messages List of messages
    * @return {object} Mongoose query object
    */
-  create(participants, messages) {
+  create(participants) {
     const newConversation = new Conversation({
       _id: new mongoose.Types.ObjectId(),
       participants,
-      messages,
     })
 
     return newConversation.save()

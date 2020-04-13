@@ -12,11 +12,7 @@ module.exports = {
       if (!ownerId) throw new Error('OwnerId is required')
       if (!memberIds.length) throw new Error('At least one member is required')
 
-      const newConversation = await createConversation(
-        ownerId,
-        memberIds,
-        messageText,
-      )
+      const newConversation = await createConversation(ownerId, memberIds)
 
       res.status(201).json(newConversation)
     } catch (error) {

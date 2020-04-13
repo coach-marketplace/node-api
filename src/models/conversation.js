@@ -10,14 +10,11 @@ const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
 const conversationParticipantSchema = require('../schemas/conversationParticipant')
-const conversationMessageSchema = require('../schemas/conversationMessage')
 
 const conversationSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
 
   participants: [conversationParticipantSchema],
-
-  messages: [conversationMessageSchema],
 })
 
 conversationSchema.plugin(timestamp)
