@@ -3,6 +3,7 @@
 const mongoose = require('mongoose')
 
 const User = require('../../models/user')
+const Body = require('../../models/body')
 
 module.exports = {
   /**
@@ -43,5 +44,35 @@ module.exports = {
    */
   deleteOne(id) {
     return User.deleteOne({ _id: { $eq: id } })
+  },
+
+  getBodyData(userId) {
+    //var bodyId = User.findOne({_id: userId}).select("body -_id").exec();
+    User.findOne({_id: userId, "body":{$ne:null}}).select("body -_id").exec().then(doc => {
+      if(doc) {
+        return {"todo":"todo"};
+      }
+      else {
+        return {};
+      }
+    });
+  },
+
+  editBodyData(userId, bodyData) {
+    User.findOne({_id: userId, "body":{$ne:null}}).select("body -_id").exec().then(doc => {
+      if(doc) {
+        return {"todo":"todo"};
+      }
+      else {
+        var bodyId = new mongoose.Types.ObjectId()
+        bodyData._id = bodyId;
+        var newBody = new Body(bodyData);
+        User.findOneAndUpdate({ _id: userId }, 
+          {$set:{"body":bodyId}}, 
+          {new: true}
+        )
+        return newBody.save();
+      }
+    });
   },
 }

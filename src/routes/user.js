@@ -11,6 +11,9 @@ const {
   retrieveUser,
   updateUser,
   deleteUser,
+  updateUserPassword,
+  retrieveBodyData,
+  updateBodyData,
   // addUserAvatar,
 } = require('../controllers/user')
 
@@ -95,5 +98,8 @@ userRouter
   .put('/:id', updateUser)
   .delete('/:id', deleteUser)
 // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
+  .post('/password/:id', updateUserPassword)
+  .get('/body/:id', retrieveBodyData)
+  .post('/body/:id', updateBodyData)
 
 module.exports = userRouter

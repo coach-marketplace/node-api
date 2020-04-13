@@ -8,6 +8,15 @@ const {
   deleteUserById,
   editUser,
 } = require('./handlers')
+/* OLD
+  removeUserById,
+  editUserPassword,
+  getUserPassword,
+  getBodyData,
+  editBodyData,
+} = require('./queries.js')
+const { createUser, retrieveUsers } = require('./handlers')
+*/
 
 module.exports = {
   createNewUser: async (req, res) => {
@@ -104,4 +113,51 @@ module.exports = {
       })
     }
   },
+
+  retrieveBodyData: async (req, res) => {
+    try {
+      var bodyData = getBodyData(req.id);
+      console.log(bodyData)
+      res.status(200).json(bodyData);
+    } catch(error) {
+      res.status(500).json({
+        public_message: "could not retrieve user physical data",
+        debug_message: error.message,
+      })
+    }
+  },
+
+  updateBodyData: async (req, res) => {
+    try {
+      var {
+        body: {height, weight, age, gender},
+        param: {id}
+      } = req;
+      console.log(req)
+      var updatedUser = editBodyData(id, {height, weight, age, gender});
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(500).json({
+        public_message: "Cannot update the user physical data",
+        debug_message: error.message
+      })
+    }
+    //TODO update or create body data
+  }
+
+  /**
+   * Add avatar to user
+   */
+  // addUserAvatar: async (req, res) => {
+  //   try {
+  //     const { id } = req.params
+  //     const newUser = await editUser(id, { avatar: true })
+  //     res.status(200).json(newUser)
+  //   } catch (error) {
+  //     res.status(500).json({
+  //       public_message: 'Cannot add avatar',
+  //       debug_message: error.message,
+  //     })
+  //   }
+  // },
 }
