@@ -105,7 +105,7 @@ module.exports = {
   getUserById: async (id) => {
     if (!id) throw new Error('id is required')
 
-    const users = await read({ _id: id })
+    const users = await read({ _id: id }).lean()
 
     return users.length ? users[0] : null
   },
