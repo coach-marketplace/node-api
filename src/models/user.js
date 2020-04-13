@@ -68,6 +68,11 @@ const userSchema = new Schema({
     default: false,
   },
 
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+
   isEmailVerified: {
     type: Boolean,
     default: false,
