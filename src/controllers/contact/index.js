@@ -1,5 +1,6 @@
 'use strict'
 
+// TODO: Should user handlers and not directly queries
 const { read, create } = require('./queries')
 
 module.exports = {
