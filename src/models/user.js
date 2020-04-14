@@ -58,6 +58,10 @@ const userSchema = new Schema({
     trim: true,
   },
 
+  body: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+
   isArchived: {
     type: Boolean,
     default: false,

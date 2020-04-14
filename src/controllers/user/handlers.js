@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, deleteOne, updateOne } = require('./queries.js')
+const { create, read, deleteOne, updateOne, readBody, createBody, updateBody } = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
@@ -115,7 +115,7 @@ module.exports = {
    * @return {object} User
    */
   getUserByEmail: async (email) => {
-    if (!email) throw new Error('id is required')
+    if (!email) throw new Error('email is required')
 
     const users = await read({ email })
 
@@ -146,5 +146,45 @@ module.exports = {
     const updatedUser = await updateOne(id, { isArchived: value })
 
     return updatedUser
+  },
+
+  /**
+   * @param {string} userId User id
+   * @return {Object} USer Body
+   */
+  getUserBody: async (userId) => {
+    if (!userId) throw new Error('id is required');
+    if (!ObjectId.isValid(userId)) throw new Error('Id is invalid');
+
+    let user = await read({_id: userId});
+    if(!user[0].body) {
+      return {};
+    }
+    else {
+      return await readBody(user[0].body);
+    }
+    
+  },
+
+  /**
+   * @param {String} userId User id
+   * @param {Object} bodyData Updated user body data
+   * @return {Object} Updated user 
+   */
+  editUserBody: async (userId, bodyData) => {
+    if (!userId) throw new Error('id is required');
+    if (!ObjectId.isValid(userId)) throw new Error('Id is invalid');
+
+    let user = await read({_id: userId});
+    let bodyId = user[0].body;
+    if(!bodyId) {
+      let body = await createBody(bodyData);
+      await updateOne(userId, {"body": body._id});
+      return body;
+    }
+    else {
+      return await updateBody(bodyId, bodyData);
+    }
+
   },
 }

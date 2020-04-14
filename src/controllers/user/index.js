@@ -8,6 +8,8 @@ const {
   editUser,
   editUserPassword,
   getUserPassword,
+  getUserBody,
+  editUserBody,
 } = require('./handlers')
 const { log } = require('../auth/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
@@ -160,6 +162,50 @@ module.exports = {
       })
     }
   },
+
+  retrieveUserBody: async (req, res) => {
+    try {
+      let {
+        params: { id }
+      } = req;
+      let userBody = await getUserBody(id);
+      res.status(200).json(userBody);
+    } catch (error) {
+      res.status(500).json({
+        public_message: "could not retrive user physical data",
+        debug_message: error.message,
+      })
+    }
+  },
+
+  updateUserBody: async (req, res) => {
+    try {
+      let {
+        body,
+        params: { id }
+      } = req;
+      /*editUserBody(id, body).then(userBody => {
+        console.log("coucou")
+        console.log(userBody);
+        res.status(200).json(userBody);
+      })
+      .catch(error => {
+        res.status(500).json({
+          public_message: "could not update user physical data",
+          debug_message: error.message,
+        })
+      });*/
+      let userBody = await editUserBody(id, body);
+      console.log(userBody);
+      res.status(200).json(userBody);
+
+    } catch (error) {
+      res.status(500).json({
+        public_message: "could not update user physical data",
+        debug_message: error.message,
+      })
+    }
+  }
 
   /**
    * Add avatar to user
