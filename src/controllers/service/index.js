@@ -11,7 +11,8 @@ module.exports = {
    */
   createService: async (req, res) => {
     try {
-      const { coach, title, description, price, currency } = req.body
+      // TODO: include the currency
+      const { coach, title, description, price } = req.body
 
       /**
        * Check if the coach value is a valid mongoID

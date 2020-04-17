@@ -17,7 +17,9 @@ module.exports = {
 
       return response.data
     } catch (error) {
+      // eslint-disable-next-line no-undef
       log('Error', { color: 'red' })
+      // eslint-disable-next-line no-undef
       log(error.message)
 
       return []

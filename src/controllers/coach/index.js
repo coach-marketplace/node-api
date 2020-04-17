@@ -1,15 +1,19 @@
 'use strict'
 
-// const ObjectId = require('mongoose').Types.ObjectId
-
-// const { read: readUser, create: createUser } = require('../user/queries')
-// const {
-//   read: readContact,
-//   create: createContact,
-// } = require('../contact/queries')
-// const { CONTACT_TYPES } = require('../../_utils/constants')
-const { getExercisesByCoachId } = require('../exercise/handlers')
+const { createUser, getUserById } = require('../user/handlers')
+const { getLangByISO } = require('../lang/handlers')
+const {
+  getExercisesByCoachId,
+  createExercise,
+} = require('../exercise/handlers')
 const { addService, retrieveCoachServices } = require('../service/handlers')
+const {
+  getContactsByCoachId,
+  createContact,
+  getCoachLeadsById,
+  getContactById,
+} = require('../contact/handlers')
+const { LANG } = require('../../_utils/constants')
 
 module.exports = {
   addServiceToCoach: async (req, res) => {
@@ -63,122 +67,103 @@ module.exports = {
     }
   },
 
-  /**
-   * Get all coaches
-   *
-   * A coach is a user which at least one listing
-   */
-  // retrieveCoaches: async (_req, res) => {
-  //   try {
-  //     res.status(200).json([]) // Actually there is no listing set so no coach
-  //   } catch (error) {
-  //     res.status(500).json({
-  //       public_message: 'Error in get coaches',
-  //       debug_message: error.message,
-  //     })
-  //   }
-  // },
+  addExerciseToCoach: async (req, res) => {
+    try {
+      const {
+        body: { name, lang, instructions, videoUrl, isPrivate },
+        user,
+      } = req
 
-  // addCustomerToCoach: async (req, res) => {
-  //   try {
-  //     const { id } = req.params
-  //     const { email, first_name, last_name, phone } = req.body
+      if (!name) throw new Error('Name is required')
+      if (!lang) throw new Error('Lang is required')
 
-  //     if (!ObjectId.isValid(id)) {
-  //       throw new Error('Coach param id is incorrect')
-  //     }
+      const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
+        LANG[k].NAME.toLowerCase(),
+      )
 
-  //     if (!email) {
-  //       throw new Error('Customer email is required')
-  //     }
+      if (!acceptedLanguagesValue.includes(lang))
+        throw new Error('Lang is invalid')
 
-  //     const coach = (await readUser({ _id: id }))[0]
+      const language = await getLangByISO(lang)
+      const newExercise = await createExercise(
+        user._id,
+        language._id.toString(),
+        name,
+        null,
+        instructions,
+        videoUrl,
+        isPrivate,
+      )
 
-  //     if (!coach) {
-  //       throw new Error('No coach found')
-  //     }
+      res.status(201).json(newExercise)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Exercise can not be added',
+        debug_message: error.message,
+      })
+    }
+  },
 
-  //     /**
-  //      * Check is there is already a user with this email
-  //      */
-  //     let lead = (await readUser({ email }))[0]
+  addCustomerToCoach: async (req, res) => {
+    try {
+      const {
+        user: { _id },
+        body: { email, firstName, lastName, phone, leadId },
+      } = req
 
-  //     if (!lead) {
-  //       lead = await createUser({ email, first_name, last_name, phone })
-  //     }
+      let lead
+      /**
+       * Is no lead id we need to create the user
+       */
+      if (!leadId) {
+        try {
+          lead = await createUser(email, firstName, lastName, phone)
+        } catch (error) {
+          res.status(500).json({
+            public_message: 'Cannot create the user',
+            debug_message: error.message,
+          })
+        }
+      } else {
+        /**
+         * Else we should add the existing user as a contact
+         * In that case we check is the contact is not already present
+         */
+        lead = await getUserById(leadId)
 
-  //     const leadAsCoachContact = (
-  //       await readContact({ owner: coach._id, lead: lead._id })
-  //     )[0]
+        if (!lead) throw new Error('Lead not found')
 
-  //     /**
-  //      * If the contact already exist, just send it back
-  //      */
-  //     if (leadAsCoachContact) {
-  //       throw new Error('This contact is already your customer')
-  //     }
+        const leads = await getCoachLeadsById(_id, leadId)
 
-  //     const newContact = await createContact({
-  //       owner: coach._id,
-  //       lead: lead._id,
-  //       type: CONTACT_TYPES.TRAINEE,
-  //     })
+        if (leads.length) throw new Error('Lead already a contact')
+      }
 
-  //     res.status(200).json(newContact)
-  //   } catch (error) {
-  //     res.status(500).json({
-  //       public_message: 'Error in adding customer to coach',
-  //       debug_message: error.message,
-  //     })
-  //   }
-  // },
+      const newContact = await createContact(_id, lead._id)
+      const newContactToSend = await getContactById(newContact._id)
 
-  // getCoachCustomers: async (req, res) => {
-  //   try {
-  //     const { user: coach } = req
+      res.status(200).json(newContactToSend)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Error in adding customer to coach',
+        debug_message: error.message,
+      })
+    }
+  },
 
-  //     const leads = await readContact({ owner: coach._id })
+  retrieveCoachCustomers: async (req, res) => {
+    try {
+      const {
+        user: { _id },
+      } = req
 
-  //     const ids = leads.map(contact => contact.lead)
+      const customers = await getContactsByCoachId(_id)
 
-  //     const customers = await readUser({ _id: { $in: ids } })
-
-  //     res.status(200).json(customers)
-  //   } catch (error) {
-  //     res.status(500).json({
-  //       public_message: 'Error in adding customer to coach',
-  //       debug_message: error.message,
-  //     })
-  //   }
-  // },
-
-  // getCoachCustomer: async (req, res) => {
-  //   try {
-  //     const {
-  //       user: coach,
-  //       params: { customerId },
-  //     } = req
-
-  //     const contact = (
-  //       await readContact({ owner: coach._id, lead: customerId })
-  //     )[0]
-
-  //     if (!contact) {
-  //       throw new Error('Customer not found 1')
-  //     }
-
-  //     const customer = (await readUser({ _id: contact.lead }))[0]
-
-  //     if (!customer) {
-  //       throw new Error('Customer not found 2')
-  //     }
-
-  //     res.status(200).json(customer)
-  //   } catch (error) {
-  //     res.status(500).json({
-  //       public_message: 'Error in getting customer to coach',
-  //       debug_message: error.message,
-  //     })
-  //   }
-  // },
+      res.status(200).json(customers)
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'Error in adding customer to coach',
+        debug_message: error.message,
+      })
+    }
+  },
 }
