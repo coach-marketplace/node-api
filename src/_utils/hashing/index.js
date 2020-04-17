@@ -14,15 +14,13 @@ module.exports = {
   },
 
   /**
-   * @param {string} stringToCompare String to compare
-   * @param {string} encryptedString Encrypted string
+   * @description https://github.com/kelektiv/node.bcrypt.js#to-check-a-password
+   * @param {string} plainString String to compare
+   * @param {string} hash Encrypted hash
    * @return {object} Promise
    */
-  compareHash: async (stringToCompare, encryptedString) => {
-    const areStringMatch = await bcrypt.compare(
-      encryptedString,
-      stringToCompare,
-    )
+  compareHash: async (plainString, hash) => {
+    const areStringMatch = await bcrypt.compare(plainString, hash)
 
     return areStringMatch
   },
