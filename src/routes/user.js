@@ -4,6 +4,7 @@ const userRouter = require('express').Router()
 
 // TODO: upload avatar for local account
 // const { uploadUserAvatar } = require('../middleware/file-upload')
+const { requireJWTAuth, requireAccessMyData } = require('../middleware/auth')
 
 const {
   createNewUser,
@@ -12,6 +13,7 @@ const {
   updateUser,
   deleteUser,
   // addUserAvatar,
+  retrieveUserConversations,
 } = require('../controllers/user')
 
 /**
@@ -94,6 +96,12 @@ userRouter
 
   .put('/:id', updateUser)
   .delete('/:id', deleteUser)
+  .get(
+    '/:id/conversations',
+    requireJWTAuth,
+    requireAccessMyData,
+    retrieveUserConversations,
+  )
 // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
 
 module.exports = userRouter

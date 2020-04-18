@@ -109,9 +109,27 @@ const createConversation = async (ownerId, memberIds) => {
   return newConversation
 }
 
+/**
+ * Same as getConversationsByParticipantId but we give back user info too
+ * @param {string} userId User id
+ * @return {array} List of conversations
+ */
+const getConversationsByUserId = async (userId) => {
+  if (!userId) throw new Error('userId is required')
+
+  if (!ObjectId.isValid(userId)) throw new Error('userId is invalid')
+
+  const conversations = await read({
+    participants: { $elemMatch: { user: userId } },
+  }).populate('participants.user')
+
+  return conversations
+}
+
 module.exports = {
   createConversation,
   getAllConversations,
   getConversationsByParticipantId,
   getConversationByParticipantsIds,
+  getConversationsByUserId,
 }

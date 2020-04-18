@@ -8,6 +8,20 @@ const {
   deleteUserById,
   editUser,
 } = require('./handlers')
+const { getConversationsByUserId } = require('../conversation/handlers')
+
+const retrieveUserConversations = async (req, res) => {
+  try {
+    const conversations = await getConversationsByUserId(req.user._id)
+
+    res.status(200).json(conversations)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Conversations not found',
+      debug_message: error.message,
+    })
+  }
+}
 
 module.exports = {
   createNewUser: async (req, res) => {
@@ -104,4 +118,6 @@ module.exports = {
       })
     }
   },
+
+  retrieveUserConversations,
 }
