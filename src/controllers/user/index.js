@@ -1,19 +1,19 @@
 'use strict'
 
 const {
+  createUser,
   getAllUsers,
   getUserById,
   getUserByEmail,
   deleteUserById,
   editUser,
-  editUserPassword,
-  getUserPassword,
-  getUserBody,
-  editUserBody,
 } = require('./handlers')
-const { log } = require('../auth/handlers')
+const {
+  createUserPhysicalMetrics,
+  getPhysicalMetricsByUserId,
+} = require('../physical-metrics/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
-const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
+const { USER_ACCOUNT_TYPE, UNIT } = require('../../_utils/constants')
 
 module.exports = {
   createNewUser: async (req, res) => {
@@ -163,49 +163,48 @@ module.exports = {
     }
   },
 
-  retrieveUserBody: async (req, res) => {
+  retrieveUserPhysicalMetrics: async (req, res) => {
     try {
-      let {
-        params: { id }
-      } = req;
-      let userBody = await getUserBody(id);
-      res.status(200).json(userBody);
+      let { user } = req
+
+      const userPhysicalMetrics = await getPhysicalMetricsByUserId(user._id)
+
+      res.status(200).json(userPhysicalMetrics)
     } catch (error) {
       res.status(500).json({
-        public_message: "could not retrive user physical data",
+        public_message: 'Could not retrieve user physical Metrics',
         debug_message: error.message,
       })
     }
   },
 
-  updateUserBody: async (req, res) => {
+  addUserPhysicalMetrics: async (req, res) => {
     try {
       let {
-        body,
-        params: { id }
-      } = req;
-      /*editUserBody(id, body).then(userBody => {
-        console.log("coucou")
-        console.log(userBody);
-        res.status(200).json(userBody);
-      })
-      .catch(error => {
-        res.status(500).json({
-          public_message: "could not update user physical data",
-          debug_message: error.message,
-        })
-      });*/
-      let userBody = await editUserBody(id, body);
-      console.log(userBody);
-      res.status(200).json(userBody);
+        body: { height, weight },
+        user,
+      } = req
 
+      /**
+       * For now units are KG and CM by default
+       * TODO: let the user enter the unity himself
+       */
+      const userPhysicalMetrics = await createUserPhysicalMetrics(
+        user._id,
+        weight,
+        UNIT.WEIGHT.KG,
+        height,
+        UNIT.HEIGHT.CM,
+      )
+
+      res.status(200).json(userPhysicalMetrics)
     } catch (error) {
       res.status(500).json({
-        public_message: "could not update user physical data",
+        public_message: 'could not update user physical data',
         debug_message: error.message,
       })
     }
-  }
+  },
 
   /**
    * Add avatar to user

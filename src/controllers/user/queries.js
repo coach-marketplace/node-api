@@ -3,7 +3,6 @@
 const mongoose = require('mongoose')
 
 const User = require('../../models/user')
-const Body = require('../../models/body');
 
 module.exports = {
   /**
@@ -47,34 +46,17 @@ module.exports = {
   },
 
   editUserPassword(userId, newPassword) {
-    return User.findOneAndUpdate({ _id: userId, "accounts.type": "local" }, 
-      {$set:{"accounts.$.password":newPassword}}, 
-      {new: true}
-      )
+    return User.findOneAndUpdate(
+      { _id: userId, 'accounts.type': 'local' },
+      { $set: { 'accounts.$.password': newPassword } },
+      { new: true },
+    )
   },
 
   getUserPassword(userId) {
-    return User.findOne({ _id: userId, "accounts.type": "local" }, {"accounts.$.password":1});
-  },
-
-  createBody(data) {
-    const newBody = new Body({
-      _id: new mongoose.Types.ObjectId(),
-      ...data,
-    })
-
-    return newBody.save()
-  },
-
-  readBody(bodyId) {
-    return Body.findById(bodyId)
-  },
-
-  updateBody(bodyId, newData) {
-    return Body.findOneAndUpdate(
-      { _id: bodyId },
-      { $set: newData },
-      { new: true }, // new is use to return the document after updating
+    return User.findOne(
+      { _id: userId, 'accounts.type': 'local' },
+      { 'accounts.$.password': 1 },
     )
   },
 }

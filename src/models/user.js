@@ -58,8 +58,13 @@ const userSchema = new Schema({
     trim: true,
   },
 
-  body: {
-    type: mongoose.Schema.Types.ObjectId,
+  dateOfBirth: {
+    type: Date,
+  },
+
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other', 'not-say'],
   },
 
   isArchived: {

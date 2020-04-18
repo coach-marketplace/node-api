@@ -30,10 +30,22 @@ const CONSOLE_LOG_CODE = {
   },
 }
 
+const UNIT = {
+  HEIGHT: {
+    CM: 'cm',
+    IN: 'in',
+  },
+  WEIGHT: {
+    KG: 'kg',
+    LB: 'lb',
+  },
+}
+
 module.exports = {
   USER_ACCOUNT_TYPE,
   CONTACT_TYPE,
   CONSOLE_LOG_CODE,
   CURRENCY,
   LANG,
+  UNIT,
 }

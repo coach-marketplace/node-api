@@ -13,8 +13,8 @@ const {
   updateUser,
   deleteUser,
   changeUserPassword,
-  retrieveUserBody,
-  updateUserBody,
+  retrieveUserPhysicalMetrics,
+  addUserPhysicalMetrics,
   // addUserAvatar,
 } = require('../controllers/user')
 
@@ -105,7 +105,7 @@ userRouter
     requireAccessMyData,
     changeUserPassword,
   )
-  .get("/body/:id", retrieveUserBody)
-  .post("/body/:id", updateUserBody)
+  .get('/:id/physical-Metrics', retrieveUserPhysicalMetrics)
+  .post('/:id/physical-Metrics', addUserPhysicalMetrics)
 
 module.exports = userRouter
