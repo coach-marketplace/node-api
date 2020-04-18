@@ -135,8 +135,6 @@ userSchema.methods = {
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
-      phone: this.phone,
-      accounts: this.accounts,
     }
   },
 }
