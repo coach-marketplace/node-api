@@ -9,6 +9,9 @@ const getUserLightData = (user) => ({
   email: user.email,
   firstName: user.firstName,
   lastName: user.lastName,
+  isArchived: user.isArchived,
+  isCoach: user.isCoach,
+  isAdmin: user.isAdmin,
 })
 
 module.exports = {

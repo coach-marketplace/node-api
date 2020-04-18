@@ -2,7 +2,15 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, deleteOne, updateOne, readBody, createBody, updateBody } = require('./queries.js')
+const {
+  create,
+  read,
+  deleteOne,
+  updateOne,
+  readBody,
+  createBody,
+  updateBody,
+} = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
@@ -59,15 +67,6 @@ module.exports = {
     if (!userToUpdate) throw new Error('User not found')
 
     const updatedData = {
-      isArchived: newData.hasOwnProperty('isArchived')
-        ? newData.isArchived
-        : userToUpdate.isArchived,
-      isCoach: newData.hasOwnProperty('isCoach')
-        ? newData.isCoach
-        : userToUpdate.isCoach,
-      isEmailVerified: newData.hasOwnProperty('isEmailVerified')
-        ? newData.isEmailVerified
-        : userToUpdate.isEmailVerified,
       email: newData.hasOwnProperty('email')
         ? newData.email
         : userToUpdate.email,
@@ -80,12 +79,30 @@ module.exports = {
       phone: newData.hasOwnProperty('phone')
         ? newData.phone
         : userToUpdate.phone,
-      emailToken: newData.hasOwnProperty('emailToken')
-        ? newData.emailToken
-        : userToUpdate.emailToken,
+      dateOfBirth: newData.hasOwnProperty('dateOfBirth')
+        ? newData.dateOfBirth
+        : userToUpdate.dateOfBirth,
+      gender: newData.hasOwnProperty('gender')
+        ? newData.gender
+        : userToUpdate.gender,
+      isArchived: newData.hasOwnProperty('isArchived')
+        ? newData.isArchived
+        : userToUpdate.isArchived,
+      isCoach: newData.hasOwnProperty('isCoach')
+        ? newData.isCoach
+        : userToUpdate.isCoach,
+      isAdmin: newData.hasOwnProperty('isAdmin')
+        ? newData.isAdmin
+        : userToUpdate.isAdmin,
+      isEmailVerified: newData.hasOwnProperty('isEmailVerified')
+        ? newData.isEmailVerified
+        : userToUpdate.isEmailVerified,
       emailConfirmedAt: newData.hasOwnProperty('emailConfirmedAt')
         ? newData.emailConfirmedAt
         : userToUpdate.emailConfirmedAt,
+      emailToken: newData.hasOwnProperty('emailToken')
+        ? newData.emailToken
+        : userToUpdate.emailToken,
     }
 
     const updatedUser = await updateOne(id, updatedData)
@@ -153,38 +170,34 @@ module.exports = {
    * @return {Object} USer Body
    */
   getUserBody: async (userId) => {
-    if (!userId) throw new Error('id is required');
-    if (!ObjectId.isValid(userId)) throw new Error('Id is invalid');
+    if (!userId) throw new Error('id is required')
+    if (!ObjectId.isValid(userId)) throw new Error('Id is invalid')
 
-    let user = await read({_id: userId});
-    if(!user[0].body) {
-      return {};
+    let user = await read({ _id: userId })
+    if (!user[0].body) {
+      return {}
+    } else {
+      return await readBody(user[0].body)
     }
-    else {
-      return await readBody(user[0].body);
-    }
-    
   },
 
   /**
    * @param {String} userId User id
    * @param {Object} bodyData Updated user body data
-   * @return {Object} Updated user 
+   * @return {Object} Updated user
    */
   editUserBody: async (userId, bodyData) => {
-    if (!userId) throw new Error('id is required');
-    if (!ObjectId.isValid(userId)) throw new Error('Id is invalid');
+    if (!userId) throw new Error('id is required')
+    if (!ObjectId.isValid(userId)) throw new Error('Id is invalid')
 
-    let user = await read({_id: userId});
-    let bodyId = user[0].body;
-    if(!bodyId) {
-      let body = await createBody(bodyData);
-      await updateOne(userId, {"body": body._id});
-      return body;
+    let user = await read({ _id: userId })
+    let bodyId = user[0].body
+    if (!bodyId) {
+      let body = await createBody(bodyData)
+      await updateOne(userId, { body: body._id })
+      return body
+    } else {
+      return await updateBody(bodyId, bodyData)
     }
-    else {
-      return await updateBody(bodyId, bodyData);
-    }
-
   },
 }
