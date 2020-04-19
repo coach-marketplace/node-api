@@ -10,6 +10,19 @@ const {
 } = require('./handlers')
 const { getConversationsByUserId } = require('../conversation/handlers')
 
+const getMe = async (req, res) => {
+  try {
+    const user = await getUserById(req.user._id)
+
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Unauthorized',
+      debug_message: error.message,
+    })
+  }
+}
+
 const retrieveUserConversations = async (req, res) => {
   try {
     const conversations = await getConversationsByUserId(req.user._id)
@@ -120,4 +133,5 @@ module.exports = {
   },
 
   retrieveUserConversations,
+  getMe,
 }

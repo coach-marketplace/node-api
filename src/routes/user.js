@@ -7,6 +7,7 @@ const userRouter = require('express').Router()
 const { requireJWTAuth, requireAccessMyData } = require('../middleware/auth')
 
 const {
+  getMe,
   createNewUser,
   retrieveUsers,
   retrieveUser,
@@ -24,6 +25,7 @@ const {
  */
 
 userRouter
+  .get('/me', requireJWTAuth, getMe)
   /**
    * @swagger
    * path:

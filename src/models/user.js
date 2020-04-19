@@ -88,6 +88,14 @@ const userSchema = new Schema({
   },
 
   /**
+   * If user have a socket
+   */
+  onlineSocketId: {
+    type: String,
+    default: null,
+  },
+
+  /**
    * Account is optional, and if you have one, you can have many possibilities
    * like `local`which is the normal `email` + `password` authentication way.
    * You also can have a google account then in that cas you get an id and
