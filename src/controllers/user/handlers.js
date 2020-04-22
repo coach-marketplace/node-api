@@ -2,7 +2,15 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, deleteOne, updateOne } = require('./queries.js')
+const {
+  create,
+  read,
+  deleteOne,
+  updateOne,
+  readBody,
+  createBody,
+  updateBody,
+} = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
@@ -65,15 +73,6 @@ const editUser = async (id, newData) => {
   if (!userToUpdate) throw new Error('User not found')
 
   const updatedData = {
-    isArchived: newData.hasOwnProperty('isArchived')
-      ? newData.isArchived
-      : userToUpdate.isArchived,
-    isCoach: newData.hasOwnProperty('isCoach')
-      ? newData.isCoach
-      : userToUpdate.isCoach,
-    isEmailVerified: newData.hasOwnProperty('isEmailVerified')
-      ? newData.isEmailVerified
-      : userToUpdate.isEmailVerified,
     email: newData.hasOwnProperty('email') ? newData.email : userToUpdate.email,
     firstName: newData.hasOwnProperty('firstName')
       ? newData.firstName
@@ -82,12 +81,30 @@ const editUser = async (id, newData) => {
       ? newData.lastName
       : userToUpdate.lastName,
     phone: newData.hasOwnProperty('phone') ? newData.phone : userToUpdate.phone,
-    emailToken: newData.hasOwnProperty('emailToken')
-      ? newData.emailToken
-      : userToUpdate.emailToken,
+    dateOfBirth: newData.hasOwnProperty('dateOfBirth')
+      ? newData.dateOfBirth
+      : userToUpdate.dateOfBirth,
+    gender: newData.hasOwnProperty('gender')
+      ? newData.gender
+      : userToUpdate.gender,
+    isArchived: newData.hasOwnProperty('isArchived')
+      ? newData.isArchived
+      : userToUpdate.isArchived,
+    isCoach: newData.hasOwnProperty('isCoach')
+      ? newData.isCoach
+      : userToUpdate.isCoach,
+    isAdmin: newData.hasOwnProperty('isAdmin')
+      ? newData.isAdmin
+      : userToUpdate.isAdmin,
+    isEmailVerified: newData.hasOwnProperty('isEmailVerified')
+      ? newData.isEmailVerified
+      : userToUpdate.isEmailVerified,
     emailConfirmedAt: newData.hasOwnProperty('emailConfirmedAt')
       ? newData.emailConfirmedAt
       : userToUpdate.emailConfirmedAt,
+    emailToken: newData.hasOwnProperty('emailToken')
+      ? newData.emailToken
+      : userToUpdate.emailToken,
     onlineSocketId: newData.hasOwnProperty('onlineSocketId')
       ? newData.onlineSocketId
       : userToUpdate.onlineSocketId,

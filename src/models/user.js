@@ -2,33 +2,6 @@
 
 const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
 
-/**
- * @swagger
- *  components:
- *    schemas:
- *      User:
- *        type: object
- *        required:
- *          - email
- *        properties:
- *          _id:
- *            type: objectId
- *          createdAt:
- *            type: timestamp
- *          updatedAt:
- *            type: timestamp
- *          firstName:
- *            type: string
- *          lastName:
- *            type: string
- *          accounts:
- *            type: array
- *        example:
- *           email: john.doe@email.com
- *           firstName: John
- *           lastName: Doe
- */
-
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
@@ -56,6 +29,15 @@ const userSchema = new Schema({
   phone: {
     type: String,
     trim: true,
+  },
+
+  dateOfBirth: {
+    type: Date,
+  },
+
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other', 'not-say'],
   },
 
   isArchived: {
@@ -131,18 +113,5 @@ const userSchema = new Schema({
 })
 
 userSchema.plugin(timestamp)
-
-userSchema.methods = {
-  getLightData() {
-    return {
-      _id: this._id,
-      email: this.email,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      phone: this.phone,
-      accounts: this.accounts,
-    }
-  },
-}
 
 module.exports = mongoose.model('User', userSchema)

@@ -44,4 +44,19 @@ module.exports = {
   deleteOne(id) {
     return User.deleteOne({ _id: { $eq: id } })
   },
+
+  editUserPassword(userId, newPassword) {
+    return User.findOneAndUpdate(
+      { _id: userId, 'accounts.type': 'local' },
+      { $set: { 'accounts.$.password': newPassword } },
+      { new: true },
+    )
+  },
+
+  getUserPassword(userId) {
+    return User.findOne(
+      { _id: userId, 'accounts.type': 'local' },
+      { 'accounts.$.password': 1 },
+    )
+  },
 }

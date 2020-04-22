@@ -65,7 +65,7 @@ module.exports = {
     }
 
     if (!req.user.isAdmin) {
-      res.status(401).json({ message: "Don't have permission for this action" })
+      res.status(401).json({ message: 'Unauthorized to access admin data' })
       return
     }
 

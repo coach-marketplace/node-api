@@ -37,6 +37,17 @@ const TYPE = {
   },
 }
 
+const UNIT = {
+  HEIGHT: {
+    CM: 'cm',
+    IN: 'in',
+  },
+  WEIGHT: {
+    KG: 'kg',
+    LB: 'lb',
+  },
+}
+
 module.exports = {
   USER_ACCOUNT_TYPE,
   CONTACT_TYPE,
@@ -45,4 +56,5 @@ module.exports = {
   LANG,
   CONVERSATION_PARTICIPANT: TYPE.CONVERSATION_PARTICIPANT,
   CONVERSATION_PARTICIPANTS: Object.values(TYPE.CONVERSATION_PARTICIPANT),
+  UNIT,
 }
