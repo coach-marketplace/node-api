@@ -4,6 +4,16 @@ const { encryptString, compareHash } = require('../../_utils/hashing')
 const { read, create } = require('../user/queries')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 
+const getUserLightData = (user) => ({
+  _id: user._id,
+  email: user.email,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  isArchived: user.isArchived,
+  isCoach: user.isCoach,
+  isAdmin: user.isAdmin,
+})
+
 module.exports = {
   /**
    * Log
@@ -34,7 +44,7 @@ module.exports = {
       throw new Error('Email or password incorrect')
     }
 
-    return user
+    return getUserLightData(user)
   },
 
   register: async (data) => {
@@ -63,6 +73,6 @@ module.exports = {
       ],
     })
 
-    return user
+    return getUserLightData(user)
   },
 }

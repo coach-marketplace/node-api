@@ -47,8 +47,25 @@ module.exports = {
       return
     }
 
-    if (req.user._id !== req.params.id) {
+    if (req.user._id !== req.params.id && !req.user.isAdmin) {
       res.status(401).json({ message: 'Unauthorized to access these data' })
+      return
+    }
+
+    next()
+  },
+
+  /**
+   * This middleware let pass only admin
+   */
+  onlyAdmin: (req, res, next) => {
+    if (!req.user) {
+      res.status(401).json({ message: 'Unauthorized for un-auth user' })
+      return
+    }
+
+    if (!req.user.isAdmin) {
+      res.status(401).json({ message: 'Unauthorized to access admin data' })
       return
     }
 
