@@ -68,6 +68,11 @@ const userSchema = new Schema({
     default: false,
   },
 
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+
   isEmailVerified: {
     type: Boolean,
     default: false,
@@ -80,6 +85,14 @@ const userSchema = new Schema({
 
   emailToken: {
     type: String,
+  },
+
+  /**
+   * If user have a socket
+   */
+  onlineSocketId: {
+    type: String,
+    default: null,
   },
 
   /**
