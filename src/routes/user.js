@@ -4,102 +4,47 @@ const userRouter = require('express').Router()
 
 // TODO: upload avatar for local account
 // const { uploadUserAvatar } = require('../middleware/file-upload')
+const {
+  requireJWTAuth,
+  requireAccessMyData,
+  onlyAdmin,
+} = require('../middleware/auth')
 
 const {
+  getMe,
   createNewUser,
   retrieveUsers,
   retrieveUser,
   updateUser,
   deleteUser,
-  updateUserPassword,
-  retrieveBodyData,
-  updateBodyData,
+  changeUserPassword,
+  retrieveUserPhysicalMetrics,
+  addUserPhysicalMetrics,
   // addUserAvatar,
+  retrieveUserConversations,
 } = require('../controllers/user')
 
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management
- */
-
 userRouter
-  /**
-   * @swagger
-   * path:
-   *  /users:
-   *    post:
-   *      summary: Create a user
-   *      tags: [Users]
-   *      requestBody:
-   *        required: true
-   *        content:
-   *          application/json:
-   *            schema:
-   *              type: object
-   *              properties:
-   *                email:
-   *                  type: string
-   *                firstName:
-   *                  type: string
-   *                lastName:
-   *                  type: string
-   *                password:
-   *                  type: string
-   *      responses:
-   *        "201":
-   *          description: Get an object with the data of new user
-   *          content:
-   *            application/json:
-   *              schema:
-   *                $ref: '#/components/schemas/User'
-   */
-  .post('/', createNewUser)
-
-  /**
-   * @swagger
-   * path:
-   *  /users:
-   *    get:
-   *      summary: Get all users
-   *      tags: [Users]
-   *      responses:
-   *        "200":
-   *          description: Get an array of users from database
-   *          content:
-   *            application/json:
-   *              schema:
-   *                $ref: '#/components/schemas/User'
-   */
-  .get('/', retrieveUsers)
-
-  /**
-   * @swagger
-   * path:
-   *  /users/:id:
-   *    get:
-   *      summary: Get one user
-   *      tags: [Users]
-   *      parameters:
-   *        - in: path
-   *          name: userId
-   *          required: true
-   *      responses:
-   *        "200":
-   *          description: Get an object with the user data
-   *          content:
-   *            application/json:
-   *              schema:
-   *                $ref: '#/components/schemas/User'
-   */
-  .get('/:id', retrieveUser)
-
-  .put('/:id', updateUser)
+  .get('/me', requireJWTAuth, getMe)
+  .post('/', requireJWTAuth, onlyAdmin, createNewUser)
+  .get('/', requireJWTAuth, onlyAdmin, retrieveUsers)
+  .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser)
+  .put('/:id', requireJWTAuth, requireAccessMyData, updateUser)
   .delete('/:id', deleteUser)
-// .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
-  .post('/password/:id', updateUserPassword)
-  .get('/body/:id', retrieveBodyData)
-  .post('/body/:id', updateBodyData)
+  // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
+  .post(
+    '/:id/change-password',
+    requireJWTAuth,
+    requireAccessMyData,
+    changeUserPassword,
+  )
+  .get('/:id/physical-Metrics', retrieveUserPhysicalMetrics)
+  .post('/:id/physical-Metrics', addUserPhysicalMetrics)
+  .get(
+    '/:id/conversations',
+    requireJWTAuth,
+    requireAccessMyData,
+    retrieveUserConversations,
+  )
 
 module.exports = userRouter

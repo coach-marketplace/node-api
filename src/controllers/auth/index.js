@@ -1,6 +1,7 @@
 'use strict'
 
 const { register } = require('./handlers')
+const { getUserById } = require('../user/handlers')
 const { signToken } = require('../../_utils/jwt')
 
 module.exports = {
@@ -18,15 +19,14 @@ module.exports = {
   },
 
   login: async (req, res) => {
-    /**
-     * We use getLightData to control which data from the user we want to
-     * retrieve, else we get the complete mongo object
-     */
-    const userData = req.user.getLightData()
-    const token = signToken({ ...userData })
+    const user = await getUserById(req.user._id)
+    const token = signToken({ _id: user._id, isAdmin: user.isAdmin })
 
+    // const token = signToken({ ...req.user })
+
+    // res.status(201).json({ token: `Bearer ${token}` })
     res.status(201).json({
-      user: userData,
+      user: req.user,
       token: `Bearer ${token}`,
     })
   },
