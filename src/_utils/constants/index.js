@@ -30,10 +30,31 @@ const CONSOLE_LOG_CODE = {
   },
 }
 
+const TYPE = {
+  CONVERSATION_PARTICIPANT: {
+    OWNER: 'owner',
+    MEMBER: 'member',
+  },
+}
+
+const UNIT = {
+  HEIGHT: {
+    CM: 'cm',
+    IN: 'in',
+  },
+  WEIGHT: {
+    KG: 'kg',
+    LB: 'lb',
+  },
+}
+
 module.exports = {
   USER_ACCOUNT_TYPE,
   CONTACT_TYPE,
   CONSOLE_LOG_CODE,
   CURRENCY,
   LANG,
+  CONVERSATION_PARTICIPANT: TYPE.CONVERSATION_PARTICIPANT,
+  CONVERSATION_PARTICIPANTS: Object.values(TYPE.CONVERSATION_PARTICIPANT),
+  UNIT,
 }

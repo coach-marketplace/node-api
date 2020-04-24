@@ -46,33 +46,18 @@ module.exports = {
     return User.deleteOne({ _id: { $eq: id } })
   },
 
-  getBodyData(userId) {
-    //var bodyId = User.findOne({_id: userId}).select("body -_id").exec();
-    User.findOne({_id: userId, "body":{$ne:null}}).select("body -_id").exec().then(doc => {
-      if(doc) {
-        return {"todo":"todo"};
-      }
-      else {
-        return {};
-      }
-    });
+  editUserPassword(userId, newPassword) {
+    return User.findOneAndUpdate(
+      { _id: userId, 'accounts.type': 'local' },
+      { $set: { 'accounts.$.password': newPassword } },
+      { new: true },
+    )
   },
 
-  editBodyData(userId, bodyData) {
-    User.findOne({_id: userId, "body":{$ne:null}}).select("body -_id").exec().then(doc => {
-      if(doc) {
-        return {"todo":"todo"};
-      }
-      else {
-        var bodyId = new mongoose.Types.ObjectId()
-        bodyData._id = bodyId;
-        var newBody = new Body(bodyData);
-        User.findOneAndUpdate({ _id: userId }, 
-          {$set:{"body":bodyId}}, 
-          {new: true}
-        )
-        return newBody.save();
-      }
-    });
+  getUserPassword(userId) {
+    return User.findOne(
+      { _id: userId, 'accounts.type': 'local' },
+      { 'accounts.$.password': 1 },
+    )
   },
 }

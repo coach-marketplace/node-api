@@ -14,7 +14,6 @@ module.exports = {
       })
       .then(async () => {
         await hydrate()
-        console.log('Database connected!')
       })
       .catch((error) => {
         console.log('Database connection error:', error.message)
