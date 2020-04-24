@@ -39,6 +39,7 @@ describe("Ensure new user is working", () => {
         res.should.have.status(201);
         res.body.should.be.a('object');
         res.body.email.should.equal(data.email);
+        data.user = res.body;
         done();
       })
     })
@@ -73,4 +74,3 @@ describe("Ensure new user is working", () => {
 
 
 //TODO logout
-//TODO delete user
