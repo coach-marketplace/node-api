@@ -3,7 +3,6 @@
 const userRouter = require('express').Router()
 
 // TODO: upload avatar for local account
-// const { uploadUserAvatar } = require('../middleware/file-upload')
 const {
   requireJWTAuth,
   requireAccessMyData,
@@ -20,8 +19,11 @@ const {
   changeUserPassword,
   retrieveUserPhysicalMetrics,
   addUserPhysicalMetrics,
-  // addUserAvatar,
+  retrieveUserConversation,
   retrieveUserConversations,
+  retrieveUserConversationMessages,
+  postMessageToConversation,
+  startConversation,
 } = require('../controllers/user')
 
 userRouter
@@ -31,20 +33,43 @@ userRouter
   .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser)
   .put('/:id', requireJWTAuth, requireAccessMyData, updateUser)
   .delete('/:id', deleteUser)
-  // .post('/:id/avatar', uploadUserAvatar, addUserAvatar)
   .post(
     '/:id/change-password',
     requireJWTAuth,
     requireAccessMyData,
     changeUserPassword,
   )
-  .get('/:id/physical-Metrics', retrieveUserPhysicalMetrics)
-  .post('/:id/physical-Metrics', addUserPhysicalMetrics)
+  .get('/:id/physical-metrics', retrieveUserPhysicalMetrics)
+  .post('/:id/physical-metrics', addUserPhysicalMetrics)
   .get(
     '/:id/conversations',
     requireJWTAuth,
     requireAccessMyData,
     retrieveUserConversations,
+  )
+  .post(
+    '/:id/conversations',
+    requireJWTAuth,
+    requireAccessMyData,
+    startConversation,
+  )
+  .get(
+    '/:id/conversations/:conversationId',
+    requireJWTAuth,
+    requireAccessMyData,
+    retrieveUserConversation,
+  )
+  .get(
+    '/:id/conversations/:conversationId/messages',
+    requireJWTAuth,
+    requireAccessMyData,
+    retrieveUserConversationMessages,
+  )
+  .post(
+    '/:id/conversations/:conversationId/messages',
+    requireJWTAuth,
+    requireAccessMyData,
+    postMessageToConversation,
   )
 
 module.exports = userRouter

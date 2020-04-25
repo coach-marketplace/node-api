@@ -2,12 +2,13 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create } = require('./queries')
+const { create, read } = require('./queries')
 
 /**
  * @param {string} conversationId Id of conversation
  * @param {string} userId Id of user
  * @param {string} text Message
+ * @return {object} Created message
  */
 const createMessage = async (conversationId, userId, text) => {
   if (!conversationId) throw new Error('conversationId is required')
@@ -26,6 +27,22 @@ const createMessage = async (conversationId, userId, text) => {
   return newMessage
 }
 
+/**
+ * @param {string} conversationId Id of conversation
+ * @return {array} Messages
+ */
+const retrieveMessagesByConversationId = async (conversationId) => {
+  if (!conversationId) throw new Error('conversationId is required')
+
+  if (!ObjectId.isValid(conversationId))
+    throw new Error('conversationId is invalid')
+
+  const messages = await read({ conversation: conversationId })
+
+  return messages
+}
+
 module.exports = {
   createMessage,
+  retrieveMessagesByConversationId,
 }

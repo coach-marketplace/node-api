@@ -9,10 +9,8 @@ const {
   addExerciseToCoach,
   addServiceToCoach,
   getCoachServices,
-  retrieveCoachConversations,
   retrieveCoachCustomers,
   retrieveCoachExercises,
-  startConversation,
 } = require('../controllers/coach')
 
 coachRouter
@@ -46,18 +44,6 @@ coachRouter
     requireJWTAuth,
     requireAccessMyData,
     addCustomerToCoach,
-  )
-  .get(
-    '/:id/conversations',
-    requireJWTAuth,
-    requireAccessMyData,
-    retrieveCoachConversations,
-  )
-  .post(
-    '/:id/conversations',
-    requireJWTAuth,
-    requireAccessMyData,
-    startConversation,
   )
 
 module.exports = coachRouter

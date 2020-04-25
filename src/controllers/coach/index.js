@@ -13,10 +13,6 @@ const {
   getCoachLeadsById,
   getContactById,
 } = require('../contact/handlers')
-const {
-  createConversation,
-  getConversationsByParticipantId,
-} = require('../conversation/handlers')
 const { LANG } = require('../../_utils/constants')
 
 module.exports = {
@@ -166,48 +162,6 @@ module.exports = {
     } catch (error) {
       res.status(500).json({
         public_message: 'Error in adding customer to coach',
-        debug_message: error.message,
-      })
-    }
-  },
-
-  startConversation: async (req, res) => {
-    try {
-      const {
-        user: { _id },
-        body: { memberIds, messageText },
-      } = req
-
-      if (!messageText) throw new Error('Message is required')
-      if (!memberIds.length) throw new Error('At least one member is required')
-
-      const newConversation = await createConversation(
-        _id,
-        memberIds,
-        messageText,
-      )
-
-      res.status(200).json(newConversation)
-    } catch (error) {
-      res.status(500).json({
-        public_message: 'Error in starting the conversation',
-        debug_message: error.message,
-      })
-    }
-  },
-
-  retrieveCoachConversations: async (req, res) => {
-    try {
-      const {
-        user: { _id },
-      } = req
-
-      const conversations = await getConversationsByParticipantId(_id)
-
-      res.status(200).json(conversations)
-    } catch (error) {
-      res.status(500).json({
-        public_message: 'Error in starting the conversation',
         debug_message: error.message,
       })
     }
