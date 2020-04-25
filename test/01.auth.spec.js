@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 
-let server = require("../src/server.js")
+//let server = require("../src/server.js")
 
 let should = chai.should();
 const assert = require('assert');
@@ -15,16 +15,25 @@ let basePath = "/v1/auth"
 
 var data = require("./shared.js")
 
+const application = require('../src/app')
+const database = require('../src/database')
+const { PORT } = process.env
 
-describe('server', function () {
-  before(function () {
-    server.listen(5555);
-  });
+const server = application.listen(PORT, () => {
+  database.connect().then(() => {
+  })
+})
 
-  after(function () {
-    server.close();
-  });
+
+before(function () {
+    server.on("listening", () => {
+      done();
+    })
 });
+
+/*after(function () {
+  server.close();
+});*/
 
 
 //Create a user

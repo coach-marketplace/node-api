@@ -24,6 +24,7 @@ describe("Udating user infos", () => {
     it("update new user email address", (done) => {
         chai.request(app)
         .put(basePath+"/"+data.user._id)
+        .set("authorization",data.token)
         .send({"email": new_data.email})
         .end((err, res) => {
             should.not.exist(err);
@@ -56,7 +57,7 @@ describe("Udating user infos", () => {
 
 describe("Getting user infos", () => {
 
-    it("get all users", (done) => {
+    /*it("get all users", (done) => {
         chai.request(app)
         .get(basePath+"/")
         .end((err, res) => {
@@ -66,11 +67,12 @@ describe("Getting user infos", () => {
             res.body.should.not.have.lengthOf(0);
             done();
         })
-    })
+    })*/
 
     it("get new user", (done) => {
         chai.request(app)
-        .get(basePath+"/"+data.user._id)
+        .get(basePath+"/me")
+        .set("authorization",data.token)
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
