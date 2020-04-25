@@ -28,7 +28,7 @@ coachRouter
     retrieveCoachExercises,
   )
   .post(
-    '/:id/exercises/add',
+    '/:id/exercises/',
     requireJWTAuth,
     requireAccessMyData,
     addExerciseToCoach,
