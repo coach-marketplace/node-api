@@ -1,8 +1,13 @@
 'use strict'
 
-const { encryptString, compareHash } = require('../../_utils/hashing')
 const { read, create } = require('../user/queries')
-const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
+const { getLangByISO } = require('../lang/handlers')
+const { encryptString, compareHash } = require('../../_utils/hashing')
+const { USER_ACCOUNT_TYPE, LANG } = require('../../_utils/constants')
+
+const authorizedLangs = Object.values(LANG).map((lang) =>
+  lang.NAME.toLowerCase(),
+)
 
 const getUserLightData = (user) => ({
   _id: user._id,
@@ -47,24 +52,34 @@ module.exports = {
     return getUserLightData(user)
   },
 
+  /**
+   * @param {object} data User data
+   * @param {string} data.email User email
+   * @param {string} data.firstName User First name
+   * @param {string} data.lastName User Last name
+   * @param {string} data.phone User phone
+   * @param {string} data.lang User language (en - fr)
+   */
   register: async (data) => {
-    const { email, password, firstName, lastName, phone } = data
+    const { email, password, firstName, lastName, phone, lang } = data
 
-    if (!email || !password) {
-      throw new Error('Email and Password are required')
-    }
+    if (!email || !password) throw new Error('Email and Password are required')
 
     const users = await read({ email })
 
-    if (users.length) {
-      throw new Error('Email already used')
-    }
+    if (users.length) throw new Error('Email already used')
+
+    if (lang && !authorizedLangs.includes(lang))
+      throw new Error('Lang not accepted')
+
+    const langId = (await getLangByISO(LANG.ENGLISH.NAME.toLowerCase()))._id
 
     const user = await create({
       email,
       firstName,
       lastName,
       phone,
+      lang: langId,
       accounts: [
         {
           type: USER_ACCOUNT_TYPE.LOCAL,
