@@ -3,7 +3,6 @@
 const mongoose = require('mongoose')
 
 const User = require('../../models/user')
-const Body = require('../../models/body')
 
 module.exports = {
   /**
