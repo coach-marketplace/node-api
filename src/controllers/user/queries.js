@@ -3,7 +3,6 @@
 const mongoose = require('mongoose')
 
 const User = require('../../models/user')
-const Body = require('../../models/body')
 
 module.exports = {
   /**
@@ -26,6 +25,9 @@ module.exports = {
     return newUser.save()
   },
 
+  // TODO: replace by findAndModify du to deprecation warning
+  // https://mongoosejs.com/docs/deprecations.html
+  // https://www.journaldev.com/6221/mongodb-findandmodify-example
   /**
    * @param {string} userId Id of the user to update
    * @param {object} newData Data to update

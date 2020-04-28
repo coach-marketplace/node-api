@@ -2,18 +2,27 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const {
-  create,
-  read,
-  deleteOne,
-  updateOne,
-  readBody,
-  createBody,
-  updateBody,
-} = require('./queries.js')
+const { create, read, deleteOne, updateOne } = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
+
+/**
+ * Function who will return only exposed fields
+ * @param {object} user Data of ruse from database
+ */
+const getExposedUserData = (user, mode = 'light') => {
+  // TODO: add other modes
+  const exposedData = {}
+
+  exposedData._id = user._id
+  exposedData.email = user.email
+  exposedData.firstName = user.firstName
+  exposedData.lastName = user.lastName
+  exposedData.phone = user.phone
+
+  return exposedData
+}
 
 /**
  * @param {string} email user email
@@ -87,6 +96,7 @@ const editUser = async (id, newData) => {
     gender: newData.hasOwnProperty('gender')
       ? newData.gender
       : userToUpdate.gender,
+    lang: newData.hasOwnProperty('lang') ? newData.lang : userToUpdate.lang,
     isArchived: newData.hasOwnProperty('isArchived')
       ? newData.isArchived
       : userToUpdate.isArchived,
@@ -197,6 +207,7 @@ const disconnectUserBySocketId = async (socketId) => {
 }
 
 module.exports = {
+  getExposedUserData,
   createUser,
   editUser,
   getAllUsers,

@@ -4,8 +4,7 @@ const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
 
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
-const Schema = mongoose.Schema;
-
+const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -39,6 +38,11 @@ const userSchema = new Schema({
   gender: {
     type: String,
     enum: ['male', 'female', 'other', 'not-say'],
+  },
+
+  lang: {
+    type: Schema.Types.ObjectId,
+    ref: 'Lang',
   },
 
   isArchived: {
@@ -109,11 +113,6 @@ const userSchema = new Schema({
         type: String,
         trim: true,
       },
-
-      body: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Body'
-      }
     },
   ],
 })
