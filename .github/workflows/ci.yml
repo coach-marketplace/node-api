@@ -20,11 +20,11 @@ jobs:
       - name: Run unit tests
         run: npm run test
         env:
-          PORT=5555
-          MONGO_DB_URI=mongodb+srv://dbUser:dbUserPassword@clustercoachmarketplace-dakgz.mongodb.net/dev?retryWrites=true&w=majority
-          JWT_SECRET=secret
-          GOOGLE_CLIENT_ID=410290218130-9rprt9p3u2pobvvqkea73nue5s8qfdpf.apps.googleusercontent.com
-          GOOGLE_CLIENT_SECRET=jdVwpq_tqJd8LzS52uGlb-g7
-          API_URL=http://localhost:5555/
-          SESSION_KEY=caachmarketplacesessionkey
-          COOKIE_KEY=caachmarketplacecookiekey
+          PORT: 5555
+          MONGO_DB_URI: mongodb+srv://dbUser:dbUserPassword@clustercoachmarketplace-dakgz.mongodb.net/dev?retryWrites=true&w=majority
+          JWT_SECRET: secret
+          GOOGLE_CLIENT_ID: 410290218130-9rprt9p3u2pobvvqkea73nue5s8qfdpf.apps.googleusercontent.com
+          GOOGLE_CLIENT_SECRET: jdVwpq_tqJd8LzS52uGlb-g7
+          API_URL: http://localhost:5555/
+          SESSION_KEY: caachmarketplacesessionkey
+          COOKIE_KEY: caachmarketplacecookiekey
