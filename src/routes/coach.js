@@ -12,6 +12,7 @@ const {
   retrieveCoachCustomers,
   retrieveCoachExercises,
   searchUserAsCoach,
+  addWorkout,
 } = require('../controllers/coach')
 
 coachRouter
@@ -52,5 +53,6 @@ coachRouter
     requireAccessMyData,
     searchUserAsCoach,
   )
+  .get('/:id/workout', requireJWTAuth, requireAccessMyData, addWorkout)
 
 module.exports = coachRouter
