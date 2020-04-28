@@ -2,6 +2,8 @@
 
 const passport = require('passport')
 
+const { retrieveWorkoutById } = require("../controllers/workout/handlers")
+
 module.exports = {
   requireJWTAuth: (req, res, next) => {
     passport.authenticate('jwt', (_err, user) => {
@@ -48,6 +50,30 @@ module.exports = {
     }
 
     if (req.user._id !== req.params.id && !req.user.isAdmin) {
+      res.status(401).json({ message: 'Unauthorized to access these data' })
+      return
+    }
+
+    next()
+  },
+
+  /**
+   * request to acces user's exercise, workout, or program
+   */
+  requireAccessMyWorkouts: async (req, res, next) => {
+    if (!req.params.id) {
+      res.status(401).json({ message: 'Unauthorized to access user data' })
+      return
+    }
+
+    if (!req.user) {
+      res.status(401).json({ message: 'Unauthorized for un-auth user' })
+      return
+    }
+
+    let workout = await retrieveWorkoutById(req.params.id);
+
+    if(workout[0].userOwner.toString() !== req.user._id && !req.user.isAdmin) {
       res.status(401).json({ message: 'Unauthorized to access these data' })
       return
     }

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const workoutContentSchema = require('../schemas/workoutContent')
+const workoutExerciseSchema = require('../schemas/workoutExercise')
 
 const workoutSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -31,6 +32,7 @@ const workoutSchema = new Schema({
    * The content who can be written into different languages
    */
   content: [workoutContentSchema],
+  exercises: [workoutExerciseSchema],
 })
 
 module.exports = mongoose.model('Workout', workoutSchema)

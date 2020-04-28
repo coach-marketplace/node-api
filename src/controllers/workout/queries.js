@@ -21,6 +21,7 @@ module.exports = {
     content,
     isArchived = false,
     isPrivate = false,
+    exercises
   ) {
     const newWorkout = new Workout({
       _id: new mongoose.Types.ObjectId(),
@@ -34,6 +35,7 @@ module.exports = {
           content,
         },
       ],
+      exercises: exercises,
     })
 
     return newWorkout.save()

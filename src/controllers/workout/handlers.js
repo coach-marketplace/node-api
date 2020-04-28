@@ -27,8 +27,11 @@ module.exports = {
     content = null,
     isArchived = false,
     isPrivate = false,
+    exercises,
   ) => {
     if (!userOwnerId) throw new Error('userOwnerId is required')
+
+    console.log("hola")
 
     if (!ObjectId.isValid(userOwnerId))
       throw new Error('userOwnerId is incorrect')
@@ -46,6 +49,7 @@ module.exports = {
       content,
       isArchived,
       isPrivate,
+      exercises
     )
 
     return newWorkout
@@ -67,7 +71,19 @@ module.exports = {
 
     if (!ObjectId.isValid(id)) throw new Error('id is incorrect')
 
-    return await readWorkout({ owner: id })
+    return await readWorkout({ userOwner: id })
+  },
+
+  /**
+   * @param {String} id required
+   * @return exercise with id id
+   */
+  retrieveWorkoutById: async (id) => {
+    if (!id) throw new Error('id is required')
+
+    if (!ObjectId.isValid(id)) throw new Error('id is incorrect')
+
+    return await readWorkout({ _id: id })
   },
 
   /**
