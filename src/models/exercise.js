@@ -11,6 +11,7 @@ const exerciseSchema = new Schema({
 
   /**
    * The user responsible of this exercise
+   * (could be a organization in the future)
    */
   userOwner: {
     type: mongoose.Schema.Types.ObjectId,
