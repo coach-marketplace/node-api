@@ -6,35 +6,23 @@ let chaiHttp = require('chai-http');
 //let server = require("../src/server.js")
 
 let should = chai.should();
-const assert = require('assert');
 
 chai.use(chaiHttp);
-
-let app = "http://localhost:5555"
-let basePath = "/v1/auth"
 
 var data = require("./shared.js")
 
 const application = require('../src/app')
-const database = require('../src/database')
 const { PORT } = process.env
 
-const server = application.listen(PORT, () => {
-  database.connect().then(() => {
-  })
-})
+let app = "http://localhost:"+PORT;
+let basePath = "/v1/auth"
 
 
-before(function () {
-    server.on("listening", () => {
+before(function (done) {
+  application.on("appStarted", function(){
       done();
-    })
+  });
 });
-
-/*after(function () {
-  server.close();
-});*/
-
 
 //Create a user
 describe("Ensure new user is working", () => {
@@ -67,18 +55,6 @@ describe("Ensure new user is working", () => {
           });
     })
 
-    it("autologin with new user", (done) => {
-      chai.request(app)
-        .get(basePath+"/me")
-        .set("authorization", data.token)
-        .end( (err, res) => {
-          should.not.exist(err)
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.email.should.equal(data.email)
-          done();
-      })
-    })
 });
 
 

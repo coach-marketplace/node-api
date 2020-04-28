@@ -21,6 +21,19 @@ var new_data = {
 
 describe("Udating user infos", () => {
 
+    it("get me", (done) => {
+        chai.request(app)
+          .get(basePath+"/me")
+          .set("authorization", data.token)
+          .end( (err, res) => {
+            should.not.exist(err)
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.email.should.equal(data.email)
+            done();
+        })
+      })
+
     it("update new user email address", (done) => {
         chai.request(app)
         .put(basePath+"/"+data.user._id)
