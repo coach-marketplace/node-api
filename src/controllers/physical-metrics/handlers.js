@@ -3,10 +3,7 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { read, create } = require('./queries')
-const { UNIT } = require('../../_utils/constants')
-
-const WEIGHT_UNITS = Object.values(UNIT.WEIGHT)
-const HEIGHT_UNITS = Object.values(UNIT.HEIGHT)
+const { WEIGHTS, DISTANCES } = require('../../_utils/constants')
 
 /**
  * @param {string} userId
@@ -29,13 +26,11 @@ const createUserPhysicalMetrics = async (
 
   if (!weight) throw new Error('weight is required')
   if (!weightUnit) throw new Error('weightUnit is required')
-  if (!WEIGHT_UNITS.includes(weightUnit))
-    throw new Error('weightUnit is invalid')
+  if (!WEIGHTS.includes(weightUnit)) throw new Error('weightUnit is invalid')
 
   if (!height) throw new Error('height is required')
   if (!heightUnit) throw new Error('heightUnit is required')
-  if (!HEIGHT_UNITS.includes(heightUnit))
-    throw new Error('heightUnit is invalid')
+  if (!DISTANCES.includes(heightUnit)) throw new Error('heightUnit is invalid')
 
   const newPhysicalMetrics = await create(
     userId,
