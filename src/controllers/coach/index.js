@@ -18,7 +18,12 @@ const {
   getCoachLeadsById,
   getContactById,
 } = require('../contact/handlers')
+const { createWorkout } = require('../workout/handlers')
 const { LANG } = require('../../_utils/constants')
+
+const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
+  LANG[k].NAME.toLowerCase(),
+)
 
 const addServiceToCoach = async (req, res) => {
   try {
@@ -80,10 +85,6 @@ const addExerciseToCoach = async (req, res) => {
 
     if (!name) throw new Error('Name is required')
     if (!lang) throw new Error('Lang is required')
-
-    const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
-      LANG[k].NAME.toLowerCase(),
-    )
 
     if (!acceptedLanguagesValue.includes(lang))
       throw new Error('Lang is invalid')
@@ -189,6 +190,33 @@ const searchUserAsCoach = async (req, res) => {
   }
 }
 
+const addWorkout = async (req, res) => {
+  try {
+    const {
+      user,
+      body: { title, content, lang },
+    } = req
+
+    if (!acceptedLanguagesValue.includes(lang))
+      throw new Error('Lang is invalid')
+
+    const language = await getLangByISO(lang)
+    const workout = await createWorkout(
+      user._id,
+      language._id.toString(),
+      title,
+      content,
+    )
+
+    res.status(201).json(workout)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Error in adding customer to coach',
+      debug_message: error.message,
+    })
+  }
+}
+
 module.exports = {
   addServiceToCoach,
   getCoachServices,
@@ -197,4 +225,5 @@ module.exports = {
   addCustomerToCoach,
   retrieveCoachCustomers,
   searchUserAsCoach,
+  addWorkout,
 }
