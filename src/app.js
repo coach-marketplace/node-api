@@ -12,6 +12,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const passport = require('passport')
+const cookieSession = require('cookie-session')
 
 // Setup passport authentication
 require('./services/passport')
@@ -22,11 +23,18 @@ const errorController = require('./controllers/error')
 const app = express()
 
 app
+  .use(
+    cookieSession({
+      maxAge: 24 * 60 * 60 * 1000 * 7, // 7 days in milliseconds
+      keys: [process.env.COOKIE_KEY],
+    }),
+  )
   .use(cors())
   .use('/files', express.static('static'))
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json({}))
   .use(passport.initialize())
+  .use(passport.session())
 
 if (process.env.NODE_ENV === 'local') {
   app.use(morgan('dev'))

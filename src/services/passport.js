@@ -1,17 +1,20 @@
 const passport = require('passport')
-// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 
 // eslint-disable-next-line no-undef
-const { /*GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,*/ JWT_SECRET } = process.env
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env
 
 // const { getUserById } = require('../controllers/user/handlers')
-const { log } = require('../controllers/auth/handlers')
+const { log, logWithGoogle } = require('../controllers/auth/handlers')
 
-// passport.serializeUser((user, done) => {
-//   console.log('serializeUser', user)
+// passport.serializeUser(({ user, error }, done) => {
+//   // console.log('serializeUser', user, error)
+//   if (error) {
+//     done(null, error.message)
+//   }
 //   done(null, user._id)
 // })
 
@@ -60,52 +63,62 @@ passport.use(
 )
 
 // TODO: build google auth
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: GOOGLE_CLIENT_ID,
-//       clientSecret: GOOGLE_CLIENT_SECRET,
-//       callbackURL: 'http://localhost:5555/v1/auth/google/callback',
-//     },
-//     async (accessToken, refreshToken, profile, done) => {
-//       try {
-//         if (!profile._json && !profile._json.email) {
-//           throw new Error('No email in google profile')
-//         }
-//         const results = await getUserByEmail(profile._json.email)
-//         if (results.length) {
-//           const user = results[0]
-//           if (user.google && user.google.id) {
-//             done(null, user)
-//           } else {
-//             const newUserData = {
-//               google: { id: profile.id },
-//             }
-//             if (profile._json.picture) {
-//               newUserData.google = {
-//                 ...newUserData.google,
-//                 picture: profile._json.picture,
-//               }
-//             }
-//             const updatedUser = await editUser(user._id, newUserData)
-//             done(null, updatedUser)
-//           }
-//         } else {
-//           const newUserData = {
-//             email: profile._json && profile._json.email,
-//             firstName: profile.name && profile.name.givenName,
-//             lastName: profile.name && profile.name.familyName,
-//             google_id: profile.id,
-//           }
-//           profile._json.picture &&
-//             (newUserData.google_avatar = profile._json.picture)
-//           const newUser = await addUser(newUserData)
-//           done(null, newUser)
-//         }
-//       } catch (error) {
-//         // TODO: handle errors... because here the api send back an plain text error
-//         done(error, null)
-//       }
-//     },
-//   ),
-// )
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: '/v1/auth/google/callback',
+      state: { test: 'kevin' },
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // console.log('accessToken', accessToken)
+        // console.log('refreshToken', refreshToken)
+        console.log('profile', profile)
+        console.log('++1', profile.id)
+        console.log('++2', profile.emails[0].value)
+
+        const user = await logWithGoogle(profile.emails[0].value, profile.id)
+
+        return done(null, { error: null, user })
+        // if (!profile._json && !profile._json.email) {
+        //   throw new Error('No email in google profile')
+        // }
+        // const results = await getUserByEmail(profile._json.email)
+        // if (results.length) {
+        //   const user = results[0]
+        //   if (user.google && user.google.id) {
+        //     done(null, user)
+        //   } else {
+        //     const newUserData = {
+        //       google: { id: profile.id },
+        //     }
+        //     if (profile._json.picture) {
+        //       newUserData.google = {
+        //         ...newUserData.google,
+        //         picture: profile._json.picture,
+        //       }
+        //     }
+        //     const updatedUser = await editUser(user._id, newUserData)
+        //     done(null, updatedUser)
+        //   }
+        // } else {
+        //   const newUserData = {
+        //     email: profile._json && profile._json.email,
+        //     firstName: profile.name && profile.name.givenName,
+        //     lastName: profile.name && profile.name.familyName,
+        //     google_id: profile.id,
+        //   }
+        //   profile._json.picture &&
+        //     (newUserData.google_avatar = profile._json.picture)
+        //   const newUser = await addUser(newUserData)
+        //   done(null, newUser)
+        // }
+      } catch (error) {
+        // TODO: handle errors... because here the api send back an plain text error
+        done(null, { error, user: null })
+      }
+    },
+  ),
+)

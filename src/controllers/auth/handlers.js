@@ -1,6 +1,7 @@
 'use strict'
 
 const { read, create } = require('../user/queries')
+const { getUserByEmail } = require('../user/handlers')
 const { getLangByISO } = require('../lang/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { USER_ACCOUNT_TYPE, LANG } = require('../../_utils/constants')
@@ -48,6 +49,30 @@ module.exports = {
     if (!isMatch) {
       throw new Error('Email or password incorrect')
     }
+
+    return getUserLightData(user)
+  },
+
+  /**
+   * Log with google
+   *
+   * @param {string} email Email of the user
+   * @param {string} googleId Google id
+   *
+   * @returns {object} The logged user
+   */
+  logWithGoogle: async (email, googleId) => {
+    const user = await getUserByEmail(email)
+
+    if (!user || (!user.accounts && !user.accounts.length))
+      throw new Error("This account doesn't exist")
+
+    const localAccount = user.accounts.find(
+      ({ type }) => type === USER_ACCOUNT_TYPE.GOOGLE,
+    )
+
+    if (!localAccount) throw new Error("This google account doesn't exist")
+    if (localAccount.id !== googleId) throw new Error("Google id don't match")
 
     return getUserLightData(user)
   },
