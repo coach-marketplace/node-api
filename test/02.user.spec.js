@@ -25,7 +25,7 @@ describe("Udating user infos", () => {
         chai.request(app)
         .put(basePath+"/"+data.user._id)
         .set("authorization",data.token)
-        .send({"email": new_data.email})
+        .send({"email": new_data.email, "isCoach": "true"})
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
