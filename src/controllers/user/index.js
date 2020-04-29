@@ -320,13 +320,13 @@ const addUserPhysicalMetrics = async (req, res) => {
      */
     const userPhysicalMetrics = await createUserPhysicalMetrics(
       user._id,
-      weight,
+      weight.value,
       UNIT.WEIGHT.KG,
-      height,
+      height.value,
       UNIT.HEIGHT.CM,
     )
 
-    res.status(200).json(userPhysicalMetrics)
+    res.status(201).json(userPhysicalMetrics)
   } catch (error) {
     res.status(500).json({
       public_message: 'could not update user physical data',

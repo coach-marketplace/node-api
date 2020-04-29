@@ -21,19 +21,6 @@ var new_data = {
 
 describe("Udating user infos", () => {
 
-    it("get me", (done) => {
-        chai.request(app)
-          .get(basePath+"/me")
-          .set("authorization", data.token)
-          .end( (err, res) => {
-            should.not.exist(err)
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.email.should.equal(data.email)
-            done();
-        })
-      })
-
     it("update new user email address", (done) => {
         chai.request(app)
         .put(basePath+"/"+data.user._id)
@@ -51,19 +38,18 @@ describe("Udating user infos", () => {
 
     // TODO update password
 
-    //TODO after call is updated
-    /*it("Update new user body data", (done) => {
+    it("Update new user body data", (done) => {
         chai.request(app)
-        .post(basePath+"/body/"+data.user._id)
-        .send({""})
+        .post(basePath+'/'+data.user._id+"/physical-metrics")
+        .set("authorization",data.token)
+        .send({"weight": {"value":"75", "unit":"kg"}, "height":{"value":"175", "unit":"cm"}})
         .end((err, res) => {
             should.not.exist(err);
-            res.should.have.status(200);
+            res.should.have.status(201);
             res.body.should.be.a("object");
-            res.body.email.should.equal(data.email);
             done();
         })
-    })*/
+    })
 
 })
 
@@ -82,6 +68,19 @@ describe("Getting user infos", () => {
         })
     })*/
 
+    it("get me", (done) => {
+        chai.request(app)
+          .get(basePath+"/me")
+          .set("authorization", data.token)
+          .end( (err, res) => {
+            should.not.exist(err)
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.email.should.equal(data.email)
+            done();
+        })
+      })
+
     it("get new user", (done) => {
         chai.request(app)
         .get(basePath+"/me")
@@ -95,15 +94,16 @@ describe("Getting user infos", () => {
         })
     })
 
-    //CALL TO BE FIXED
-    /*it("get new user physical data", (done) => {
+    it("get new user physical data", (done) => {
         chai.request(app)
-        .get(basePath+"/body/"+data.user._id)
+        .get(basePath+'/'+data.user._id+"/physical-metrics")
+        .set("authorization",data.token)
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
-            res.body.should.be.a("object");
+            res.body.should.be.a("array");
+            res.body.should.not.have.lengthOf(0);
             done();
         })
-    })*/
+    })
 })

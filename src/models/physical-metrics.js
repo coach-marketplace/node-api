@@ -7,6 +7,8 @@ const { UNIT } = require('../_utils/constants')
 const HEIGHT_UNITS = Object.values(UNIT.HEIGHT)
 const WEIGHT_UNITS = Object.values(UNIT.WEIGHT)
 
+//TODO: what about the date?
+
 const physicalMetricsSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
 
@@ -17,18 +19,18 @@ const physicalMetricsSchema = new Schema({
   },
 
   height: {
-    type: Number,
+    value: Number,
     unit: {
       type: String,
-      enum: [HEIGHT_UNITS],
+      enum: HEIGHT_UNITS,
     },
   },
 
   weight: {
-    type: Number,
+    value: Number,
     unit: {
       type: String,
-      enum: [WEIGHT_UNITS],
+      enum: WEIGHT_UNITS,
     },
   },
 })
