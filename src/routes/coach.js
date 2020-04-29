@@ -12,6 +12,7 @@ const {
   retrieveCoachCustomers,
   retrieveCoachExercises,
   searchUserAsCoach,
+  removeExercise,
 } = require('../controllers/coach')
 
 coachRouter
@@ -51,6 +52,11 @@ coachRouter
     requireJWTAuth,
     requireAccessMyData,
     searchUserAsCoach,
+  )
+  .delete(
+    '/:id/exercises',
+    requireJWTAuth,
+    removeExercise
   )
 
 module.exports = coachRouter

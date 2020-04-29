@@ -21,7 +21,7 @@ var new_data = {
 
 describe("Udating user infos", () => {
 
-    it("update new user email address", (done) => {
+    it("update new user email address and make it coach", (done) => {
         chai.request(app)
         .put(basePath+"/"+data.user._id)
         .set("authorization",data.token)

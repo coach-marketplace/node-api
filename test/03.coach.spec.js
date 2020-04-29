@@ -18,6 +18,7 @@ var exercise_data = {
     instructions: "dance like there's no tomorrow",
     videoUrl: "https://www.youtube.com/watch?v=MvFmuWd_NQw&gl=BE",
     isPrivate: "true",
+    _id: "",
 }
 describe("Test exercises", () => {
 
@@ -31,6 +32,7 @@ describe("Test exercises", () => {
             res.should.have.status(201);
             res.body.should.be.a("object");
             res.body.content[0].name.should.equal(exercise_data.name);
+            exercise_data._id = res.body._id;
             done();
         })
     })
@@ -48,4 +50,15 @@ describe("Test exercises", () => {
         })
     })
 
+    it("delete newly created exercise", (done) => {
+        chai.request(app)
+        .delete(basePath+"/"+exercise_data._id+"/exercises")
+        .set("authorization",data.token)
+        .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200);
+            res.body.should.be.equal("ok");
+            done();
+        })
+    })
 })

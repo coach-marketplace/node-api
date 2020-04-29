@@ -50,4 +50,11 @@ module.exports = {
   readExercise(query = {}) {
     return Exercise.find(query)
   },
+
+  /**
+   * @param {string} id exercise id required
+   */
+  deleteExercise(id) {
+    return Exercise.deleteOne({ _id: { $eq: id } })
+  }
 }
