@@ -116,3 +116,23 @@ describe("Test customers", () => {
     })
 
 })
+
+
+describe("Test search users", () => {
+
+    it("Search users as coach", (done) => {
+        chai.request(app)
+        .get(basePath+"/"+data.coach.user._id+"/search-users")
+        .set("authorization",data.token)
+        .query({email: data.customer.email})
+        .end((err, res) => {
+            console.log(res.body)
+            should.not.exist(err);
+            res.should.have.status(200);
+            res.body.should.be.a("object");
+            res.body.email.should.equal(data.customer.email);
+            done();
+        })
+    })
+
+})

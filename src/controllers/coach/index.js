@@ -192,6 +192,7 @@ const retrieveCoachCustomers = async (req, res) => {
   }
 }
 
+//TODO: why don't we return an array with possible matches ?
 const searchUserAsCoach = async (req, res) => {
   try {
     const {
