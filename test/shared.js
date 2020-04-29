@@ -1,4 +1,13 @@
 module.exports = {
+    admin: {
+        firstName: "Tatiana",
+        lastName: "Makosso",
+        phone: "0455667788",
+        email: "tatiana.makosso@yopmail.com",
+        password: "azerty",
+        user: {},
+        token: "",
+    },
     coach: {
         firstName: "Camille",
         lastName: "Makosso",
@@ -6,6 +15,7 @@ module.exports = {
         email: "camille.makosso@yopmail.com",
         password: "azerty",
         user: {},
+        token: "",
     },
     customer: {
         firstName: "Mamadou",
@@ -14,6 +24,7 @@ module.exports = {
         email: "mamadou.seydoukoulibali@yopmail.com",
         password: "qwerty",
         user: {},
+        token: "",
     },
     contact: {
         email: "ali.bongo.ondimba@yopmail.com",
@@ -22,6 +33,5 @@ module.exports = {
         phone: "0455678996",
         user: {},
     },
-    token: "",
 }
 

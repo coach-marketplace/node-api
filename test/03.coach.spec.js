@@ -28,7 +28,7 @@ describe("Test exercises", () => {
     it("create new exercise", (done) => {
         chai.request(app)
         .post(basePath+"/"+data.coach.user._id+"/exercises")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .send(exercise_data)
         .end((err, res) => {
             should.not.exist(err);
@@ -43,7 +43,7 @@ describe("Test exercises", () => {
     it("get coach exercises", (done) => {
         chai.request(app)
         .get(basePath+"/"+data.coach.user._id+"/exercises")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
@@ -56,7 +56,7 @@ describe("Test exercises", () => {
     it("delete newly created exercise", (done) => {
         chai.request(app)
         .delete(basePath+"/"+exercise_data._id+"/exercises")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
@@ -72,7 +72,7 @@ describe("Test customers", () => {
     it("add new non-existing customer to coach", (done) => {
         chai.request(app)
         .post(basePath+"/"+data.coach.user._id+"/customers")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .send(data.contact)
         .end((err, res) => {
             should.not.exist(err);
@@ -87,7 +87,7 @@ describe("Test customers", () => {
     it("add new existing customer to coach", (done) => {
         chai.request(app)
         .post(basePath+"/"+data.coach.user._id+"/customers")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .send({
             firstName: data.customer.firstName,
             lastName: data.customer.lastName,
@@ -107,7 +107,7 @@ describe("Test customers", () => {
     it("get coach customers", (done) => {
         chai.request(app)
         .get(basePath+"/"+data.coach.user._id+"/customers")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
@@ -125,7 +125,7 @@ describe("Test search users", () => {
     it("Search users as coach", (done) => {
         chai.request(app)
         .get(basePath+"/"+data.coach.user._id+"/search-users")
-        .set("authorization",data.token)
+        .set("authorization",data.coach.token)
         .query({email: data.customer.email})
         .end((err, res) => {
             should.not.exist(err);

@@ -28,8 +28,8 @@ const {
 
 userRouter
   .get('/me', requireJWTAuth, getMe)
-  .post('/', requireJWTAuth, onlyAdmin, createNewUser) //TODO: test
-  .get('/', requireJWTAuth, onlyAdmin, retrieveUsers) // TODO: test
+  .post('/', requireJWTAuth, onlyAdmin, createNewUser)
+  .get('/', requireJWTAuth, onlyAdmin, retrieveUsers) 
   .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser)
   .put('/:id', requireJWTAuth, requireAccessMyData, updateUser)
   .delete('/:id', deleteUser)

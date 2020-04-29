@@ -45,4 +45,14 @@ describe("Cleaning up", () => {
             done();
         })
     })
+
+    it("destroy test user (admin)", (done) => {
+        chai.request(app)
+        .delete(basePath+"/"+data.admin.user._id)
+        .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200)
+            done();
+        })
+    })
 })
