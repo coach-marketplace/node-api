@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 
-//let server = require("../src/server.js")
+let server = require("../src/server.js")
 
 let should = chai.should();
 
@@ -12,9 +12,10 @@ chai.use(chaiHttp);
 var data = require("./shared.js")
 
 const application = require('../src/app')
-const { PORT } = process.env
 
+const { PORT } = process.env
 let app = "http://localhost:"+PORT;
+
 let basePath = "/v1/auth"
 
 

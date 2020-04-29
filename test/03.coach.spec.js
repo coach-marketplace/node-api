@@ -7,12 +7,14 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-let app = "http://localhost:5555"
+const { PORT } = process.env
+let app = "http://localhost:"+PORT;
+
 let basePath = "/v1/coach"
 
 var data = require("./shared.js")
 
-var exercise_data = {
+let exercise_data = {
     name: "Gabon army dance",
     lang: "en",
     instructions: "dance like there's no tomorrow",

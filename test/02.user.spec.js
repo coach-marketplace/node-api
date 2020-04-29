@@ -3,18 +3,18 @@ process.env.NODE_ENV = 'test';
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 
-let server = require("../src/server.js")
-
 let should = chai.should();
 
 chai.use(chaiHttp);
 
-let app = "http://localhost:5555"
+const { PORT } = process.env
+let app = "http://localhost:"+PORT;
+
 let basePath = "/v1/user"
 
 var data = require("./shared.js")
 
-var new_data = {
+let new_data = {
     email: "general.de.dieu@yopmail.com",
     password: "sapologie",
 }

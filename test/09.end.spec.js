@@ -7,7 +7,9 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-let app = "http://localhost:5555"
+const { PORT } = process.env
+let app = "http://localhost:"+PORT;
+
 let basePath = "/v1/user"
 
 var data = require("./shared.js")
