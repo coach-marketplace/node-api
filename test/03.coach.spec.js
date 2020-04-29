@@ -20,11 +20,12 @@ var exercise_data = {
     isPrivate: "true",
     _id: "",
 }
+
 describe("Test exercises", () => {
 
     it("create new exercise", (done) => {
         chai.request(app)
-        .post(basePath+"/"+data.user._id+"/exercises")
+        .post(basePath+"/"+data.coach.user._id+"/exercises")
         .set("authorization",data.token)
         .send(exercise_data)
         .end((err, res) => {
@@ -39,7 +40,7 @@ describe("Test exercises", () => {
 
     it("get coach exercises", (done) => {
         chai.request(app)
-        .get(basePath+"/"+data.user._id+"/exercises")
+        .get(basePath+"/"+data.coach.user._id+"/exercises")
         .set("authorization",data.token)
         .end((err, res) => {
             should.not.exist(err);
@@ -61,4 +62,57 @@ describe("Test exercises", () => {
             done();
         })
     })
+})
+
+
+describe("Test customers", () => {
+
+    it("add new non-existing customer to coach", (done) => {
+        chai.request(app)
+        .post(basePath+"/"+data.coach.user._id+"/customers")
+        .set("authorization",data.token)
+        .send(data.contact)
+        .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200);
+            res.body.should.be.a("object");
+            res.body.lead.email.should.equal(data.contact.email);
+            data.contact.user = res.body.lead;
+            done();
+        })
+    })
+
+    it("add new existing customer to coach", (done) => {
+        chai.request(app)
+        .post(basePath+"/"+data.coach.user._id+"/customers")
+        .set("authorization",data.token)
+        .send({
+            firstName: data.customer.firstName,
+            lastName: data.customer.lastName,
+            phone: data.customer.phone,
+            email: data.customer.email,
+            leadId: data.customer.user._id,
+        })
+        .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200);
+            res.body.should.be.a("object");
+            res.body.lead.email.should.equal(data.customer.email);
+            done();
+        })
+    })
+
+    it("get coach customers", (done) => {
+        chai.request(app)
+        .get(basePath+"/"+data.coach.user._id+"/customers")
+        .set("authorization",data.token)
+        .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200);
+            res.body.should.be.a("array");
+            res.body.should.not.have.lengthOf(0);
+            done();
+        })
+    })
+
 })

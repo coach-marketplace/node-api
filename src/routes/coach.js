@@ -35,6 +35,11 @@ coachRouter
     requireAccessMyData,
     addExerciseToCoach,
   )
+  .delete(
+    '/:id/exercises',
+    requireJWTAuth,
+    removeExercise
+  )
   .get(
     '/:id/customers',
     requireJWTAuth,
@@ -52,11 +57,6 @@ coachRouter
     requireJWTAuth,
     requireAccessMyData,
     searchUserAsCoach,
-  )
-  .delete(
-    '/:id/exercises',
-    requireJWTAuth,
-    removeExercise
   )
 
 module.exports = coachRouter

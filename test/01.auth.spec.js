@@ -27,16 +27,16 @@ before(function (done) {
 //Create a user
 describe("Ensure new user is working", () => {
 
-  it("Create a new user", (done) => {
+  it("Create a new user (coach)", (done) => {
     chai.request(app)
       .post(basePath+'/register-local')
-      .send({email: data.email, password: data.password})
+      .send(data.coach)
       .end( (err, res) => {
         should.not.exist(err)
         res.should.have.status(201);
         res.body.should.be.a('object');
-        res.body.email.should.equal(data.email);
-        data.user = res.body;
+        res.body.email.should.equal(data.coach.email);
+        data.coach.user = res.body;
         done();
       })
     })
@@ -44,7 +44,7 @@ describe("Ensure new user is working", () => {
     it("log in with new user", (done) => {
       chai.request(app)
         .post(basePath+"/login-local")
-        .send({email: data.email, password: data.password})
+        .send({email: data.coach.email, password: data.coach.password})
         .end( (err, res) => {
           should.not.exist(err)
           res.should.have.status(201);
@@ -54,6 +54,20 @@ describe("Ensure new user is working", () => {
           done()
           });
     })
+
+    it("Create a second user (customer)", (done) => {
+      chai.request(app)
+        .post(basePath+'/register-local')
+        .send(data.customer)
+        .end( (err, res) => {
+          should.not.exist(err)
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.email.should.equal(data.customer.email);
+          data.customer.user = res.body;
+          done();
+        })
+      })
 
 });
 

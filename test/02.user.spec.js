@@ -23,7 +23,7 @@ describe("Udating user infos", () => {
 
     it("update new user email address and make it coach", (done) => {
         chai.request(app)
-        .put(basePath+"/"+data.user._id)
+        .put(basePath+"/"+data.coach.user._id)
         .set("authorization",data.token)
         .send({"email": new_data.email, "isCoach": "true"})
         .end((err, res) => {
@@ -31,28 +31,28 @@ describe("Udating user infos", () => {
             res.should.have.status(200);
             res.body.should.be.a("object");
             res.body.email.should.equal(new_data.email);
-            data.email = new_data.email;
+            data.coach.email = new_data.email;
             done();
         })
     })
 
     it("Update new user password", (done) => {
         chai.request(app)
-        .post(basePath+'/'+data.user._id+"/change-password")
+        .post(basePath+'/'+data.coach.user._id+"/change-password")
         .set("authorization",data.token)
-        .send({"new": new_data.password, "current": data.password})
+        .send({"new": new_data.password, "current": data.coach.password})
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
             res.body.should.equal("ok");
-            data.password = new_data.password;
+            data.coach.password = new_data.password;
             done();
         })
     })
 
     it("add new user body data", (done) => {
         chai.request(app)
-        .post(basePath+'/'+data.user._id+"/physical-metrics")
+        .post(basePath+'/'+data.coach._id+"/physical-metrics")
         .set("authorization",data.token)
         .send({"weight": {"value":"75", "unit":"kg"}, "height":{"value":"175", "unit":"cm"}})
         .end((err, res) => {
@@ -88,27 +88,27 @@ describe("Getting user infos", () => {
             should.not.exist(err)
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.email.should.equal(data.email)
+            res.body.email.should.equal(data.coach.email)
             done();
         })
       })
 
     it("get new user", (done) => {
         chai.request(app)
-        .get(basePath+"/me")
+        .get(basePath+"/"+data.coach.user._id)
         .set("authorization",data.token)
         .end((err, res) => {
             should.not.exist(err);
             res.should.have.status(200);
             res.body.should.be.a("object");
-            res.body.email.should.equal(data.email);
+            res.body.email.should.equal(data.coach.email);
             done();
         })
     })
 
     it("get new user physical data", (done) => {
         chai.request(app)
-        .get(basePath+'/'+data.user._id+"/physical-metrics")
+        .get(basePath+'/'+data.coach.user._id+"/physical-metrics")
         .set("authorization",data.token)
         .end((err, res) => {
             should.not.exist(err);
