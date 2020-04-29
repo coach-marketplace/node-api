@@ -30,7 +30,7 @@ userRouter
   .get('/me', requireJWTAuth, getMe)
   .post('/', requireJWTAuth, onlyAdmin, createNewUser) //TODO test
   .get('/', requireJWTAuth, onlyAdmin, retrieveUsers) // TODO test
-  .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser) //Difference with get me ?
+  .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser)
   .put('/:id', requireJWTAuth, requireAccessMyData, updateUser)
   .delete('/:id', deleteUser)
   .post(

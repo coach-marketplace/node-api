@@ -36,9 +36,21 @@ describe("Udating user infos", () => {
         })
     })
 
-    // TODO update password
+    it("Update new user password", (done) => {
+        chai.request(app)
+        .post(basePath+'/'+data.user._id+"/change-password")
+        .set("authorization",data.token)
+        .send({"new": new_data.password, "current": data.password})
+        .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200);
+            res.body.should.equal("ok");
+            data.password = new_data.password;
+            done();
+        })
+    })
 
-    it("Update new user body data", (done) => {
+    it("add new user body data", (done) => {
         chai.request(app)
         .post(basePath+'/'+data.user._id+"/physical-metrics")
         .set("authorization",data.token)
