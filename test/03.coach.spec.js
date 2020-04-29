@@ -126,7 +126,6 @@ describe("Test search users", () => {
         .set("authorization",data.token)
         .query({email: data.customer.email})
         .end((err, res) => {
-            console.log(res.body)
             should.not.exist(err);
             res.should.have.status(200);
             res.body.should.be.a("object");
