@@ -1,9 +1,16 @@
 'use strict'
 
 const { read, create } = require('../user/queries')
-const { getUserByEmail, addAccount } = require('../user/handlers')
+const {
+  getUserByEmail,
+  addAccount,
+  getUserById,
+  editUser,
+} = require('../user/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { USER_ACCOUNT_TYPE, LOCALE, LOCALES } = require('../../_utils/constants')
+const { generateUniqueToken } = require('../../_utils/helpers')
+const { sendVerificationEmail } = require('../../_utils/emails')
 
 const getUserLightData = (user) => ({
   _id: user._id,
@@ -151,6 +158,8 @@ const logWithGoogle = async (googleProfile) => {
       firstName: googleProfile._json.given_name,
       lastName: googleProfile._json.family_name,
       lang,
+      isEmailVerified: false,
+      emailToken: generateUniqueToken(),
       accounts: [
         {
           type: USER_ACCOUNT_TYPE.GOOGLE,
@@ -176,7 +185,22 @@ const logWithGoogle = async (googleProfile) => {
     }
   }
 
+  await sendVerificationEmail(user)
+
   return getUserLightData(user)
+}
+
+const validateEmail = async (userId, token) => {
+  let user = await getUserById(userId)
+  if (user.emailToken !== token) {
+    throw Error('Invalid token')
+  } else {
+    await editUser(userId, {
+      isEmailVerified: true,
+      emailConfirmedAt: Date.now(),
+    })
+    return
+  }
 }
 
 module.exports = {
@@ -184,4 +208,5 @@ module.exports = {
   logWithGoogle,
   register,
   registerWithGoogle,
+  validateEmail,
 }
