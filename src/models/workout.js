@@ -1,29 +1,20 @@
-'use strict'
-
 const mongoose = require('mongoose')
-const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
-const exerciseContentSchema = require('../schemas/exerciseContent')
+const workoutContentSchema = require('../schemas/workoutContent')
+const workoutExerciseSchema = require('../schemas/workoutExercise')
 
-const exerciseSchema = new Schema({
+const workoutSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
 
   /**
-   * The user responsible of this exercise
+   * The user responsible of this workout
    * (could be a organization in the future)
    */
   userOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-  },
-
-  // TODO: add an organization owner
-
-  sport: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Sport',
   },
 
   isArchived: {
@@ -40,9 +31,9 @@ const exerciseSchema = new Schema({
    * Translatable content:
    * The content who can be written into different languages
    */
-  content: [exerciseContentSchema],
+  content: [workoutContentSchema],
+
+  exercises: [workoutExerciseSchema],
 })
 
-exerciseSchema.plugin(timestamp)
-
-module.exports = mongoose.model('Exercise', exerciseSchema)
+module.exports = mongoose.model('Workout', workoutSchema)

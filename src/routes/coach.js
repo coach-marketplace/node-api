@@ -2,7 +2,11 @@
 
 const coachRouter = require('express').Router()
 
-const { requireJWTAuth, requireAccessMyData } = require('../middleware/auth')
+const {
+  requireJWTAuth,
+  requireAccessMyData,
+  // requireAccessMyWorkouts,
+} = require('../middleware/auth')
 
 const {
   addCustomerToCoach,
@@ -12,6 +16,11 @@ const {
   retrieveCoachCustomers,
   retrieveCoachExercises,
   searchUserAsCoach,
+  addWorkout,
+  retrieveWorkouts,
+  retrieveWorkout,
+  editWorkout,
+  removeWorkout,
 } = require('../controllers/coach')
 
 coachRouter
@@ -51,6 +60,26 @@ coachRouter
     requireJWTAuth,
     requireAccessMyData,
     searchUserAsCoach,
+  )
+  .post('/:id/workouts', requireJWTAuth, requireAccessMyData, addWorkout)
+  .get('/:id/workouts', requireJWTAuth, requireAccessMyData, retrieveWorkouts)
+  .get(
+    '/:id/workouts/:workoutId',
+    requireJWTAuth,
+    requireAccessMyData,
+    retrieveWorkout,
+  )
+  .put(
+    '/:id/workouts/:workoutId',
+    requireJWTAuth,
+    requireAccessMyData,
+    editWorkout,
+  )
+  .delete(
+    '/:id/workouts/:workoutId',
+    requireJWTAuth,
+    requireAccessMyData,
+    removeWorkout,
   )
 
 module.exports = coachRouter

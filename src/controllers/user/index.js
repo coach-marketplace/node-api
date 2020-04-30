@@ -323,7 +323,7 @@ const addUserPhysicalMetrics = async (req, res) => {
       weight,
       UNIT.WEIGHT.KG,
       height,
-      UNIT.HEIGHT.CM,
+      UNIT.DISTANCE.CM,
     )
 
     res.status(200).json(userPhysicalMetrics)

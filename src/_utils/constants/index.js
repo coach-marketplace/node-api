@@ -23,6 +23,8 @@ const LANG = {
   ENGLISH: { NAME: 'EN', COUNTRY: 'US' },
 }
 
+const ACCEPTED_LANGS = Object.keys(LANG).map((k) => LANG[k].NAME.toLowerCase())
+
 const CONSOLE_LOG_CODE = {
   RESET: '\x1b[0m',
   FONT_COLOR: {
@@ -38,15 +40,62 @@ const TYPE = {
 }
 
 const UNIT = {
-  HEIGHT: {
+  DISTANCE: {
     CM: 'cm',
     IN: 'in',
+    M: 'm',
+    KM: 'km',
+    MILE: 'mile',
   },
   WEIGHT: {
     KG: 'kg',
     LB: 'lb',
   },
+  TIME: {
+    SECOND: 'second',
+    MINUTE: 'minute',
+    HOUR: 'hour',
+  },
+  OTHER: {
+    REPETITION: 'rep',
+    ROUND: 'round',
+  },
 }
+
+/**
+ * cm, m, km, in, mile
+ * @constant
+ * @type {array}
+ */
+const DISTANCES = Object.values(UNIT.DISTANCE)
+
+/**
+ * kg, lb
+ * @constant
+ * @type {array}
+ */
+const WEIGHTS = Object.values(UNIT.WEIGHT)
+
+/**
+ * second, minute, hour
+ * @constant
+ * @type {array}
+ */
+const TIMES = Object.values(UNIT.TIME)
+
+/**
+ * rep, round
+ * @constant
+ * @type {array}
+ */
+const OTHERS_UNITS = Object.values(UNIT.OTHER)
+
+const unitsList = Object.keys(UNIT).map((key) => UNIT[key])
+const listArray = unitsList.map((obj) => Object.keys(obj))
+/**
+ * All units
+ */
+const UNITS = listArray.reduce((acc, curr) => [...curr, ...acc])
 
 module.exports = {
   USER_ACCOUNT_TYPE,
@@ -54,7 +103,13 @@ module.exports = {
   CONSOLE_LOG_CODE,
   CURRENCY,
   LANG,
+  ACCEPTED_LANGS,
   CONVERSATION_PARTICIPANT: TYPE.CONVERSATION_PARTICIPANT,
   CONVERSATION_PARTICIPANTS: Object.values(TYPE.CONVERSATION_PARTICIPANT),
   UNIT,
+  UNITS,
+  WEIGHTS,
+  DISTANCES,
+  TIMES,
+  OTHERS_UNITS,
 }

@@ -18,7 +18,18 @@ const {
   getCoachLeadsById,
   getContactById,
 } = require('../contact/handlers')
-const { LANG } = require('../../_utils/constants')
+const {
+  createWorkout,
+  retrieveWorkoutsByOwnerId,
+  retrieveWorkoutById,
+  updateWorkout,
+  deleteWorkout,
+} = require('../workout/handlers')
+const { LANG, ACCEPTED_LANGS } = require('../../_utils/constants')
+
+const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
+  LANG[k].NAME.toLowerCase(),
+)
 
 const addServiceToCoach = async (req, res) => {
   try {
@@ -80,10 +91,6 @@ const addExerciseToCoach = async (req, res) => {
 
     if (!name) throw new Error('Name is required')
     if (!lang) throw new Error('Lang is required')
-
-    const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
-      LANG[k].NAME.toLowerCase(),
-    )
 
     if (!acceptedLanguagesValue.includes(lang))
       throw new Error('Lang is invalid')
@@ -189,6 +196,109 @@ const searchUserAsCoach = async (req, res) => {
   }
 }
 
+const addWorkout = async (req, res) => {
+  try {
+    const {
+      user,
+      body: { isPrivate, lang, title, content, exercises },
+    } = req
+
+    if (!lang) throw new Error('Lang is required')
+
+    if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
+
+    const language = await getLangByISO(lang)
+    const newWorkout = await createWorkout(
+      user._id,
+      language._id.toString(),
+      title,
+      content,
+      exercises || null,
+      false,
+      isPrivate,
+    )
+    res.status(201).json(newWorkout)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not create new workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrieveWorkouts = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req
+
+    const workouts = await retrieveWorkoutsByOwnerId(id)
+
+    res.status(200).json(workouts)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrieveWorkout = async (req, res) => {
+  try {
+    const {
+      params: { workoutId },
+    } = req
+    if (!workoutId) throw new Error('Workout id is required')
+
+    const workout = await retrieveWorkoutById(workoutId)
+
+    res.status(200).json(workout)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const editWorkout = async (req, res) => {
+  try {
+    const {
+      body,
+      params: { workoutId },
+    } = req
+
+    if (!workoutId) throw new Error('workout id is required')
+
+    const updatedWorkout = await updateWorkout(workoutId, body)
+
+    res.status(200).json(updatedWorkout)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not update workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const removeWorkout = async (req, res) => {
+  try {
+    const {
+      params: { workoutId },
+    } = req
+    if (!workoutId) throw new Error('Workout id needed')
+
+    await deleteWorkout(workoutId)
+
+    res.status(200).json({ message: 'workout deleted' })
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not delete workout',
+      debug_message: error.message,
+    })
+  }
+}
+
 module.exports = {
   addServiceToCoach,
   getCoachServices,
@@ -197,4 +307,9 @@ module.exports = {
   addCustomerToCoach,
   retrieveCoachCustomers,
   searchUserAsCoach,
+  addWorkout,
+  retrieveWorkouts,
+  retrieveWorkout,
+  editWorkout,
+  removeWorkout,
 }

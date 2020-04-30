@@ -139,7 +139,9 @@ const getUserById = async (id) => {
 
   const users = await read({ _id: id }).lean()
 
-  return users.length ? users[0] : null
+  if (!users.length) throw new Error('User not found')
+
+  return users[0]
 }
 
 /**
@@ -149,9 +151,11 @@ const getUserById = async (id) => {
 const getUserByEmail = async (email) => {
   if (!email) throw new Error('id is required')
 
-  const users = await read({ email })
+  const users = await read({ email }).lean()
 
-  return users.length ? users[0] : null
+  if (!users.length) throw new Error('User not found')
+
+  return users[0]
 }
 
 /**
