@@ -32,6 +32,7 @@ const workoutSchema = new Schema({
    * The content who can be written into different languages
    */
   content: [workoutContentSchema],
+
   exercises: [workoutExerciseSchema],
 })
 

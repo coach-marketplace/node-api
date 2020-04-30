@@ -11,7 +11,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const workoutExerciseSchema = new Schema({
-
   /**
    * The exercise id
    */
@@ -22,12 +21,14 @@ const workoutExerciseSchema = new Schema({
   },
 
   /**
-   * Number (could be minutes, seconds, reps,...)
+   * Quantity of... (could be minutes, seconds, reps,...)
    */
-  number: {
-    type: Number,
-    min: 1,
-    default: null,
+  quantity: {
+    value: {
+      type: Number,
+      min: 1,
+      default: 1,
+    },
     /**
      * The unit will explain what the number is for
      * e.g. 300 (squats) | 300m (RUN) | 10rep (Jumping jack)
@@ -43,14 +44,15 @@ const workoutExerciseSchema = new Schema({
    * e.g. 10 reps of squat at 40kg
    */
   weight: {
-    type: Number,
-    min: 0,
-    default: null,
+    value: {
+      type: Number,
+      default: null,
+    },
     unit: {
       type: String,
-      enum: [WEIGHTS], // kg, lbs
+      enum: WEIGHTS, // kg, lbs
     },
   },
 })
 
-module.exports =  workoutExerciseSchema;
+module.exports = workoutExerciseSchema

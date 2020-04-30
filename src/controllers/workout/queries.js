@@ -10,20 +10,21 @@ module.exports = {
    * @param {string} langId Required
    * @param {string} title Required
    * @param {string} content Optional
+   * @param {array} exercises Optional - Arrays of exercises
    * @param {boolean} isArchived
    * @param {boolean} isPrivate
    * @return Created Workout
    */
-  createNewWorkout(
+  create(
     userOwnerId,
     langId,
     title,
     content,
+    exercises = null,
     isArchived = false,
     isPrivate = false,
-    exercises
   ) {
-    const newWorkout = new Workout({
+    const newWorkoutData = {
       _id: new mongoose.Types.ObjectId(),
       userOwner: new mongoose.Types.ObjectId(userOwnerId),
       isArchived: isArchived,
@@ -35,8 +36,9 @@ module.exports = {
           content,
         },
       ],
-      exercises: exercises,
-    })
+    }
+    exercises && (newWorkoutData.exercises = exercises)
+    const newWorkout = new Workout(newWorkoutData)
 
     return newWorkout.save()
   },
@@ -45,7 +47,7 @@ module.exports = {
    * @param {Object} query
    * @return workout Object
    */
-  readWorkout(query = {}) {
+  read(query = {}) {
     return Workout.find(query)
   },
 
@@ -54,7 +56,7 @@ module.exports = {
    * @param {Object} data
    * @return workout Object
    */
-  updateWorkoutById(id, data) {
+  updateOne(id, data) {
     return Workout.updateOne({ _id: id }, data)
   },
 
@@ -62,7 +64,7 @@ module.exports = {
    *
    * @param {String} id required
    */
-  deleteWorkout(id) {
+  deleteOne(id) {
     return Workout.deleteOne({ _id: { $eq: id } })
   },
 }
