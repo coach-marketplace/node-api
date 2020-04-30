@@ -251,8 +251,8 @@ const changeUserPassword = async (req, res) => {
     if (!currentPassword) throw new Error('Password is required')
     if (!newPassword) throw new Error('New password is required')
 
-    await updateUserPassword(id, currentPassword, newPassword);
-   
+    await updateUserPassword(id, currentPassword, newPassword)
+
     res.status(200).json('ok')
   } catch (error) {
     res.status(500).json({

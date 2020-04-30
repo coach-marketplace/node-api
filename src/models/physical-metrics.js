@@ -2,10 +2,7 @@ const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
-const { UNIT } = require('../_utils/constants')
-
-const HEIGHT_UNITS = Object.values(UNIT.HEIGHT)
-const WEIGHT_UNITS = Object.values(UNIT.WEIGHT)
+const { UNIT, WEIGHTS } = require('../_utils/constants')
 
 //TODO: what about the date?
 
@@ -22,7 +19,7 @@ const physicalMetricsSchema = new Schema({
     value: Number,
     unit: {
       type: String,
-      enum: HEIGHT_UNITS,
+      enum: [UNIT.DISTANCE.CM, UNIT.DISTANCE.IN],
     },
   },
 
@@ -30,7 +27,7 @@ const physicalMetricsSchema = new Schema({
     value: Number,
     unit: {
       type: String,
-      enum: WEIGHT_UNITS,
+      enum: WEIGHTS,
     },
   },
 })

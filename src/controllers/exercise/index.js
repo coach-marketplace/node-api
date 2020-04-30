@@ -7,7 +7,7 @@ const {
 } = require('./handlers')
 const { getLangByISO } = require('../lang/handlers')
 const { getUserById } = require('../user/handlers')
-const { LANG } = require('../../_utils/constants')
+const { ACCEPTED_LANGS } = require('../../_utils/constants')
 
 module.exports = {
   retrieveExercises: async (req, res) => {
@@ -54,12 +54,7 @@ module.exports = {
 
       if (!userOwnerId) throw new Error('userOwnerId is required')
 
-      const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
-        LANG[k].NAME.toLowerCase(),
-      )
-
-      if (!acceptedLanguagesValue.includes(lang))
-        throw new Error('Lang is invalid')
+      if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
 
       const language = await getLangByISO(lang)
       const userOwner = await getUserById(userOwnerId)
