@@ -14,7 +14,19 @@ module.exports = {
     })(req, res, next)
   },
 
-  authGoogle: passport.authenticate('google', { scope: ['profile', 'email'] }),
+  /**
+   * We need to use a callback function to access the session and store the
+   * query inside to get it back from the store function from the custom
+   * overwrite passport prototype helper function and pass it through google
+   * redirection
+   */
+  authGoogle: (req, res, next) => {
+    req.session.state = JSON.stringify(req.query)
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      session: false,
+    })(req, res, next)
+  },
 
   authLocal: (req, res, next) => {
     passport.authenticate('local', { session: false }, (error, user) => {

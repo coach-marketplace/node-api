@@ -1,7 +1,7 @@
 'use strict'
 
 const { read, create } = require('../user/queries')
-const { getUserByEmail } = require('../user/handlers')
+const { getUserByEmail, addAccount } = require('../user/handlers')
 const { getLangByISO } = require('../lang/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { USER_ACCOUNT_TYPE, LANG } = require('../../_utils/constants')
@@ -20,99 +20,184 @@ const getUserLightData = (user) => ({
   isAdmin: user.isAdmin,
 })
 
-module.exports = {
-  /**
-   * Log
-   *
-   * @param {string} email Email of the user
-   * @param {string} password Password of the user
-   *
-   * @returns {object} The logged user
-   */
-  log: async (email, password) => {
-    const user = (await read({ email }, { withPassword: true }))[0]
+/**
+ * Log
+ *
+ * @param {string} email Email of the user
+ * @param {string} password Password of the user
+ *
+ * @returns {object} The logged user
+ */
+const log = async (email, password) => {
+  const user = (await read({ email }, { withPassword: true }))[0]
 
-    if (!user || (!user.accounts && !user.accounts.length)) {
-      throw new Error("This account doesn't exist")
-    }
+  if (!user || (!user.accounts && !user.accounts.length)) {
+    throw new Error("This account doesn't exist")
+  }
 
-    const localAccount = user.accounts.find(
-      ({ type }) => type === USER_ACCOUNT_TYPE.LOCAL,
-    )
+  const localAccount = user.accounts.find(
+    ({ type }) => type === USER_ACCOUNT_TYPE.LOCAL,
+  )
 
-    if (!user.accounts && !user.accounts.length && !localAccount) {
-      throw new Error('Email or password incorrect')
-    }
+  if (!user.accounts && !user.accounts.length && !localAccount) {
+    throw new Error('Email or password incorrect')
+  }
 
-    const isMatch = await compareHash(password, localAccount.password)
+  const isMatch = await compareHash(password, localAccount.password)
 
-    if (!isMatch) {
-      throw new Error('Email or password incorrect')
-    }
+  if (!isMatch) {
+    throw new Error('Email or password incorrect')
+  }
 
-    return getUserLightData(user)
-  },
+  return getUserLightData(user)
+}
 
-  /**
-   * Log with google
-   *
-   * @param {string} email Email of the user
-   * @param {string} googleId Google id
-   *
-   * @returns {object} The logged user
-   */
-  logWithGoogle: async (email, googleId) => {
-    const user = await getUserByEmail(email)
+/**
+ * @param {object} data User data
+ * @param {string} data.email User email
+ * @param {string} data.firstName User First name
+ * @param {string} data.lastName User Last name
+ * @param {string} data.phone User phone
+ * @param {string} data.lang User language (en - fr)
+ */
+const register = async (data) => {
+  const { email, password, firstName, lastName, phone, lang } = data
 
-    if (!user || (!user.accounts && !user.accounts.length))
-      throw new Error("This account doesn't exist")
+  if (!email || !password) throw new Error('Email and Password are required')
 
-    const localAccount = user.accounts.find(
-      ({ type }) => type === USER_ACCOUNT_TYPE.GOOGLE,
-    )
+  const users = await read({ email })
 
-    if (!localAccount) throw new Error("This google account doesn't exist")
-    if (localAccount.id !== googleId) throw new Error("Google id don't match")
+  if (users.length) throw new Error('Email already used')
 
-    return getUserLightData(user)
-  },
+  if (lang && !authorizedLangs.includes(lang))
+    throw new Error('Lang not accepted')
 
-  /**
-   * @param {object} data User data
-   * @param {string} data.email User email
-   * @param {string} data.firstName User First name
-   * @param {string} data.lastName User Last name
-   * @param {string} data.phone User phone
-   * @param {string} data.lang User language (en - fr)
-   */
-  register: async (data) => {
-    const { email, password, firstName, lastName, phone, lang } = data
+  const langId = (await getLangByISO(LANG.ENGLISH.NAME.toLowerCase()))._id
 
-    if (!email || !password) throw new Error('Email and Password are required')
+  const user = await create({
+    email,
+    firstName,
+    lastName,
+    phone,
+    lang: langId,
+    accounts: [
+      {
+        type: USER_ACCOUNT_TYPE.LOCAL,
+        password: await encryptString(password),
+      },
+    ],
+  })
 
-    const users = await read({ email })
+  return getUserLightData(user)
+}
 
-    if (users.length) throw new Error('Email already used')
-
-    if (lang && !authorizedLangs.includes(lang))
-      throw new Error('Lang not accepted')
-
-    const langId = (await getLangByISO(LANG.ENGLISH.NAME.toLowerCase()))._id
-
-    const user = await create({
+/**
+ * @param {object} profile Google user profile
+ * @param {string} profile._json.sub User google id
+ * @param {string} profile._json.email User email
+ * @param {string} profile._json.given_name User First name
+ * @param {string} profile._json.family_name User Last name
+ * @param {string} profile.picture User avatar
+ * @param {string} profile.locale User language (en - fr)
+ * @param {boolean} isCoach Is coach
+ */
+const registerWithGoogle = async (profile, isCoach = false) => {
+  const {
+    _json: {
       email,
-      firstName,
-      lastName,
-      phone,
+      sub: id,
+      given_name: firstName,
+      family_name: lastName,
+      picture: avatar,
+      locale,
+    },
+  } = profile
+
+  /**
+   * Keep only take care of 'en' & 'fr' event is locale is something
+   * like `en-GB`
+   */
+  const lang = locale.includes(LANG.FRENCH.NAME)
+    ? LANG.FRENCH.NAME.toLocaleLowerCase()
+    : LANG.ENGLISH.NAME.toLocaleLowerCase()
+
+  const l = await getLangByISO(lang)
+  const langId = l._id
+
+  const user = await create({
+    email,
+    firstName,
+    lastName,
+    lang: langId,
+    isCoach: isCoach,
+    accounts: [
+      {
+        type: USER_ACCOUNT_TYPE.GOOGLE,
+        id,
+        avatar,
+      },
+    ],
+  })
+
+  return getUserLightData(user)
+}
+
+/**
+ * Log with google
+ *
+ * @param {object} googleProfile Google id
+ *
+ * @returns {object} The logged user
+ */
+const logWithGoogle = async (googleProfile) => {
+  const email = googleProfile._json.email
+
+  let user = await getUserByEmail(email)
+
+  if (!user) {
+    // Keep only the 2 first letter (e.g. 'en-GB' -> 'en')
+    const locale = googleProfile._json.locale.substring(1, 3)
+    const userLang = authorizedLangs.includes(locale)
+      ? locale
+      : LANG.ENGLISH.NAME
+
+    const langId = (await getLangByISO(userLang))._id
+    user = await create({
+      email: googleProfile._json.email,
+      firstName: googleProfile._json.given_name,
+      lastName: googleProfile._json.family_name,
       lang: langId,
       accounts: [
         {
-          type: USER_ACCOUNT_TYPE.LOCAL,
-          password: await encryptString(password),
+          type: USER_ACCOUNT_TYPE.GOOGLE,
+          id: googleProfile._json.sub,
+          avatar: googleProfile._json.picture || null,
         },
       ],
     })
+  } else {
+    // the user exist
 
-    return getUserLightData(user)
-  },
+    const googleAccount = user.accounts.find(
+      ({ type }) => type === USER_ACCOUNT_TYPE.GOOGLE,
+    )
+
+    if (!googleAccount) {
+      const newAccount = {
+        type: USER_ACCOUNT_TYPE.GOOGLE,
+        id: googleProfile._json.sub,
+        avatar: googleProfile._json.picture || null,
+      }
+      await addAccount(user._id, newAccount)
+    }
+  }
+
+  return getUserLightData(user)
+}
+
+module.exports = {
+  log,
+  logWithGoogle,
+  register,
+  registerWithGoogle,
 }
