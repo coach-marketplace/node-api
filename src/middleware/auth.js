@@ -9,6 +9,7 @@ module.exports = {
     passport.authenticate('jwt', (_err, user) => {
       if (!user) {
         res.status(401).json({ message: 'Unauthorized' })
+        return
       }
       req.user = user
 
