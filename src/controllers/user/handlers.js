@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, deleteOne, updateOne } = require('./queries.js')
+const { create, read, deleteOne, updateOne, pushOne } = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
@@ -126,6 +126,16 @@ const editUser = async (id, newData) => {
 }
 
 /**
+ * @param {string} userId User id
+ * @param {object} newAccount New account to add
+ */
+const addAccount = async (userId, newAccount) => {
+  const updatedUser = await pushOne(userId, { accounts: newAccount })
+
+  return updatedUser
+}
+
+/**
  * @return {array} List of users
  */
 const getAllUsers = async () => await read()
@@ -214,6 +224,7 @@ module.exports = {
   getExposedUserData,
   createUser,
   editUser,
+  addAccount,
   getAllUsers,
   getUserById,
   getUserByEmail,

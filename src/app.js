@@ -12,6 +12,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const passport = require('passport')
+const session = require('express-session')
 
 // Setup passport authentication
 require('./services/passport')
@@ -27,6 +28,13 @@ app
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json({}))
   .use(passport.initialize())
+  .use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: true,
+      saveUninitialized: true,
+    }),
+  )
 
 if (process.env.NODE_ENV === 'local') {
   app.use(morgan('dev'))
