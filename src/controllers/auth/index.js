@@ -68,16 +68,19 @@ module.exports = {
   },
 
   login: async (req, res) => {
-    const user = await getUserById(req.user._id)
-    const token = signTokenWithUser(user)
+    if (!req.user) {
+      res.status(401).json({
+        message: 'Email or password incorrect',
+      })
+    } else {
+      const user = await getUserById(req.user._id)
+      const token = signToken({ _id: user._id, isAdmin: user.isAdmin })
 
-    // const token = signToken({ ...req.user })
-
-    // res.status(201).json({ token: `Bearer ${token}` })
-    res.status(201).json({
-      user: req.user,
-      token: `Bearer ${token}`,
-    })
+      res.status(201).json({
+        user: req.user,
+        token: `Bearer ${token}`,
+      })
+    }
   },
 
   /**
