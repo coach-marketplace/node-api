@@ -2,7 +2,7 @@
 
 const passport = require('passport')
 
-const { retrieveWorkoutById } = require("../controllers/workout/handlers")
+const { retrieveWorkoutById } = require('../controllers/workout/handlers')
 
 module.exports = {
   requireJWTAuth: (req, res, next) => {
@@ -32,10 +32,9 @@ module.exports = {
 
   authLocal: (req, res, next) => {
     passport.authenticate('local', { session: false }, (error, user) => {
-      if (error) {
-        res.status(500).json({ message: error.message })
+      if (user) {
+        req.user = user
       }
-      req.user = user
 
       return next()
     })(req, res, next)
@@ -83,9 +82,9 @@ module.exports = {
       return
     }
 
-    let workout = await retrieveWorkoutById(req.params.id);
+    let workout = await retrieveWorkoutById(req.params.id)
 
-    if(workout[0].userOwner.toString() !== req.user._id && !req.user.isAdmin) {
+    if (workout[0].userOwner.toString() !== req.user._id && !req.user.isAdmin) {
       res.status(401).json({ message: 'Unauthorized to access these data' })
       return
     }
