@@ -20,10 +20,13 @@ const sendEmail = async (email, subject, content) => {
   })
 }
 
-//TODO: change with right app URL
 const sendVerificationEmail = async (user) => {
   let verificationURL =
-    process.env.API_URL + 'auth/verifyEmail/' + user.emailToken
+    process.env.APP_URL +
+    'account-validation/' +
+    user._id +
+    '-' +
+    user.emailToken
   return await sendEmail(
     user.email,
     'Welcome to Coach-Marketplace!',

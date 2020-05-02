@@ -109,10 +109,17 @@ module.exports = {
   verifyEmail: async (req, res) => {
     try {
       let {
+<<<<<<< HEAD
         params: { userId, token },
       } = req
       if (!userId) throw Error('No user id')
       if (!token) throw Error('No token')
+=======
+        userId, token
+      } = req.body;
+      if(!userId) throw Error("No user id");
+      if(!token) throw Error("No token");
+>>>>>>> modifications route email verification
 
       await validateEmail(userId, token)
 
