@@ -41,6 +41,14 @@ module.exports = {
   },
 
   /**
+   * @param {string} userId
+   * @param {object} dataToPush
+   */
+  pushOne(userId, dataToPush) {
+    return User.update({ _id: userId }, { $push: dataToPush })
+  },
+
+  /**
    * @param {string} id User id
    * @return Mongoose query object
    */

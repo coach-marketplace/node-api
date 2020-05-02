@@ -1,8 +1,57 @@
 'use strict'
 
-const { register } = require('./handlers')
-const { getUserById } = require('../user/handlers')
+const queryString = require('query-string')
+
+const { register, registerWithGoogle } = require('./handlers')
+const { getUserById, addAccount } = require('../user/handlers')
 const { signToken } = require('../../_utils/jwt')
+const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
+
+const signTokenWithUser = (user) =>
+  signToken({ _id: user._id, isAdmin: user.isAdmin })
+
+const loginWithGoogle = async (req, res) => {
+  /**
+   * In that specific case we need more than the user, that's why the variable's
+   * name isn't relevant. Passport put the result in req.user by default.
+   */
+  let { redirectUrl, user, profile, isCoach } = req.user
+
+  try {
+    if (!user) {
+      user = await registerWithGoogle(profile, isCoach)
+    } else {
+      // the user exist
+      const googleAccount = user.accounts.find(
+        (account) => account && account.type === USER_ACCOUNT_TYPE.GOOGLE,
+      )
+
+      if (!googleAccount) {
+        const newAccount = {
+          type: USER_ACCOUNT_TYPE.GOOGLE,
+          id: profile._json.sub,
+          avatar: profile._json.picture || null,
+        }
+
+        await addAccount(user._id, newAccount)
+      }
+    }
+
+    const token = `Bearer ${signTokenWithUser(user)}`
+    const hasUrlQueryParams = redirectUrl.includes('?')
+    const symbol = hasUrlQueryParams ? '&' : '?'
+
+    res.redirect(`${redirectUrl}${symbol}${queryString.stringify({ token })}`)
+  } catch (error) {
+    const hasUrlQueryParams = redirectUrl.includes('?')
+    const symbol = hasUrlQueryParams ? '&' : '?'
+    res.redirect(
+      `${redirectUrl}${symbol}${queryString.stringify({
+        error: error.message,
+      })}`,
+    )
+  }
+}
 
 module.exports = {
   registerLocal: async (req, res) => {
@@ -20,7 +69,7 @@ module.exports = {
 
   login: async (req, res) => {
     const user = await getUserById(req.user._id)
-    const token = signToken({ _id: user._id, isAdmin: user.isAdmin })
+    const token = signTokenWithUser(user)
 
     // const token = signToken({ ...req.user })
 
@@ -48,4 +97,6 @@ module.exports = {
       })
     }
   },
+
+  loginWithGoogle,
 }

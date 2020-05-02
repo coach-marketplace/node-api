@@ -2,7 +2,14 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, deleteOne, updateOne, editUserPassword } = require('./queries.js')
+const {
+  create,
+  read,
+  deleteOne,
+  updateOne,
+  pushOne,
+  editUserPassword,
+} = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { compareHash, encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
@@ -126,6 +133,16 @@ const editUser = async (id, newData) => {
 }
 
 /**
+ * @param {string} userId User id
+ * @param {object} newAccount New account to add
+ */
+const addAccount = async (userId, newAccount) => {
+  const updatedUser = await pushOne(userId, { accounts: newAccount })
+
+  return updatedUser
+}
+
+/**
  * @return {array} List of users
  */
 const getAllUsers = async () => await read()
@@ -211,21 +228,20 @@ const disconnectUserBySocketId = async (socketId) => {
 }
 
 const updateUserPassword = async (userId, currentPwd, newPwd) => {
-  console.log("hello")
-  let user = await getUserById(userId);
+  console.log('hello')
+  let user = await getUserById(userId)
   let localUserAccount = user.accounts.find(
-    account => account.type === USER_ACCOUNT_TYPE.LOCAL
-  );
+    (account) => account.type === USER_ACCOUNT_TYPE.LOCAL,
+  )
 
-  if(!localUserAccount) throw new Error("no local account for this user");
+  if (!localUserAccount) throw new Error('no local account for this user')
 
-  if(await compareHash(currentPwd,localUserAccount.password)) {
-    let encryptedPwd = await encryptString(newPwd);
+  if (await compareHash(currentPwd, localUserAccount.password)) {
+    let encryptedPwd = await encryptString(newPwd)
     console.log(encryptedPwd)
     return await editUserPassword(userId, encryptedPwd)
-  }
-  else {
-    throw new Error("Invalid password");
+  } else {
+    throw new Error('Invalid password')
   }
 }
 
@@ -233,6 +249,7 @@ module.exports = {
   getExposedUserData,
   createUser,
   editUser,
+  addAccount,
   getAllUsers,
   getUserById,
   getUserByEmail,
@@ -240,5 +257,5 @@ module.exports = {
   toggleArchiveUserById,
   connectUser,
   disconnectUserBySocketId,
-  updateUserPassword
+  updateUserPassword,
 }
