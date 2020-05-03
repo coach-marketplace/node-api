@@ -24,6 +24,7 @@ const createUserPhysicalMetrics = async (
 
   if (!ObjectId.isValid(userId)) throw new Error('userId is invalid')
 
+  //TODO: do we need always both weight and height ?
   if (!weight) throw new Error('weight is required')
   if (!weightUnit) throw new Error('weightUnit is required')
   if (!WEIGHTS.includes(weightUnit)) throw new Error('weightUnit is invalid')

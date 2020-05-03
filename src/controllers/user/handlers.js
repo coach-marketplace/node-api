@@ -2,9 +2,16 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, deleteOne, updateOne, pushOne } = require('./queries.js')
+const {
+  create,
+  read,
+  deleteOne,
+  updateOne,
+  pushOne,
+  editUserPassword,
+} = require('./queries.js')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
-const { encryptString } = require('../../_utils/hashing')
+const { compareHash, encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
 
 /**
@@ -159,13 +166,26 @@ const getUserById = async (id) => {
  * @return {object} User
  */
 const getUserByEmail = async (email) => {
-  if (!email) throw new Error('id is required')
+  if (!email) throw new Error('email is required')
 
   const users = await read({ email }).lean()
 
   if (!users.length) throw new Error('User not found')
 
   return users[0]
+}
+
+/**
+ * @param {string} email User email
+ * @return {object} User
+ */
+const checkUserExistenceByEmail = async (email) => {
+  if (!email) throw new Error('email is required')
+
+  const users = await read({ email }).lean()
+
+  return users.length
+
 }
 
 /**
@@ -220,6 +240,24 @@ const disconnectUserBySocketId = async (socketId) => {
   return updatedUser
 }
 
+const updateUserPassword = async (userId, currentPwd, newPwd) => {
+  console.log('hello')
+  let user = await getUserById(userId)
+  let localUserAccount = user.accounts.find(
+    (account) => account.type === USER_ACCOUNT_TYPE.LOCAL,
+  )
+
+  if (!localUserAccount) throw new Error('no local account for this user')
+
+  if (await compareHash(currentPwd, localUserAccount.password)) {
+    let encryptedPwd = await encryptString(newPwd)
+    console.log(encryptedPwd)
+    return await editUserPassword(userId, encryptedPwd)
+  } else {
+    throw new Error('Invalid password')
+  }
+}
+
 module.exports = {
   getExposedUserData,
   createUser,
@@ -228,8 +266,10 @@ module.exports = {
   getAllUsers,
   getUserById,
   getUserByEmail,
+  checkUserExistenceByEmail,
   deleteUserById,
   toggleArchiveUserById,
   connectUser,
   disconnectUserBySocketId,
+  updateUserPassword,
 }
