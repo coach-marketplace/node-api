@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { createExercise, readExercise } = require('./queries')
+const { createExercise, readExercise, deleteExercise } = require('./queries')
 
 module.exports = {
   /**
@@ -75,4 +75,9 @@ module.exports = {
 
     return results
   },
+
+  deleteExercise: async (exId) => {
+    return deleteExercise(exId)
+  },
+
 }

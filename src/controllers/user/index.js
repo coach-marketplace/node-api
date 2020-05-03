@@ -5,8 +5,10 @@ const {
   getAllUsers,
   getUserById,
   getUserByEmail,
+  checkUserExistenceByEmail,
   deleteUserById,
   editUser,
+  updateUserPassword,
 } = require('./handlers')
 const {
   getConversationsByUserId,
@@ -30,7 +32,8 @@ const createNewUser = async (req, res) => {
 
     if (!email) throw new Error('email is required')
 
-    const user = await getUserByEmail(email)
+    const user = await checkUserExistenceByEmail(email)
+    console.log(user)
 
     if (user) {
       throw new Error('This email is already used')
@@ -241,48 +244,17 @@ const postMessageToConversation = async (req, res) => {
 }
 
 const changeUserPassword = async (req, res) => {
-  //TODO check if old password is okay
   try {
-    const {
+    let {
       body: { current: currentPassword, new: newPassword },
       params: { id },
-      user,
     } = req
 
     if (!currentPassword) throw new Error('Password is required')
     if (!newPassword) throw new Error('New password is required')
 
-    const localUserAccount = user.accounts.find(
-      (account) => account.type === USER_ACCOUNT_TYPE.LOCAL,
-    )
-    const encryptedCurrentPassword = await encryptString(currentPassword)
-    const encryptedCurrentPassword2 = await encryptString('azerty')
+    await updateUserPassword(id, currentPassword, newPassword)
 
-    const isMatcha = await compareHash('azerty', encryptedCurrentPassword2)
-    const isMatch = compareHash(currentPassword, localUserAccount.password)
-    console.log('1', encryptedCurrentPassword)
-    console.log('1', encryptedCurrentPassword2)
-    console.log('1', localUserAccount.password)
-    console.log('+', isMatcha)
-    console.log('+', isMatch)
-
-    // var userinfos = await getUserPassword(id)
-    // var encryptedCurrentPassword = userinfos.accounts[0].password
-    // var pwdComparison = await compareHash(
-    //   encryptedCurrentPassword,
-    //   currentPassword,
-    // )
-    // if (!pwdComparison) {
-    //   res.status(500).json({
-    //     public_message: 'Password invalid',
-    //     debug_message: 'Password invalid',
-    //   })
-    // } else {
-    //   var encryptedNewPassword = await encryptString(newPassword)
-    //   const newUser = await editUserPassword(id, encryptedNewPassword)
-
-    //   res.status(200).json(newUser)
-    // }
     res.status(200).json('ok')
   } catch (error) {
     res.status(500).json({
@@ -320,13 +292,13 @@ const addUserPhysicalMetrics = async (req, res) => {
      */
     const userPhysicalMetrics = await createUserPhysicalMetrics(
       user._id,
-      weight,
+      weight.value,
       UNIT.WEIGHT.KG,
-      height,
+      height.value,
       UNIT.DISTANCE.CM,
     )
 
-    res.status(200).json(userPhysicalMetrics)
+    res.status(201).json(userPhysicalMetrics)
   } catch (error) {
     res.status(500).json({
       public_message: 'could not update user physical data',

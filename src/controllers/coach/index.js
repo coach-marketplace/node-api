@@ -10,6 +10,7 @@ const { getLangByISO } = require('../lang/handlers')
 const {
   getExercisesByCoachId,
   createExercise,
+  deleteExercise,
 } = require('../exercise/handlers')
 const { addService, retrieveCoachServices } = require('../service/handlers')
 const {
@@ -119,6 +120,25 @@ const addExerciseToCoach = async (req, res) => {
   }
 }
 
+//TODO: check if user ca remove this exercise
+const removeExercise = async (req, res) => {
+  try {
+    let {
+      params: { id },
+    } = req
+    if (!id) throw Error('exercise id needed')
+
+    await deleteExercise(id)
+
+    res.status(200).json('ok')
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not remove exercise',
+      debug_message: error.message,
+    })
+  }
+}
+
 const addCustomerToCoach = async (req, res) => {
   try {
     const {
@@ -183,6 +203,7 @@ const retrieveCoachCustomers = async (req, res) => {
   }
 }
 
+//TODO: why don't we return an array with possible matches ?
 const searchUserAsCoach = async (req, res) => {
   try {
     const {
@@ -365,6 +386,7 @@ module.exports = {
   addCustomerToCoach,
   retrieveCoachCustomers,
   searchUserAsCoach,
+  removeExercise,
   addWorkout,
   retrieveWorkouts,
   retrieveWorkout,
