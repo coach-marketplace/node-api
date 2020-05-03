@@ -26,6 +26,10 @@ const {
   updateWorkout,
   deleteWorkout,
 } = require('../workout/handlers')
+const {
+  createProgram,
+  retrieveProgramsByOwnerId,
+} = require('../program/handlers')
 const { LANG, ACCEPTED_LANGS } = require('../../_utils/constants')
 
 const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
@@ -320,6 +324,60 @@ const removeWorkout = async (req, res) => {
   }
 }
 
+const addProgram = async (req, res) => {
+  try {
+    const {
+      user,
+      body: { isPrivate, days, workouts, lang, title, description },
+    } = req
+    console.log(isPrivate, days, workouts, lang, title, description)
+
+    if (!days) throw new Error('Days is required')
+
+    if (!title) throw new Error('Title is required')
+
+    if (!lang) throw new Error('Lang is required')
+
+    if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
+
+    const language = await getLangByISO(lang)
+    const newProgram = await createProgram(
+      user._id,
+      days,
+      language._id.toString(),
+      title,
+      description,
+      workouts || [],
+      false,
+      isPrivate,
+    )
+
+    res.status(201).json(newProgram)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not create new program',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrievePrograms = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req
+
+    const programs = await retrieveProgramsByOwnerId(id)
+
+    res.status(200).json(programs)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
 module.exports = {
   addServiceToCoach,
   getCoachServices,
@@ -334,4 +392,6 @@ module.exports = {
   retrieveWorkout,
   editWorkout,
   removeWorkout,
+  addProgram,
+  retrievePrograms,
 }
