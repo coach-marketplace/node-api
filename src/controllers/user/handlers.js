@@ -166,13 +166,26 @@ const getUserById = async (id) => {
  * @return {object} User
  */
 const getUserByEmail = async (email) => {
-  if (!email) throw new Error('id is required')
+  if (!email) throw new Error('email is required')
 
   const users = await read({ email }).lean()
 
   if (!users.length) throw new Error('User not found')
 
   return users[0]
+}
+
+/**
+ * @param {string} email User email
+ * @return {object} User
+ */
+const checkUserExistenceByEmail = async (email) => {
+  if (!email) throw new Error('email is required')
+
+  const users = await read({ email }).lean()
+
+  return users.length
+
 }
 
 /**
@@ -253,6 +266,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   getUserByEmail,
+  checkUserExistenceByEmail,
   deleteUserById,
   toggleArchiveUserById,
   connectUser,

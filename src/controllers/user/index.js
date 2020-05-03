@@ -5,6 +5,7 @@ const {
   getAllUsers,
   getUserById,
   getUserByEmail,
+  checkUserExistenceByEmail,
   deleteUserById,
   editUser,
   updateUserPassword,
@@ -31,7 +32,8 @@ const createNewUser = async (req, res) => {
 
     if (!email) throw new Error('email is required')
 
-    const user = await getUserByEmail(email)
+    const user = await checkUserExistenceByEmail(email)
+    console.log(user)
 
     if (user) {
       throw new Error('This email is already used')
@@ -293,7 +295,7 @@ const addUserPhysicalMetrics = async (req, res) => {
       weight.value,
       UNIT.WEIGHT.KG,
       height.value,
-      UNIT.HEIGHT.CM,
+      UNIT.DISTANCE.CM,
     )
 
     res.status(201).json(userPhysicalMetrics)

@@ -25,15 +25,13 @@ let conversation_data = {
 }
 
 describe('creating and updating users', () => {
-  it('Create new user (customer)', (done) => {
+  it('Create new user (customer) as admin', (done) => {
     chai
       .request(app)
       .post(basePath + '/')
       .set('authorization', data.admin.token)
       .send(data.customer)
       .end((err, res) => {
-        // console.log(res.status)
-        // console.log(res.body)
         should.not.exist(err)
         res.should.have.status(201)
         res.body.should.be.a('object')
