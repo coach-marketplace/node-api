@@ -41,5 +41,6 @@ database.connect().then(() => {
     })
   })
 
+  app.emit("appStarted");
   console.log(`--- Server in running on http://localhost:${PORT}/ ---`)
 })

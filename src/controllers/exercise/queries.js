@@ -62,9 +62,10 @@ module.exports = {
     return Exercise.updateOne({ _id: id, lang }, query, options)
   },
 
-  // return User.findOneAndUpdate(
-  //   { _id: userId, 'accounts.type': 'local' },
-  //   { $set: { 'accounts.$.password': newPassword } },
-  //   { new: true },
-  // )
+  /**
+   * @param {string} id exercise id required
+   */
+  del(id) {
+    return Exercise.deleteOne({ _id: { $eq: id } })
+  },
 }

@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, updateByLang } = require('./queries')
+const { create, read, updateByLang, del } = require('./queries')
 const { LOCALES } = require('../../_utils/constants')
 
 /**
@@ -102,10 +102,15 @@ const editExercise = async (exerciseId, data) => {
   return updatedExercise
 }
 
+const deleteExercise = async (id) => {
+  return del(id)
+}
+
 module.exports = {
   createExercise,
   getExerciseById,
   getAllExercises,
   getExercisesByCoachId,
   editExercise,
+  deleteExercise,
 }
