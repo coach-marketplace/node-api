@@ -7,7 +7,7 @@ const Workout = require('../../models/workout')
 module.exports = {
   /**
    * @param {string} userOwnerId Required
-   * @param {string} langId Required
+   * @param {string} lang Required
    * @param {string} title Required
    * @param {string} content Optional
    * @param {array} exercises Optional - Arrays of exercises
@@ -17,7 +17,7 @@ module.exports = {
    */
   create(
     userOwnerId,
-    langId,
+    lang,
     title,
     content,
     exercises = null,
@@ -31,7 +31,7 @@ module.exports = {
       isPrivate: isPrivate,
       content: [
         {
-          lang: new mongoose.Types.ObjectId(langId),
+          lang,
           title,
           content,
         },

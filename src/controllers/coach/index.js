@@ -6,10 +6,10 @@ const {
   getUserByEmail,
   getExposedUserData,
 } = require('../user/handlers')
-const { getLangByISO } = require('../lang/handlers')
 const {
   getExercisesByCoachId,
   createExercise,
+  editExercise,
 } = require('../exercise/handlers')
 const { addService, retrieveCoachServices } = require('../service/handlers')
 const {
@@ -25,11 +25,7 @@ const {
   updateWorkout,
   deleteWorkout,
 } = require('../workout/handlers')
-const { LANG, ACCEPTED_LANGS } = require('../../_utils/constants')
-
-const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
-  LANG[k].NAME.toLowerCase(),
-)
+const { LOCALES } = require('../../_utils/constants')
 
 const addServiceToCoach = async (req, res) => {
   try {
@@ -76,7 +72,20 @@ const retrieveCoachExercises = async (req, res) => {
     res.status(200).json(response)
   } catch (error) {
     res.status(500).json({
-      public_message: 'Services can not be found',
+      public_message: 'Exercise can not be found',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrieveCoachExercise = async (req, res) => {
+  try {
+    const { exercise } = req
+
+    res.status(200).json(exercise)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Exercise can not be found',
       debug_message: error.message,
     })
   }
@@ -92,13 +101,11 @@ const addExerciseToCoach = async (req, res) => {
     if (!name) throw new Error('Name is required')
     if (!lang) throw new Error('Lang is required')
 
-    if (!acceptedLanguagesValue.includes(lang))
-      throw new Error('Lang is invalid')
+    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-    const language = await getLangByISO(lang)
     const newExercise = await createExercise(
       user._id,
-      language._id.toString(),
+      lang,
       name,
       null,
       instructions,
@@ -110,6 +117,21 @@ const addExerciseToCoach = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       public_message: 'Exercise can not be added',
+      debug_message: error.message,
+    })
+  }
+}
+
+const editCoachExercise = async (req, res) => {
+  try {
+    const { body, exercise } = req
+
+    const editedExercise = await editExercise(exercise._id, body)
+
+    res.status(200).json(editedExercise)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Exercise can not be edited',
       debug_message: error.message,
     })
   }
@@ -205,12 +227,11 @@ const addWorkout = async (req, res) => {
 
     if (!lang) throw new Error('Lang is required')
 
-    if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
+    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-    const language = await getLangByISO(lang)
     const newWorkout = await createWorkout(
       user._id,
-      language._id.toString(),
+      lang,
       title,
       content,
       exercises || null,
@@ -303,7 +324,9 @@ module.exports = {
   addServiceToCoach,
   getCoachServices,
   retrieveCoachExercises,
+  retrieveCoachExercise,
   addExerciseToCoach,
+  editCoachExercise,
   addCustomerToCoach,
   retrieveCoachCustomers,
   searchUserAsCoach,

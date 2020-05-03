@@ -2,13 +2,8 @@
 
 const { read, create } = require('../user/queries')
 const { getUserByEmail, addAccount } = require('../user/handlers')
-const { getLangByISO } = require('../lang/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
-const { USER_ACCOUNT_TYPE, LANG } = require('../../_utils/constants')
-
-const authorizedLangs = Object.values(LANG).map((lang) =>
-  lang.NAME.toLowerCase(),
-)
+const { USER_ACCOUNT_TYPE, LOCALE, LOCALES } = require('../../_utils/constants')
 
 const getUserLightData = (user) => ({
   _id: user._id,
@@ -69,17 +64,14 @@ const register = async (data) => {
 
   if (users.length) throw new Error('Email already used')
 
-  if (lang && !authorizedLangs.includes(lang))
-    throw new Error('Lang not accepted')
-
-  const langId = (await getLangByISO(LANG.ENGLISH.NAME.toLowerCase()))._id
+  if (lang && !LOCALES.includes(lang)) throw new Error('Lang not accepted')
 
   const user = await create({
     email,
     firstName,
     lastName,
     phone,
-    lang: langId,
+    lang: lang || LOCALE.EN_US,
     accounts: [
       {
         type: USER_ACCOUNT_TYPE.LOCAL,
@@ -98,7 +90,7 @@ const register = async (data) => {
  * @param {string} profile._json.given_name User First name
  * @param {string} profile._json.family_name User Last name
  * @param {string} profile.picture User avatar
- * @param {string} profile.locale User language (en - fr)
+ * @param {string} profile.locale User language (en-US - fr-FR)
  * @param {boolean} isCoach Is coach
  */
 const registerWithGoogle = async (profile, isCoach = false) => {
@@ -117,18 +109,13 @@ const registerWithGoogle = async (profile, isCoach = false) => {
    * Keep only take care of 'en' & 'fr' event is locale is something
    * like `en-GB`
    */
-  const lang = locale.includes(LANG.FRENCH.NAME)
-    ? LANG.FRENCH.NAME.toLocaleLowerCase()
-    : LANG.ENGLISH.NAME.toLocaleLowerCase()
-
-  const l = await getLangByISO(lang)
-  const langId = l._id
+  const lang = locale.includes('fr') ? LOCALE.FR_FR : LOCALE.EN_US
 
   const user = await create({
     email,
     firstName,
     lastName,
-    lang: langId,
+    lang,
     isCoach: isCoach,
     accounts: [
       {
@@ -157,16 +144,13 @@ const logWithGoogle = async (googleProfile) => {
   if (!user) {
     // Keep only the 2 first letter (e.g. 'en-GB' -> 'en')
     const locale = googleProfile._json.locale.substring(1, 3)
-    const userLang = authorizedLangs.includes(locale)
-      ? locale
-      : LANG.ENGLISH.NAME
+    const lang = locale.includes('fr') ? LOCALE.FR_FR : LOCALE.EN_US
 
-    const langId = (await getLangByISO(userLang))._id
     user = await create({
       email: googleProfile._json.email,
       firstName: googleProfile._json.given_name,
       lastName: googleProfile._json.family_name,
-      lang: langId,
+      lang,
       accounts: [
         {
           type: USER_ACCOUNT_TYPE.GOOGLE,

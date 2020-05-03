@@ -1,8 +1,7 @@
 'use strict'
 
 const { getAllSports, createSport, getSportById } = require('./handlers')
-const { getLangByISO } = require('../lang/handlers')
-const { LANG } = require('../../_utils/constants')
+const { LOCALE, LOCALES } = require('../../_utils/constants')
 
 module.exports = {
   retrieveSports: async (req, res) => {
@@ -38,26 +37,15 @@ module.exports = {
     try {
       const { name, lang } = req.body
 
-      if (!name) {
-        throw new Error('Name is required')
-      }
+      if (!name) throw new Error('Name is required')
 
-      if (!lang) {
-        throw new Error('Lang is required')
-      }
+      if (!lang) throw new Error('Lang is required')
 
-      const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
-        LANG[k].NAME.toLowerCase(),
-      )
+      if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-      if (!acceptedLanguagesValue.includes(lang)) {
-        throw new Error('Lang is invalid')
-      }
-
-      const language = await getLangByISO(lang)
       const newSport = await createSport({
         name,
-        langId: language._id,
+        lang,
       })
 
       res.status(201).json(newSport)

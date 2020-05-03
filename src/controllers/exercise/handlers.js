@@ -2,77 +2,110 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { createExercise, readExercise } = require('./queries')
+const { create, read, updateByLang } = require('./queries')
+const { LOCALES } = require('../../_utils/constants')
 
-module.exports = {
-  /**
-   * @param {string} userOwnerId Required
-   * @param {string} langId Required
-   * @param {string} name Required
-   * @param {string} sportId Optional
-   * @param {string} instructions Optional
-   * @param {string} videoUrl Optional
-   * @param {boolean} isPrivate Default: false
-   * @return Created sport
-   */
-  createExercise: async (
+/**
+ * @param {string} userOwnerId Required
+ * @param {string} lang Required
+ * @param {string} name Required
+ * @param {string} sportId Optional
+ * @param {string} instructions Optional
+ * @param {string} videoUrl Optional
+ * @param {boolean} isPrivate Default: false
+ * @return Created sport
+ */
+const createExercise = async (
+  userOwnerId,
+  lang,
+  name,
+  sportId,
+  instructions,
+  videoUrl,
+  isPrivate = false,
+) => {
+  if (!userOwnerId) throw new Error('userOwnerId is required')
+
+  if (!ObjectId.isValid(userOwnerId))
+    throw new Error('userOwnerId is incorrect')
+
+  if (!lang) throw new Error('lang is required')
+
+  if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
+
+  if (!name) throw new Error('name is required')
+
+  const newExercise = await create(
     userOwnerId,
-    langId,
-    name,
     sportId,
+    lang,
+    name,
     instructions,
     videoUrl,
-    isPrivate = false,
-  ) => {
-    if (!userOwnerId) throw new Error('userOwnerId is required')
+    isPrivate,
+  )
 
-    if (!ObjectId.isValid(userOwnerId))
-      throw new Error('userOwnerId is incorrect')
+  return newExercise
+}
 
-    if (!langId) throw new Error('langId is required')
+/**
+ * @param {string} id Exercise ID
+ * @return Sport
+ */
+const getExerciseById = async (id) => {
+  if (!id) throw new Error('Id is required')
 
-    if (!ObjectId.isValid(langId)) throw new Error('langId is incorrect')
+  if (!ObjectId.isValid(id)) throw new Error('Id is incorrect')
 
-    if (!name) throw new Error('name is required')
+  const exercises = await read({ _id: id }).lean()
 
-    const newExercise = await createExercise(
-      userOwnerId,
-      sportId,
-      langId.toString(),
-      name,
-      instructions,
-      videoUrl,
-      isPrivate,
-    )
+  if (!exercises.length) return []
 
-    return newExercise
-  },
+  return exercises[0]
+}
 
-  /**
-   * @param {string} id Exercise ID
-   * @param {string} lang Language ISO_639_1 (e.g. 'en')
-   * @return Sport
-   */
-  getExerciseById: async (id) => {
-    if (!id) throw new Error('Id is required')
+/**
+ * @return List of exercises
+ */
+const getAllExercises = async () => await read()
 
-    if (!ObjectId.isValid(id)) throw new Error('Id is incorrect')
+const getExercisesByCoachId = async (coachId) => {
+  const results = await read({ userOwner: coachId })
 
-    const exercises = await readExercise({ _id: id }).lean()
+  return results
+}
 
-    if (!exercises.length) return []
+/**
+ * @param {string} exerciseId
+ * @param {data} data
+ * @return {object} Updated exercise
+ */
+const editExercise = async (exerciseId, data) => {
+  const dataToUpdate = {}
+  data.sport && (dataToUpdate.sport = data.sport)
+  data.isArchived && (dataToUpdate.isArchived = data.isArchived)
+  data.isPrivate && (dataToUpdate.isPrivate = data.isPrivate)
 
-    return exercises[0]
-  },
+  if (data.lang && !LOCALES.includes(data.lang))
+    throw new Error('Lang in invalid')
 
-  /**
-   * @return List of exercises
-   */
-  getAllExercises: async () => await readExercise(),
+  data.name && (dataToUpdate['content.$.name'] = data.name)
+  data.instructions &&
+    (dataToUpdate['content.$.instructions'] = data.instructions)
+  data.videoUrl && (dataToUpdate['content.$.videoUrl'] = data.videoUrl)
+  console.debug(dataToUpdate)
 
-  getExercisesByCoachId: async (coachId) => {
-    const results = await readExercise({ userOwner: coachId })
+  const updatedExercise = await updateByLang(exerciseId, data.lang, {
+    $set: dataToUpdate,
+  })
 
-    return results
-  },
+  return updatedExercise
+}
+
+module.exports = {
+  createExercise,
+  getExerciseById,
+  getAllExercises,
+  getExercisesByCoachId,
+  editExercise,
 }

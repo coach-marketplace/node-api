@@ -14,16 +14,16 @@ const CURRENCY = {
 }
 
 /**
- * Language are following these:
+ * Locales are following these:
  * - (lang) ISO 639-1 : https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
  * - (country) Alpha-2 code: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
  */
-const LANG = {
-  FRENCH: { NAME: 'FR', COUNTRY: 'FR' },
-  ENGLISH: { NAME: 'EN', COUNTRY: 'US' },
+const LOCALE = {
+  EN_US: 'en-US',
+  FR_FR: 'fr-FR',
 }
 
-const ACCEPTED_LANGS = Object.keys(LANG).map((k) => LANG[k].NAME.toLowerCase())
+const LOCALES = Object.values(LOCALE)
 
 const CONSOLE_LOG_CODE = {
   RESET: '\x1b[0m',
@@ -102,8 +102,6 @@ module.exports = {
   CONTACT_TYPE,
   CONSOLE_LOG_CODE,
   CURRENCY,
-  LANG,
-  ACCEPTED_LANGS,
   CONVERSATION_PARTICIPANT: TYPE.CONVERSATION_PARTICIPANT,
   CONVERSATION_PARTICIPANTS: Object.values(TYPE.CONVERSATION_PARTICIPANT),
   UNIT,
@@ -112,4 +110,6 @@ module.exports = {
   DISTANCES,
   TIMES,
   OTHERS_UNITS,
+  LOCALE,
+  LOCALES,
 }

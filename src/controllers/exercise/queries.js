@@ -8,17 +8,17 @@ module.exports = {
   /**
    * @param {string} userOwnerId
    * @param {string} sportId
-   * @param {string} langId
+   * @param {string} lang
    * @param {string} name
    * @param {string} instructions
    * @param {string} videoUrl
    * @param {string} isPrivate
    * @return {object} Mongoose query object
    */
-  createExercise(
+  create(
     userOwnerId,
     sportId,
-    langId,
+    lang,
     name,
     instructions,
     videoUrl,
@@ -32,7 +32,7 @@ module.exports = {
       isPrivate: isPrivate,
       content: [
         {
-          lang: new mongoose.Types.ObjectId(langId),
+          lang,
           name,
           instructions,
           videoUrl,
@@ -47,7 +47,24 @@ module.exports = {
    * @param {object} query Mongo query object
    * @return {object} Mongoose query object
    */
-  readExercise(query = {}) {
+  read(query = {}) {
     return Exercise.find(query)
   },
+
+  /**
+   * @param {string} id Exercise id to update
+   * @param {string} lang Lang
+   * @param {object} query Mongo query object
+   * @param {object} options Mongo options object
+   * @return {object} Mongoose query object
+   */
+  updateByLang(id, lang, query = {}, options = {}) {
+    return Exercise.updateOne({ _id: id, lang }, query, options)
+  },
+
+  // return User.findOneAndUpdate(
+  //   { _id: userId, 'accounts.type': 'local' },
+  //   { $set: { 'accounts.$.password': newPassword } },
+  //   { new: true },
+  // )
 }
