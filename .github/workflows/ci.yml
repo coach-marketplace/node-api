@@ -28,3 +28,4 @@ jobs:
           API_URL: http://localhost:5555/
           SESSION_KEY: caachmarketplacesessionkey
           COOKIE_KEY: caachmarketplacecookiekey
+          SESSION_SECRET: session-secret
