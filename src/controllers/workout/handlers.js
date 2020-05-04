@@ -3,10 +3,11 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, deleteOne, read, updateOne } = require('./queries')
+const {LOCALE, LOCALES }=require('../../_utils/constants')
 
 /**
  * @param {string} userOwnerId Required
- * @param {string} langId Required
+ * @param {string} lang Required
  * @param {string} title Required
  * @param {string} content Optional
  * @param {Array} exercises Optional
@@ -16,7 +17,7 @@ const { create, deleteOne, read, updateOne } = require('./queries')
  */
 const createWorkout = async (
   userOwnerId,
-  langId,
+  lang,
   title,
   content = null,
   exercises = [],
@@ -28,9 +29,9 @@ const createWorkout = async (
   if (!ObjectId.isValid(userOwnerId))
     throw new Error('userOwnerId is incorrect')
 
-  if (!langId) throw new Error('langId is required')
+  if (!lang) throw new Error('lang is required')
 
-  if (!ObjectId.isValid(langId)) throw new Error('langId is incorrect')
+  if (!LOCALES.includes(lang)) throw new Error('lang is invalid')
 
   if (!title) throw new Error('title is required')
 
@@ -38,7 +39,7 @@ const createWorkout = async (
 
   const newWorkout = await create(
     userOwnerId,
-    langId.toString(),
+    lang,
     title,
     content,
     exercises,

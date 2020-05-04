@@ -16,7 +16,7 @@ var data = require('./shared.js')
 
 let exercise_data = {
   name: 'Gabon army dance',
-  lang: 'en',
+  lang: 'en-US',
   instructions: "dance like there's no tomorrow",
   videoUrl: 'https://www.youtube.com/watch?v=MvFmuWd_NQw&gl=BE',
   isPrivate: 'true',
@@ -31,6 +31,7 @@ describe('Test exercises', () => {
       .set('authorization', data.coach.token)
       .send(exercise_data)
       .end((err, res) => {
+        console.log('++', res.body)
         should.not.exist(err)
         res.should.have.status(201)
         res.body.should.be.a('object')
