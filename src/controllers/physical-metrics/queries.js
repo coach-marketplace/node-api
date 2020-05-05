@@ -19,11 +19,11 @@ module.exports = {
       user: new mongoose.Types.ObjectId(userId),
       weight: {
         value: weight,
-        weightUnit,
+        unit: weightUnit,
       },
       height: {
         value: height,
-        heightUnit,
+        unit: heightUnit,
       },
     })
 

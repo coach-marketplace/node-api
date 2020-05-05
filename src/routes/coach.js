@@ -16,11 +16,14 @@ const {
   retrieveCoachCustomers,
   retrieveCoachExercises,
   searchUserAsCoach,
+  removeExercise,
   addWorkout,
   retrieveWorkouts,
   retrieveWorkout,
   editWorkout,
   removeWorkout,
+  addProgram,
+  retrievePrograms,
 } = require('../controllers/coach')
 
 coachRouter
@@ -43,6 +46,7 @@ coachRouter
     requireAccessMyData,
     addExerciseToCoach,
   )
+  .delete('/:id/exercises', requireJWTAuth, removeExercise)
   .get(
     '/:id/customers',
     requireJWTAuth,
@@ -81,5 +85,7 @@ coachRouter
     requireAccessMyData,
     removeWorkout,
   )
+  .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)
+  .get('/:id/programs', requireJWTAuth, requireAccessMyData, retrievePrograms)
 
 module.exports = coachRouter
