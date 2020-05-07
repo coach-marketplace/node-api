@@ -116,7 +116,8 @@ const createAssignmentWorkoutsFromProgramHanlder = async (
   let assignedWorkouts = []
   let program = await retrieveProgramById(programId)
   for (let workout of program.workouts) {
-    let date = new Date(startDate).getDate() + workout.day
+    let date = new Date(startDate)
+    date.setDate(date.getDate() + (workout.day - 1)) //as first day is 1 in program
     let minutes = workout.startTime % 60
     date.setHours((workout.startTime - minutes) / 60)
     date.setMinutes(minutes)
