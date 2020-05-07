@@ -2,6 +2,7 @@
 'use strict'
 
 const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false)
 
 // const hydrate = require('./hydration')
 
