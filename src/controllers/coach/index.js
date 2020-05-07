@@ -30,9 +30,7 @@ const {
   createProgram,
   retrieveProgramsByOwnerId,
 } = require('../program/handlers')
-const {
-  createAssignmentHandler,
-} = require('../assignment/handlers')
+const { createAssignmentHandler } = require('../assignment/handlers')
 const { LANG, ACCEPTED_LANGS } = require('../../_utils/constants')
 
 const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
@@ -393,13 +391,21 @@ const createAssignment = async (req, res) => {
       content: [program, workouts, exercises]
     }*/
 
-    let assignment = await createAssignmentHandler(id, trainees, workouts, title, description, language, startDate)
+    let assignment = await createAssignmentHandler(
+      id,
+      trainees,
+      workouts,
+      title,
+      description,
+      language,
+      startDate,
+    )
 
-    res.status(200).json(assignment);
-  } catch(error) {
+    res.status(200).json(assignment)
+  } catch (error) {
     res.status(500).json({
-      public_message: "Could not assign",
-      debug_message: error.message
+      public_message: 'Could not assign',
+      debug_message: error.message,
     })
   }
 }

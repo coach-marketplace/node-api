@@ -56,5 +56,5 @@ module.exports = {
    */
   deleteExercise(id) {
     return Exercise.deleteOne({ _id: { $eq: id } })
-  }
+  },
 }

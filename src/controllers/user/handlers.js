@@ -185,7 +185,6 @@ const checkUserExistenceByEmail = async (email) => {
   const users = await read({ email }).lean()
 
   return users.length
-
 }
 
 /**

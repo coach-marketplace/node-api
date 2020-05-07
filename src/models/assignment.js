@@ -16,22 +16,25 @@ const assignmentSchema = new Schema({
     required: true,
   },
 
-  trainees: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  }],
+  trainees: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+  ],
 
   content: [assignmentContentSchema],
 
-
   startDate: Date,
 
-  workouts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'AssignedWorkouts',
-    required: true,
-  }],
+  workouts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'AssignedWorkouts',
+      required: true,
+    },
+  ],
 })
 
 module.exports = mongoose.model('Assignement', assignmentSchema)

@@ -79,5 +79,4 @@ module.exports = {
   deleteExercise: async (exId) => {
     return deleteExercise(exId)
   },
-
 }

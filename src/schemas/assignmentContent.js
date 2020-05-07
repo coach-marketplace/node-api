@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 
 const assignmentContentSchema = new Schema({
   lang: {
-    type: String
+    type: String,
   },
 
   title: {

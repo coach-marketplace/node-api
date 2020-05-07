@@ -24,7 +24,7 @@ const {
   removeWorkout,
   addProgram,
   retrievePrograms,
-  createAssignment
+  createAssignment,
 } = require('../controllers/coach')
 
 coachRouter

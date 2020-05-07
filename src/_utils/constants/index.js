@@ -63,15 +63,15 @@ const UNIT = {
 }
 
 const RATING = {
-  easy: "Easy",
-  medium: "Medium",
-  hard: "Hard"
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
 }
 
 const STATE = {
-  todo: "To do",
-  done: "Done",
-  late: "Late"
+  todo: 'To do',
+  done: 'Done',
+  late: 'Late',
 }
 
 /**
@@ -113,7 +113,6 @@ const RATINGS = Object.values(RATING)
 
 const STATES = Object.values(STATE)
 
-
 module.exports = {
   USER_ACCOUNT_TYPE,
   CONTACT_TYPE,
@@ -131,5 +130,5 @@ module.exports = {
   OTHERS_UNITS,
   RATING,
   RATINGS,
-  STATES
+  STATES,
 }

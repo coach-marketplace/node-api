@@ -29,7 +29,7 @@ const {
 userRouter
   .get('/me', requireJWTAuth, getMe)
   .post('/', requireJWTAuth, onlyAdmin, createNewUser)
-  .get('/', requireJWTAuth, onlyAdmin, retrieveUsers) 
+  .get('/', requireJWTAuth, onlyAdmin, retrieveUsers)
   .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser)
   .put('/:id', requireJWTAuth, requireAccessMyData, updateUser)
   .delete('/:id', deleteUser)
@@ -40,7 +40,7 @@ userRouter
     changeUserPassword,
   )
   .get('/:id/physical-metrics', requireJWTAuth, retrieveUserPhysicalMetrics) //TODO: Require accessmydata?
-  .post('/:id/physical-metrics', requireJWTAuth, addUserPhysicalMetrics)  //TODO: Require accessmydata?
+  .post('/:id/physical-metrics', requireJWTAuth, addUserPhysicalMetrics) //TODO: Require accessmydata?
   .get(
     '/:id/conversations',
     requireJWTAuth,
