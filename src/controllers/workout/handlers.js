@@ -3,7 +3,7 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, deleteOne, read, updateOne } = require('./queries')
-const {LOCALE, LOCALES }=require('../../_utils/constants')
+const { LOCALES } = require('../../_utils/constants')
 
 /**
  * @param {string} userOwnerId Required

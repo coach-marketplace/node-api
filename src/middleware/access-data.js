@@ -32,7 +32,11 @@ const hasAccessToExercise = async (req, res, next) => {
     return
   }
 
-  if (exercise.userOwner.toString() !== user._id && !user.isAdmin) {
+  if (
+    exercise.userOwner &&
+    exercise.userOwner.toString() !== user._id &&
+    !user.isAdmin
+  ) {
     res.status(401).json({ message: 'Unauthorized to access these data' })
     return
   }

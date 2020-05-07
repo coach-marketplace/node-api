@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, updateByLang, del } = require('./queries')
+const { create, read, updateOne, updateByLang, del } = require('./queries')
 const { LOCALES } = require('../../_utils/constants')
 
 /**
@@ -81,23 +81,7 @@ const getExercisesByCoachId = async (coachId) => {
  * @return {object} Updated exercise
  */
 const editExercise = async (exerciseId, data) => {
-  const dataToUpdate = {}
-  data.sport && (dataToUpdate.sport = data.sport)
-  data.isArchived && (dataToUpdate.isArchived = data.isArchived)
-  data.isPrivate && (dataToUpdate.isPrivate = data.isPrivate)
-
-  if (data.lang && !LOCALES.includes(data.lang))
-    throw new Error('Lang in invalid')
-
-  data.name && (dataToUpdate['content.$.name'] = data.name)
-  data.instructions &&
-    (dataToUpdate['content.$.instructions'] = data.instructions)
-  data.videoUrl && (dataToUpdate['content.$.videoUrl'] = data.videoUrl)
-  console.debug(dataToUpdate)
-
-  const updatedExercise = await updateByLang(exerciseId, data.lang, {
-    $set: dataToUpdate,
-  })
+  const updatedExercise = await updateOne({ _id: exerciseId }, data)
 
   return updatedExercise
 }

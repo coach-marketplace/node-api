@@ -6,7 +6,7 @@ const {
   getExerciseById,
 } = require('./handlers')
 const { getUserById } = require('../user/handlers')
-const { LOCALE, LOCALES } = require('../../_utils/constants')
+const { LOCALES } = require('../../_utils/constants')
 
 module.exports = {
   retrieveExercises: async (req, res) => {
@@ -74,5 +74,4 @@ module.exports = {
       })
     }
   },
-
 }

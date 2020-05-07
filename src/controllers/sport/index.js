@@ -1,7 +1,7 @@
 'use strict'
 
 const { getAllSports, createSport, getSportById } = require('./handlers')
-const { LOCALE, LOCALES } = require('../../_utils/constants')
+const { LOCALES } = require('../../_utils/constants')
 
 module.exports = {
   retrieveSports: async (req, res) => {

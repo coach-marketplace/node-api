@@ -139,16 +139,18 @@ const editCoachExercise = async (req, res) => {
 }
 
 //TODO: check if user ca remove this exercise
-const removeExercise = async (req, res) => {
+const deleteCoachExercise = async (req, res) => {
   try {
     let {
-      params: { id },
+      params: { exerciseId },
     } = req
-    if (!id) throw Error('exercise id needed')
+    if (!exerciseId) throw Error('Exercise id needed')
 
-    await deleteExercise(id)
+    await deleteExercise(exerciseId)
 
-    res.status(200).json('ok')
+    res
+      .status(200)
+      .json({ message: `Exercise ${exerciseId} successfully deleted` })
   } catch (error) {
     res.status(500).json({
       public_message: 'Could not remove exercise',
@@ -351,7 +353,7 @@ module.exports = {
   addCustomerToCoach,
   retrieveCoachCustomers,
   searchUserAsCoach,
-  removeExercise,
+  deleteCoachExercise,
   addWorkout,
   retrieveWorkouts,
   retrieveWorkout,

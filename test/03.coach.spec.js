@@ -58,12 +58,17 @@ describe('Test exercises', () => {
   it('delete newly created exercise', (done) => {
     chai
       .request(app)
-      .delete(basePath + '/' + exercise_data._id + '/exercises')
+      .delete(
+        basePath +
+          '/' +
+          data.coach.user._id +
+          '/exercises/' +
+          exercise_data._id,
+      )
       .set('authorization', data.coach.token)
       .end((err, res) => {
         should.not.exist(err)
         res.should.have.status(200)
-        res.body.should.be.equal('ok')
         done()
       })
   })

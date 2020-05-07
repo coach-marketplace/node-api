@@ -19,7 +19,7 @@ const {
   retrieveCoachExercises,
   retrieveCoachExercise,
   searchUserAsCoach,
-  removeExercise,
+  deleteCoachExercise,
   addWorkout,
   retrieveWorkouts,
   retrieveWorkout,
@@ -47,7 +47,6 @@ coachRouter
     requireAccessMyData,
     addExerciseToCoach,
   )
-  .delete('/:id/exercises', requireJWTAuth, removeExercise)
   .get(
     '/:id/exercises/:exerciseId',
     requireJWTAuth,
@@ -61,6 +60,13 @@ coachRouter
     requireAccessMyData,
     hasAccessToExercise,
     editCoachExercise,
+  )
+  .delete(
+    '/:id/exercises/:exerciseId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToExercise,
+    deleteCoachExercise,
   )
   .get(
     '/:id/customers',
