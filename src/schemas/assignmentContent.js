@@ -1,0 +1,22 @@
+'use strict'
+
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const assignmentContentSchema = new Schema({
+  lang: {
+    type: String
+  },
+
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  description: {
+    type: String,
+  },
+})
+
+module.exports = assignmentContentSchema

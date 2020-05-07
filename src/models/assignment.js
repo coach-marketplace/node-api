@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const workoutContentSchema = require('../schemas/workoutContent')
-const workoutExerciseSchema = require('../schemas/workoutExercise')
+const assignmentContentSchema = require('../schemas/assignmentContent')
 
 const assignmentSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -23,13 +22,16 @@ const assignmentSchema = new Schema({
     required: true,
   }],
 
-  content: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Program', //SHould be an assigned program
-    required: true,
-  },
+  content: [assignmentContentSchema],
+
 
   startDate: Date,
+
+  workouts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AssignedWorkouts',
+    required: true,
+  }],
 })
 
-module.exports = mongoose.model('Workout', workoutSchema)
+module.exports = mongoose.model('Assignement', assignmentSchema)

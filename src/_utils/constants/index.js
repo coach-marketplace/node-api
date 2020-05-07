@@ -62,6 +62,18 @@ const UNIT = {
   },
 }
 
+const RATING = {
+  easy: "Easy",
+  medium: "Medium",
+  hard: "Hard"
+}
+
+const STATE = {
+  todo: "To do",
+  done: "Done",
+  late: "Late"
+}
+
 /**
  * cm, m, km, in, mile
  * @constant
@@ -97,6 +109,11 @@ const listArray = unitsList.map((obj) => Object.keys(obj))
  */
 const UNITS = listArray.reduce((acc, curr) => [...curr, ...acc])
 
+const RATINGS = Object.values(RATING)
+
+const STATES = Object.values(STATE)
+
+
 module.exports = {
   USER_ACCOUNT_TYPE,
   CONTACT_TYPE,
@@ -112,4 +129,7 @@ module.exports = {
   DISTANCES,
   TIMES,
   OTHERS_UNITS,
+  RATING,
+  RATINGS,
+  STATES
 }

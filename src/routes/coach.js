@@ -24,6 +24,7 @@ const {
   removeWorkout,
   addProgram,
   retrievePrograms,
+  createAssignment
 } = require('../controllers/coach')
 
 coachRouter
@@ -87,5 +88,6 @@ coachRouter
   )
   .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)
   .get('/:id/programs', requireJWTAuth, requireAccessMyData, retrievePrograms)
+  .post('/:id/assign', requireJWTAuth, requireAccessMyData, createAssignment)
 
 module.exports = coachRouter
