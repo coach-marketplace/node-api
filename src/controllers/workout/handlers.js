@@ -88,7 +88,9 @@ const updateWorkout = async (id, data) => {
 
   if (!ObjectId.isValid(id)) throw new Error('workout id is incorrect')
 
-  return await updateOne(id, data)
+  const updatedWorkout = await updateOne({ _id: id }, data, { new: true })
+
+  return updatedWorkout
 }
 
 /**

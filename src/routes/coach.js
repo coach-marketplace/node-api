@@ -7,7 +7,10 @@ const {
   requireAccessMyData,
   // requireAccessMyWorkouts,
 } = require('../middleware/auth')
-const { hasAccessToExercise } = require('../middleware/access-data')
+const {
+  hasAccessToExercise,
+  hasAccessToWorkout,
+} = require('../middleware/access-data')
 
 const {
   addCustomerToCoach,
@@ -94,18 +97,21 @@ coachRouter
     '/:id/workouts/:workoutId',
     requireJWTAuth,
     requireAccessMyData,
+    hasAccessToWorkout,
     retrieveWorkout,
   )
   .put(
     '/:id/workouts/:workoutId',
     requireJWTAuth,
     requireAccessMyData,
+    hasAccessToWorkout,
     editWorkout,
   )
   .delete(
     '/:id/workouts/:workoutId',
     requireJWTAuth,
     requireAccessMyData,
+    hasAccessToWorkout,
     removeWorkout,
   )
   .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)

@@ -311,14 +311,9 @@ const retrieveWorkout = async (req, res) => {
 
 const editWorkout = async (req, res) => {
   try {
-    const {
-      body,
-      params: { workoutId },
-    } = req
+    const { body, workout } = req
 
-    if (!workoutId) throw new Error('workout id is required')
-
-    const updatedWorkout = await updateWorkout(workoutId, body)
+    const updatedWorkout = await updateWorkout(workout._id, body)
 
     res.status(200).json(updatedWorkout)
   } catch (error) {
@@ -334,11 +329,12 @@ const removeWorkout = async (req, res) => {
     const {
       params: { workoutId },
     } = req
-    if (!workoutId) throw new Error('Workout id needed')
 
     await deleteWorkout(workoutId)
 
-    res.status(200).json({ message: 'workout deleted' })
+    res
+      .status(200)
+      .json({ message: `Workout ${workoutId} successfully deleted` })
   } catch (error) {
     res.status(500).json({
       public_message: 'could not delete workout',

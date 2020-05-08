@@ -52,12 +52,13 @@ module.exports = {
   },
 
   /**
-   * @param {string} id
-   * @param {Object} data
-   * @return workout Object
+   * @param {object} query Match query
+   * @param {object} data Data to update
+   * @param {object} options Mongo options object
+   * @return {object} Mongoose query object
    */
-  updateOne(id, data) {
-    return Workout.updateOne({ _id: id }, data)
+  updateOne(query = {}, data = {}, options = {}) {
+    return Workout.findOneAndUpdate(query, data, options)
   },
 
   /**

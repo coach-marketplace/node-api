@@ -52,13 +52,13 @@ module.exports = {
   },
 
   /**
-   * @param {object} match Mongo match object
-   * @param {object} query Mongo query object
+   * @param {object} query Match
+   * @param {object} data Data to update
    * @param {object} options Mongo options object
    * @return {object} Mongoose query object
    */
-  updateOne(match = {}, query = {}, options = {}) {
-    return Exercise.findOneAndUpdate(match, query, options)
+  updateOne(query = {}, data = {}, options = {}) {
+    return Exercise.findOneAndUpdate(query, data, options)
   },
 
   /**
