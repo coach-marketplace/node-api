@@ -18,7 +18,7 @@ const workoutSchema = new Schema({
     trim: true,
   },
 
-  content: {
+  instructions: {
     type: String,
   },
 })

@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, updateOne, updateByLang, del } = require('./queries')
+const { create, read, updateOne, del } = require('./queries')
 const { LOCALES } = require('../../_utils/constants')
 
 /**
@@ -81,7 +81,9 @@ const getExercisesByCoachId = async (coachId) => {
  * @return {object} Updated exercise
  */
 const editExercise = async (exerciseId, data) => {
-  const updatedExercise = await updateOne({ _id: exerciseId }, data)
+  const updatedExercise = await updateOne({ _id: exerciseId }, data, {
+    new: true,
+  })
 
   return updatedExercise
 }

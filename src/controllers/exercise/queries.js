@@ -52,18 +52,13 @@ module.exports = {
   },
 
   /**
-   * @param {string} id Exercise id to update
-   * @param {string} lang Lang
+   * @param {object} match Mongo match object
    * @param {object} query Mongo query object
    * @param {object} options Mongo options object
    * @return {object} Mongoose query object
    */
-  updateByLang(id, lang, query = {}, options = {}) {
-    return Exercise.updateOne({ _id: id, lang }, query, options)
-  },
-
   updateOne(match = {}, query = {}, options = {}) {
-    return Exercise.updateOne(match, query, options)
+    return Exercise.findOneAndUpdate(match, query, options)
   },
 
   /**

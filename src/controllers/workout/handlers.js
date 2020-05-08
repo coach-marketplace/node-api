@@ -9,7 +9,7 @@ const { LOCALES } = require('../../_utils/constants')
  * @param {string} userOwnerId Required
  * @param {string} lang Required
  * @param {string} title Required
- * @param {string} content Optional
+ * @param {string} instructions Optional
  * @param {Array} exercises Optional
  * @param {boolean} isArchived Default: false
  * @param {boolean} isPrivate Default: false
@@ -19,7 +19,7 @@ const createWorkout = async (
   userOwnerId,
   lang,
   title,
-  content = null,
+  instructions = null,
   exercises = [],
   isArchived = false,
   isPrivate = false,
@@ -41,7 +41,7 @@ const createWorkout = async (
     userOwnerId,
     lang,
     title,
-    content,
+    instructions,
     exercises,
     isArchived,
     isPrivate,

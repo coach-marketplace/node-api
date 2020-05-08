@@ -9,7 +9,7 @@ module.exports = {
    * @param {string} userOwnerId Required
    * @param {string} lang Required
    * @param {string} title Required
-   * @param {string} content Optional
+   * @param {string} instructions Optional
    * @param {array} exercises Optional - Arrays of exercises
    * @param {boolean} isArchived
    * @param {boolean} isPrivate
@@ -19,7 +19,7 @@ module.exports = {
     userOwnerId,
     lang,
     title,
-    content,
+    instructions,
     exercises = null,
     isArchived = false,
     isPrivate = false,
@@ -33,7 +33,7 @@ module.exports = {
         {
           lang,
           title,
-          content,
+          instructions,
         },
       ],
     }
