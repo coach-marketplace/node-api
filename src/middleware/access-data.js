@@ -2,6 +2,7 @@
 
 const { getExerciseById } = require('../controllers/exercise/handlers')
 const { retrieveWorkoutById } = require('../controllers/workout/handlers')
+const { retrieveProgramById } = require('../controllers/program/handlers')
 
 /**
  * hasAccessToExercise
@@ -66,7 +67,7 @@ const hasAccessToWorkout = async (req, res, next) => {
   }
 
   if (!workoutId) {
-    res.status(401).json({ message: 'Exercise id not provided' })
+    res.status(401).json({ message: 'Workout id not provided' })
     return
   }
 
@@ -77,11 +78,7 @@ const hasAccessToWorkout = async (req, res, next) => {
     return
   }
 
-  if (
-    workout.userOwner &&
-    workout.userOwner.toString() !== user._id &&
-    !user.isAdmin
-  ) {
+  if (workout.userOwner && workout.userOwner.toString() !== user._id) {
     res.status(401).json({ message: 'Unauthorized to access these data' })
     return
   }
@@ -91,7 +88,48 @@ const hasAccessToWorkout = async (req, res, next) => {
   next()
 }
 
+/**
+ * hasAccessToProgram
+ *
+ * this middleware ensure that the auth user have access to the program
+ * that he are requesting.
+ * It assume that you are authenticated
+ */
+const hasAccessToProgram = async (req, res, next) => {
+  const {
+    user,
+    params: { programId },
+  } = req
+
+  if (!user) {
+    res.status(401).json({ message: 'Unauthorized for un-auth user' })
+    return
+  }
+
+  if (!programId) {
+    res.status(401).json({ message: 'Program id not provided' })
+    return
+  }
+
+  const program = await retrieveProgramById(programId)
+
+  if (!program) {
+    res.status(401).json({ message: 'Program not found' })
+    return
+  }
+
+  if (program.userOwner && program.userOwner.toString() !== user._id) {
+    res.status(401).json({ message: 'Unauthorized to access these data' })
+    return
+  }
+
+  req.program = program
+
+  next()
+}
+
 module.exports = {
   hasAccessToExercise,
   hasAccessToWorkout,
+  hasAccessToProgram,
 }
