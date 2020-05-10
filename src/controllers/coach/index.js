@@ -29,6 +29,8 @@ const {
 const {
   createProgram,
   retrieveProgramsByOwnerId,
+  updateProgram,
+  deleteProgram,
 } = require('../program/handlers')
 const { LOCALES } = require('../../_utils/constants')
 
@@ -349,15 +351,6 @@ const addProgram = async (req, res) => {
       user,
       body: { isPrivate, days, workouts, lang, title, description },
     } = req
-    console.log(isPrivate, days, workouts, lang, title, description)
-
-    if (!days) throw new Error('Days is required')
-
-    if (!title) throw new Error('Title is required')
-
-    if (!lang) throw new Error('Lang is required')
-
-    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
     const newProgram = await createProgram(
       user._id,
@@ -396,6 +389,53 @@ const retrievePrograms = async (req, res) => {
   }
 }
 
+const retrieveProgram = async (req, res) => {
+  try {
+    const { program } = req
+
+    res.status(200).json(program)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const editCoachProgram = async (req, res) => {
+  try {
+    const { program, body } = req
+
+    const updatedProgram = await updateProgram(program._id, body)
+
+    res.status(200).json(updatedProgram)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const removeCoachProgram = async (req, res) => {
+  try {
+    const {
+      params: { programId },
+    } = req
+
+    await deleteProgram(programId)
+
+    res
+      .status(200)
+      .json({ message: `Program ${programId} successfully deleted` })
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
 module.exports = {
   addServiceToCoach,
   getCoachServices,
@@ -414,4 +454,7 @@ module.exports = {
   removeWorkout,
   addProgram,
   retrievePrograms,
+  retrieveProgram,
+  editCoachProgram,
+  removeCoachProgram,
 }

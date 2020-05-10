@@ -10,6 +10,7 @@ const {
 const {
   hasAccessToExercise,
   hasAccessToWorkout,
+  hasAccessToProgram,
 } = require('../middleware/access-data')
 
 const {
@@ -30,6 +31,9 @@ const {
   removeWorkout,
   addProgram,
   retrievePrograms,
+  retrieveProgram,
+  editCoachProgram,
+  removeCoachProgram,
 } = require('../controllers/coach')
 
 coachRouter
@@ -114,7 +118,28 @@ coachRouter
     hasAccessToWorkout,
     removeWorkout,
   )
-  .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)
   .get('/:id/programs', requireJWTAuth, requireAccessMyData, retrievePrograms)
+  .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)
+  .get(
+    '/:id/programs/:programId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToProgram,
+    retrieveProgram,
+  )
+  .put(
+    '/:id/programs/:programId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToProgram,
+    editCoachProgram,
+  )
+  .delete(
+    '/:id/programs/:programId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToProgram,
+    removeCoachProgram,
+  )
 
 module.exports = coachRouter
