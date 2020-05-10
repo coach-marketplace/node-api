@@ -97,7 +97,7 @@ const updateWorkout = async (id, data) => {
  * @param {string} id required
  */
 const deleteWorkout = async (id) => {
-  if (!id) throw new Error('WOrkout id is required')
+  if (!id) throw new Error('Workout id is required')
 
   if (!ObjectId.isValid(id)) throw new Error('workout id is incorrect')
 
