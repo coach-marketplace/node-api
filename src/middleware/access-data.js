@@ -111,21 +111,27 @@ const hasAccessToProgram = async (req, res, next) => {
     return
   }
 
-  const program = await retrieveProgramById(programId)
+  try {
+    const program = await retrieveProgramById(programId)
+    if (!program) {
+      res.status(401).json({ message: 'Program not found' })
+      return
+    }
 
-  if (!program) {
-    res.status(401).json({ message: 'Program not found' })
+    if (program.userOwner && program.userOwner.toString() !== user._id) {
+      res.status(401).json({ message: 'Unauthorized to access these data' })
+      return
+    }
+
+    req.program = program
+
+    next()
+  } catch (error) {
+    res
+      .status(401)
+      .json({ message: 'Program not found', debug_message: error.message })
     return
   }
-
-  if (program.userOwner && program.userOwner.toString() !== user._id) {
-    res.status(401).json({ message: 'Unauthorized to access these data' })
-    return
-  }
-
-  req.program = program
-
-  next()
 }
 
 module.exports = {
