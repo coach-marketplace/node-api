@@ -251,7 +251,7 @@ const addWorkout = async (req, res) => {
   try {
     const {
       user,
-      body: { isPrivate, lang, title, content, exercises },
+      body: { isPrivate, lang, title, instructions, exercises },
     } = req
 
     if (!lang) throw new Error('Lang is required')
@@ -262,7 +262,7 @@ const addWorkout = async (req, res) => {
       user._id,
       lang,
       title,
-      content,
+      instructions,
       exercises || null,
       false,
       isPrivate,
