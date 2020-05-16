@@ -16,7 +16,7 @@ var data = require('./shared.js')
 
 let exercise_data = {
   name: 'Gabon army dance',
-  lang: 'en',
+  lang: 'en-US',
   instructions: "dance like there's no tomorrow",
   videoUrl: 'https://www.youtube.com/watch?v=MvFmuWd_NQw&gl=BE',
   isPrivate: 'true',
@@ -31,6 +31,7 @@ describe('Test exercises', () => {
       .set('authorization', data.coach.token)
       .send(exercise_data)
       .end((err, res) => {
+        console.log('++', res.body)
         should.not.exist(err)
         res.should.have.status(201)
         res.body.should.be.a('object')
@@ -57,12 +58,17 @@ describe('Test exercises', () => {
   it('delete newly created exercise', (done) => {
     chai
       .request(app)
-      .delete(basePath + '/' + exercise_data._id + '/exercises')
+      .delete(
+        basePath +
+          '/' +
+          data.coach.user._id +
+          '/exercises/' +
+          exercise_data._id,
+      )
       .set('authorization', data.coach.token)
       .end((err, res) => {
         should.not.exist(err)
         res.should.have.status(200)
-        res.body.should.be.equal('ok')
         done()
       })
   })

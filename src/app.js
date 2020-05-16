@@ -2,7 +2,6 @@
 'use strict'
 
 global.log = require('./_utils/helpers').log
-global.DEFAULT_LANG = 'en'
 
 require('dotenv').config({
   path: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,

@@ -3,12 +3,13 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, deleteOne, read, updateOne } = require('./queries')
+const { LOCALES } = require('../../_utils/constants')
 
 /**
  * @param {string} userOwnerId Required
- * @param {string} langId Required
+ * @param {string} lang Required
  * @param {string} title Required
- * @param {string} content Optional
+ * @param {string} instructions Optional
  * @param {Array} exercises Optional
  * @param {boolean} isArchived Default: false
  * @param {boolean} isPrivate Default: false
@@ -16,9 +17,9 @@ const { create, deleteOne, read, updateOne } = require('./queries')
  */
 const createWorkout = async (
   userOwnerId,
-  langId,
+  lang,
   title,
-  content = null,
+  instructions = null,
   exercises = [],
   isArchived = false,
   isPrivate = false,
@@ -28,9 +29,9 @@ const createWorkout = async (
   if (!ObjectId.isValid(userOwnerId))
     throw new Error('userOwnerId is incorrect')
 
-  if (!langId) throw new Error('langId is required')
+  if (!lang) throw new Error('lang is required')
 
-  if (!ObjectId.isValid(langId)) throw new Error('langId is incorrect')
+  if (!LOCALES.includes(lang)) throw new Error('lang is invalid')
 
   if (!title) throw new Error('title is required')
 
@@ -38,9 +39,9 @@ const createWorkout = async (
 
   const newWorkout = await create(
     userOwnerId,
-    langId.toString(),
+    lang,
     title,
-    content,
+    instructions,
     exercises,
     isArchived,
     isPrivate,
@@ -87,14 +88,16 @@ const updateWorkout = async (id, data) => {
 
   if (!ObjectId.isValid(id)) throw new Error('workout id is incorrect')
 
-  return await updateOne(id, data)
+  const updatedWorkout = await updateOne({ _id: id }, data, { new: true })
+
+  return updatedWorkout
 }
 
 /**
  * @param {string} id required
  */
 const deleteWorkout = async (id) => {
-  if (!id) throw new Error('WOrkout id is required')
+  if (!id) throw new Error('Workout id is required')
 
   if (!ObjectId.isValid(id)) throw new Error('workout id is incorrect')
 

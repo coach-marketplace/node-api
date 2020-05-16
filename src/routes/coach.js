@@ -7,16 +7,23 @@ const {
   requireAccessMyData,
   // requireAccessMyWorkouts,
 } = require('../middleware/auth')
+const {
+  hasAccessToExercise,
+  hasAccessToWorkout,
+  hasAccessToProgram,
+} = require('../middleware/access-data')
 
 const {
   addCustomerToCoach,
   addExerciseToCoach,
+  editCoachExercise,
   addServiceToCoach,
   getCoachServices,
   retrieveCoachCustomers,
   retrieveCoachExercises,
+  retrieveCoachExercise,
   searchUserAsCoach,
-  removeExercise,
+  deleteCoachExercise,
   addWorkout,
   retrieveWorkouts,
   retrieveWorkout,
@@ -25,6 +32,9 @@ const {
   addProgram,
   retrievePrograms,
   createAssignment,
+  retrieveProgram,
+  editCoachProgram,
+  removeCoachProgram,
 } = require('../controllers/coach')
 
 coachRouter
@@ -47,7 +57,27 @@ coachRouter
     requireAccessMyData,
     addExerciseToCoach,
   )
-  .delete('/:id/exercises', requireJWTAuth, removeExercise)
+  .get(
+    '/:id/exercises/:exerciseId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToExercise,
+    retrieveCoachExercise,
+  )
+  .put(
+    '/:id/exercises/:exerciseId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToExercise,
+    editCoachExercise,
+  )
+  .delete(
+    '/:id/exercises/:exerciseId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToExercise,
+    deleteCoachExercise,
+  )
   .get(
     '/:id/customers',
     requireJWTAuth,
@@ -72,22 +102,46 @@ coachRouter
     '/:id/workouts/:workoutId',
     requireJWTAuth,
     requireAccessMyData,
+    hasAccessToWorkout,
     retrieveWorkout,
   )
   .put(
     '/:id/workouts/:workoutId',
     requireJWTAuth,
     requireAccessMyData,
+    hasAccessToWorkout,
     editWorkout,
   )
   .delete(
     '/:id/workouts/:workoutId',
     requireJWTAuth,
     requireAccessMyData,
+    hasAccessToWorkout,
     removeWorkout,
   )
-  .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)
   .get('/:id/programs', requireJWTAuth, requireAccessMyData, retrievePrograms)
   .post('/:id/assign', requireJWTAuth, requireAccessMyData, createAssignment)
+  .post('/:id/programs', requireJWTAuth, requireAccessMyData, addProgram)
+  .get(
+    '/:id/programs/:programId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToProgram,
+    retrieveProgram,
+  )
+  .put(
+    '/:id/programs/:programId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToProgram,
+    editCoachProgram,
+  )
+  .delete(
+    '/:id/programs/:programId',
+    requireJWTAuth,
+    requireAccessMyData,
+    hasAccessToProgram,
+    removeCoachProgram,
+  )
 
 module.exports = coachRouter

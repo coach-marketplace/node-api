@@ -8,7 +8,7 @@ module.exports = {
   /**
    * @param {string} userOwnerId Required
    * @param {number} days Required
-   * @param {string} langId Optional
+   * @param {string} lang Required
    * @param {string} title Required
    * @param {string} description Optional
    * @param {array} workouts Optional - Arrays of workouts
@@ -19,7 +19,7 @@ module.exports = {
   create(
     userOwnerId,
     days,
-    langId,
+    lang,
     title,
     description,
     workouts = null,
@@ -34,7 +34,7 @@ module.exports = {
       days: days,
       content: [
         {
-          lang: new mongoose.Types.ObjectId(langId),
+          lang,
           title,
           description,
         },
@@ -55,12 +55,13 @@ module.exports = {
   },
 
   /**
-   * @param {string} id
-   * @param {Object} data
-   * @return Program Object
+   * @param {object} query Match
+   * @param {object} data Data to update
+   * @param {object} options Mongo options object
+   * @return {object} Mongoose query object
    */
-  updateOne(id, data) {
-    return Program.updateOne({ _id: id }, data)
+  updateOne(query = {}, data = {}, options = {}) {
+    return Program.findOneAndUpdate(query, data, options)
   },
 
   /**

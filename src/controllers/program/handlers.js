@@ -3,11 +3,12 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, deleteOne, read, updateOne } = require('./queries')
+const { LOCALES } = require('../../_utils/constants')
 
 /**
  * @param {string} userOwnerId Required
  * @param {number} days Required
- * @param {string} langId Required
+ * @param {string} lang Required
  * @param {string} title Required
  * @param {string} description Optional
  * @param {Array} workouts Optional
@@ -18,7 +19,7 @@ const { create, deleteOne, read, updateOne } = require('./queries')
 const createProgram = async (
   userOwnerId,
   days,
-  langId,
+  lang,
   title,
   description = null,
   workouts = [],
@@ -30,9 +31,9 @@ const createProgram = async (
   if (!ObjectId.isValid(userOwnerId))
     throw new Error('userOwnerId is incorrect')
 
-  if (!langId) throw new Error('langId is required')
+  if (!lang) throw new Error('langId is required')
 
-  if (!ObjectId.isValid(langId)) throw new Error('langId is incorrect')
+  if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
   if (!days) throw new Error('title is required')
 
@@ -41,7 +42,7 @@ const createProgram = async (
   const newProgram = await create(
     userOwnerId,
     days,
-    langId,
+    lang,
     title,
     description,
     workouts,
@@ -90,7 +91,7 @@ const updateProgram = async (id, data) => {
 
   if (!ObjectId.isValid(id)) throw new Error('Program id is incorrect')
 
-  return await updateOne(id, data)
+  return await updateOne({ _id: id }, data, { new: true })
 }
 
 /**
