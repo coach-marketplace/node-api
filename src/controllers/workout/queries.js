@@ -7,9 +7,9 @@ const Workout = require('../../models/workout')
 module.exports = {
   /**
    * @param {string} userOwnerId Required
-   * @param {string} langId Required
+   * @param {string} lang Required
    * @param {string} title Required
-   * @param {string} content Optional
+   * @param {string} instructions Optional
    * @param {array} exercises Optional - Arrays of exercises
    * @param {boolean} isArchived
    * @param {boolean} isPrivate
@@ -17,9 +17,9 @@ module.exports = {
    */
   create(
     userOwnerId,
-    langId,
+    lang,
     title,
-    content,
+    instructions,
     exercises = null,
     isArchived = false,
     isPrivate = false,
@@ -31,9 +31,9 @@ module.exports = {
       isPrivate: isPrivate,
       content: [
         {
-          lang: new mongoose.Types.ObjectId(langId),
+          lang,
           title,
-          content,
+          instructions,
         },
       ],
     }
@@ -52,12 +52,13 @@ module.exports = {
   },
 
   /**
-   * @param {string} id
-   * @param {Object} data
-   * @return workout Object
+   * @param {object} query Match query
+   * @param {object} data Data to update
+   * @param {object} options Mongo options object
+   * @return {object} Mongoose query object
    */
-  updateOne(id, data) {
-    return Workout.updateOne({ _id: id }, data)
+  updateOne(query = {}, data = {}, options = {}) {
+    return Workout.findOneAndUpdate(query, data, options)
   },
 
   /**

@@ -1,6 +1,6 @@
 'use strict'
 
-const { USER_ACCOUNT_TYPES } = require('../_utils/constants')
+const { LOCALE, LOCALES, USER_ACCOUNT_TYPES } = require('../_utils/constants')
 
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
@@ -41,8 +41,10 @@ const userSchema = new Schema({
   },
 
   lang: {
-    type: Schema.Types.ObjectId,
-    ref: 'Lang',
+    type: String,
+    default: LOCALE.EN_US,
+    enum: LOCALES,
+    required: true,
   },
 
   isArchived: {

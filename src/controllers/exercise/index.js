@@ -5,9 +5,8 @@ const {
   createExercise,
   getExerciseById,
 } = require('./handlers')
-const { getLangByISO } = require('../lang/handlers')
 const { getUserById } = require('../user/handlers')
-const { ACCEPTED_LANGS } = require('../../_utils/constants')
+const { LOCALES } = require('../../_utils/constants')
 
 module.exports = {
   retrieveExercises: async (req, res) => {
@@ -54,13 +53,12 @@ module.exports = {
 
       if (!userOwnerId) throw new Error('userOwnerId is required')
 
-      if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
+      if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-      const language = await getLangByISO(lang)
       const userOwner = await getUserById(userOwnerId)
       const newExercise = await createExercise(
         userOwner._id.toString(),
-        language._id.toString(),
+        lang,
         name,
         sportId,
         instructions,
@@ -76,5 +74,4 @@ module.exports = {
       })
     }
   },
-
 }

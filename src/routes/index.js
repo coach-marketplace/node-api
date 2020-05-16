@@ -5,7 +5,6 @@ const authRouter = require('./auth')
 const userRouter = require('./user')
 const coachRouter = require('./coach')
 const serviceRouter = require('./service')
-const langRouter = require('./lang')
 const contactRouter = require('./contact')
 const geoSpatialRouter = require('./geo-spatial')
 const sportRouter = require('./sport')
@@ -24,8 +23,4 @@ module.exports = (app) => {
     .use('/v1/sport', sportRouter)
     .use('/v1/exercise', exerciseRouter)
     .use('/v1/conversation', conversationRouter)
-
-    // Admin routes
-    // TODO: secure admin route by using middleware
-    .use('/v1/lang', langRouter)
 }

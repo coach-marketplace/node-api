@@ -6,10 +6,10 @@ const {
   getUserByEmail,
   getExposedUserData,
 } = require('../user/handlers')
-const { getLangByISO } = require('../lang/handlers')
 const {
   getExercisesByCoachId,
   createExercise,
+  editExercise,
   deleteExercise,
 } = require('../exercise/handlers')
 const { addService, retrieveCoachServices } = require('../service/handlers')
@@ -29,12 +29,10 @@ const {
 const {
   createProgram,
   retrieveProgramsByOwnerId,
+  updateProgram,
+  deleteProgram,
 } = require('../program/handlers')
-const { LANG, ACCEPTED_LANGS } = require('../../_utils/constants')
-
-const acceptedLanguagesValue = Object.keys(LANG).map((k) =>
-  LANG[k].NAME.toLowerCase(),
-)
+const { LOCALES } = require('../../_utils/constants')
 
 const addServiceToCoach = async (req, res) => {
   try {
@@ -81,7 +79,20 @@ const retrieveCoachExercises = async (req, res) => {
     res.status(200).json(response)
   } catch (error) {
     res.status(500).json({
-      public_message: 'Services can not be found',
+      public_message: 'Exercise can not be found',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrieveCoachExercise = async (req, res) => {
+  try {
+    const { exercise } = req
+
+    res.status(200).json(exercise)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Exercise can not be found',
       debug_message: error.message,
     })
   }
@@ -97,13 +108,11 @@ const addExerciseToCoach = async (req, res) => {
     if (!name) throw new Error('Name is required')
     if (!lang) throw new Error('Lang is required')
 
-    if (!acceptedLanguagesValue.includes(lang))
-      throw new Error('Lang is invalid')
+    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-    const language = await getLangByISO(lang)
     const newExercise = await createExercise(
       user._id,
-      language._id.toString(),
+      lang,
       name,
       null,
       instructions,
@@ -120,17 +129,34 @@ const addExerciseToCoach = async (req, res) => {
   }
 }
 
+const editCoachExercise = async (req, res) => {
+  try {
+    const { body, exercise } = req
+
+    const editedExercise = await editExercise(exercise._id, body)
+
+    res.status(200).json(editedExercise)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Exercise can not be edited',
+      debug_message: error.message,
+    })
+  }
+}
+
 //TODO: check if user ca remove this exercise
-const removeExercise = async (req, res) => {
+const deleteCoachExercise = async (req, res) => {
   try {
     let {
-      params: { id },
+      params: { exerciseId },
     } = req
-    if (!id) throw Error('exercise id needed')
+    if (!exerciseId) throw Error('Exercise id needed')
 
-    await deleteExercise(id)
+    await deleteExercise(exerciseId)
 
-    res.status(200).json('ok')
+    res
+      .status(200)
+      .json({ message: `Exercise ${exerciseId} successfully deleted` })
   } catch (error) {
     res.status(500).json({
       public_message: 'Could not remove exercise',
@@ -225,19 +251,18 @@ const addWorkout = async (req, res) => {
   try {
     const {
       user,
-      body: { isPrivate, lang, title, content, exercises },
+      body: { isPrivate, lang, title, instructions, exercises },
     } = req
 
     if (!lang) throw new Error('Lang is required')
 
-    if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
+    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-    const language = await getLangByISO(lang)
     const newWorkout = await createWorkout(
       user._id,
-      language._id.toString(),
+      lang,
       title,
-      content,
+      instructions,
       exercises || null,
       false,
       isPrivate,
@@ -288,14 +313,9 @@ const retrieveWorkout = async (req, res) => {
 
 const editWorkout = async (req, res) => {
   try {
-    const {
-      body,
-      params: { workoutId },
-    } = req
+    const { body, workout } = req
 
-    if (!workoutId) throw new Error('workout id is required')
-
-    const updatedWorkout = await updateWorkout(workoutId, body)
+    const updatedWorkout = await updateWorkout(workout._id, body)
 
     res.status(200).json(updatedWorkout)
   } catch (error) {
@@ -311,11 +331,12 @@ const removeWorkout = async (req, res) => {
     const {
       params: { workoutId },
     } = req
-    if (!workoutId) throw new Error('Workout id needed')
 
     await deleteWorkout(workoutId)
 
-    res.status(200).json({ message: 'workout deleted' })
+    res
+      .status(200)
+      .json({ message: `Workout ${workoutId} successfully deleted` })
   } catch (error) {
     res.status(500).json({
       public_message: 'could not delete workout',
@@ -330,21 +351,11 @@ const addProgram = async (req, res) => {
       user,
       body: { isPrivate, days, workouts, lang, title, description },
     } = req
-    console.log(isPrivate, days, workouts, lang, title, description)
 
-    if (!days) throw new Error('Days is required')
-
-    if (!title) throw new Error('Title is required')
-
-    if (!lang) throw new Error('Lang is required')
-
-    if (!ACCEPTED_LANGS.includes(lang)) throw new Error('Lang is invalid')
-
-    const language = await getLangByISO(lang)
     const newProgram = await createProgram(
       user._id,
       days,
-      language._id.toString(),
+      lang,
       title,
       description,
       workouts || [],
@@ -378,15 +389,64 @@ const retrievePrograms = async (req, res) => {
   }
 }
 
+const retrieveProgram = async (req, res) => {
+  try {
+    const { program } = req
+
+    res.status(200).json(program)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const editCoachProgram = async (req, res) => {
+  try {
+    const { program, body } = req
+
+    const updatedProgram = await updateProgram(program._id, body)
+
+    res.status(200).json(updatedProgram)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
+const removeCoachProgram = async (req, res) => {
+  try {
+    const {
+      params: { programId },
+    } = req
+
+    await deleteProgram(programId)
+
+    res
+      .status(200)
+      .json({ message: `Program ${programId} successfully deleted` })
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'could not retrieve workout',
+      debug_message: error.message,
+    })
+  }
+}
+
 module.exports = {
   addServiceToCoach,
   getCoachServices,
   retrieveCoachExercises,
+  retrieveCoachExercise,
   addExerciseToCoach,
+  editCoachExercise,
   addCustomerToCoach,
   retrieveCoachCustomers,
   searchUserAsCoach,
-  removeExercise,
+  deleteCoachExercise,
   addWorkout,
   retrieveWorkouts,
   retrieveWorkout,
@@ -394,4 +454,7 @@ module.exports = {
   removeWorkout,
   addProgram,
   retrievePrograms,
+  retrieveProgram,
+  editCoachProgram,
+  removeCoachProgram,
 }

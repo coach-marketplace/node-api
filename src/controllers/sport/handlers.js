@@ -3,41 +3,33 @@
 const ObjectId = require('mongoose').Types.ObjectId
 
 const { createSport, readSport } = require('./queries')
+const { LOCALE, LOCALES } = require('../../_utils/constants')
 
 module.exports = {
   /**
-   * @param {object} data {name, langId}
+   * @param {object} data {name, lang}
    * @return {object} Created sport
    */
   createSport: async (data) => {
-    const { name, langId } = data
+    const { name, lang } = data
 
-    if (!name) {
-      throw new Error('Name is required')
-    }
+    if (!name) throw new Error('Name is required')
+    if (!lang) throw new Error('Lang is required')
+    if (!localStorage.includes(lang)) throw new Error('Lang is invalid')
 
-    if (!ObjectId.isValid(langId)) {
-      throw new Error('Lang id is incorrect')
-    }
-
-    const newSport = await createSport(langId, name)
+    const newSport = await createSport(lang, name)
 
     return newSport
   },
 
   /**
    * @param {string} id Sport ID
-   * @param {string} lang Language ISO_639_1 (e.g. 'en')
    * @return {object} Sport
    */
   getSportById: async (id) => {
-    if (!id) {
-      throw new Error('SportId is required')
-    }
+    if (!id) throw new Error('SportId is required')
 
-    if (!ObjectId.isValid(id)) {
-      throw new Error('Lang id is incorrect')
-    }
+    if (!ObjectId.isValid(id)) throw new Error('Id is invalid')
 
     const sports = await readSport({ _id: id }).lean()
 

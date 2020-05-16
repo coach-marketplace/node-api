@@ -8,17 +8,17 @@ module.exports = {
   /**
    * @param {string} userOwnerId
    * @param {string} sportId
-   * @param {string} langId
+   * @param {string} lang
    * @param {string} name
    * @param {string} instructions
    * @param {string} videoUrl
    * @param {string} isPrivate
    * @return {object} Mongoose query object
    */
-  createExercise(
+  create(
     userOwnerId,
     sportId,
-    langId,
+    lang,
     name,
     instructions,
     videoUrl,
@@ -32,7 +32,7 @@ module.exports = {
       isPrivate: isPrivate,
       content: [
         {
-          lang: new mongoose.Types.ObjectId(langId),
+          lang,
           name,
           instructions,
           videoUrl,
@@ -47,14 +47,24 @@ module.exports = {
    * @param {object} query Mongo query object
    * @return {object} Mongoose query object
    */
-  readExercise(query = {}) {
+  read(query = {}) {
     return Exercise.find(query)
+  },
+
+  /**
+   * @param {object} query Match
+   * @param {object} data Data to update
+   * @param {object} options Mongo options object
+   * @return {object} Mongoose query object
+   */
+  updateOne(query = {}, data = {}, options = {}) {
+    return Exercise.findOneAndUpdate(query, data, options)
   },
 
   /**
    * @param {string} id exercise id required
    */
-  deleteExercise(id) {
+  del(id) {
     return Exercise.deleteOne({ _id: { $eq: id } })
-  }
+  },
 }
