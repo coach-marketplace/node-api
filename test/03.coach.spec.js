@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 process.env.NODE_ENV = 'test'
 
 let chai = require('chai')
@@ -31,7 +32,6 @@ describe('Test exercises', () => {
       .set('authorization', data.coach.token)
       .send(exercise_data)
       .end((err, res) => {
-        console.log('++', res.body)
         should.not.exist(err)
         res.should.have.status(201)
         res.body.should.be.a('object')

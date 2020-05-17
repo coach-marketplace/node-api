@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { createUser, editUser } = require('../src/controllers/user/handlers')
 
 process.env.NODE_ENV = 'test'
@@ -5,6 +6,7 @@ process.env.NODE_ENV = 'test'
 let chai = require('chai')
 let chaiHttp = require('chai-http')
 
+// eslint-disable-next-line no-unused-vars
 let server = require('../src/server.js')
 
 let should = chai.should()
