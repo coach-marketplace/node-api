@@ -42,6 +42,22 @@ const contactSchema = new Schema({
     type: String,
     enum: Object.values(CONTACT_TYPE),
   },
+
+  /**
+   * If the coach adding a customer the customer have to accept the be coached
+   * by him. Hand if the customer add a coach, the coach need to accept to be
+   * his coach.
+   */
+  acceptedAt: {
+    owner: {
+      type: Date,
+      default: null,
+    },
+    lead: {
+      type: Date,
+      default: null,
+    },
+  },
 })
 
 contactSchema.plugin(timestamp)

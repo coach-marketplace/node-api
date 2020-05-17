@@ -105,10 +105,59 @@ const deleteProgram = async (id) => {
   return await deleteOne(id)
 }
 
+/**
+ * @param {object} program required
+ * @param {array} trainees Trainees to add required
+ */
+const addTraineesToProgram = async (program, trainees) => {
+  if (!program) throw new Error('Program is required')
+  if (!trainees || !trainees.length) throw new Error('Trainees are required')
+
+  let hasError = false
+
+  trainees.forEach(async (traineeId) => {
+    if (!program.trainees.includes(traineeId)) {
+      program.trainees.push(traineeId)
+    } else {
+      hasError = true
+    }
+  })
+
+  if (hasError) throw new Error('One of id already assigned')
+
+  const updatedProgram = await updateOne({ _id: program._id }, program, {
+    new: true,
+  })
+
+  return updatedProgram
+}
+
+/**
+ * @param {object} program required
+ * @param {array} trainees Trainees to add required
+ */
+const removeTraineesFromProgram = async (program, trainees) => {
+  if (!program) throw new Error('Program is required')
+  if (!trainees || !trainees.length) throw new Error('Trainees are required')
+
+  trainees.forEach(async (traineeId) => {
+    const traineeIndex = program.trainees.findIndex(
+      (id) => id.toString() === traineeId,
+    )
+    if (traineeIndex === -1) return
+
+    program.trainees.splice(traineeIndex, 1)
+  })
+
+  return await updateOne({ _id: program._id }, program, { new: true })
+}
+
 module.exports = {
   createProgram,
   retrieveProgramsByOwnerId,
   retrieveProgramById,
   updateProgram,
   deleteProgram,
+  addTraineesToProgram,
+  removeTraineesFromProgram,
 }

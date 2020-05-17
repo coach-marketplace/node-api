@@ -31,8 +31,9 @@ const {
   retrieveProgramsByOwnerId,
   updateProgram,
   deleteProgram,
+  addTraineesToProgram,
+  removeTraineesFromProgram,
 } = require('../program/handlers')
-const { createAssignmentHandler } = require('../assignment/handlers')
 const { LOCALES } = require('../../_utils/constants')
 
 const addServiceToCoach = async (req, res) => {
@@ -390,37 +391,6 @@ const retrievePrograms = async (req, res) => {
   }
 }
 
-const createAssignment = async (req, res) => {
-  try {
-    const {
-      params: { id },
-      body: { trainees, workouts, title, description, language, startDate },
-    } = req
-
-    /*{
-      trainees: [ids],
-      content: [program, workouts, exercises]
-    }*/
-
-    let assignment = await createAssignmentHandler(
-      id,
-      trainees,
-      workouts,
-      title,
-      description,
-      language,
-      startDate,
-    )
-
-    res.status(200).json(assignment)
-  } catch (error) {
-    res.status(500).json({
-      public_message: 'Could not assign',
-      debug_message: error.message,
-    })
-  }
-}
-
 const retrieveProgram = async (req, res) => {
   try {
     const { program } = req
@@ -468,6 +438,42 @@ const removeCoachProgram = async (req, res) => {
   }
 }
 
+const assignTraineesToProgram = async (req, res) => {
+  try {
+    const {
+      program,
+      body: { trainees },
+    } = req
+
+    const updatedProgram = await addTraineesToProgram(program, trainees)
+
+    res.status(200).json(updatedProgram)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not assign',
+      debug_message: error.message,
+    })
+  }
+}
+
+const unassignTraineesToProgram = async (req, res) => {
+  try {
+    const {
+      program,
+      body: { trainees },
+    } = req
+
+    const updatedProgram = await removeTraineesFromProgram(program, trainees)
+
+    res.status(200).json(updatedProgram)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not assign',
+      debug_message: error.message,
+    })
+  }
+}
+
 module.exports = {
   addServiceToCoach,
   getCoachServices,
@@ -486,7 +492,8 @@ module.exports = {
   removeWorkout,
   addProgram,
   retrievePrograms,
-  createAssignment,
+  assignTraineesToProgram,
+  unassignTraineesToProgram,
   retrieveProgram,
   editCoachProgram,
   removeCoachProgram,

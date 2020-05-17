@@ -95,7 +95,7 @@ const hasAccessToWorkout = async (req, res, next) => {
  * that he are requesting.
  * It assume that you are authenticated
  */
-const hasAccessToProgram = async (req, res, next) => {
+const requiredAccessToProgram = async (req, res, next) => {
   const {
     user,
     params: { programId },
@@ -137,5 +137,5 @@ const hasAccessToProgram = async (req, res, next) => {
 module.exports = {
   hasAccessToExercise,
   hasAccessToWorkout,
-  hasAccessToProgram,
+  requiredAccessToProgram,
 }
