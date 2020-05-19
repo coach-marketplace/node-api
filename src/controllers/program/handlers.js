@@ -54,15 +54,15 @@ const createProgram = async (
 }
 
 /**
- * @param {String} id required
+ * @param {String} ownerId required
  * @return program with id id
  */
-const retrieveProgramsByOwnerId = async (id) => {
-  if (!id) throw new Error('id is required')
+const retrieveProgramsByOwnerId = async (ownerId) => {
+  if (!ownerId) throw new Error('ownerId is required')
 
-  if (!ObjectId.isValid(id)) throw new Error('id is incorrect')
+  if (!ObjectId.isValid(ownerId)) throw new Error('ownerId is incorrect')
 
-  const results = await read({ userOwner: id })
+  const results = await read({ userOwner: ownerId })
 
   return results
 }

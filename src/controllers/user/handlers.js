@@ -152,7 +152,7 @@ const getAllUsers = async () => await read()
  * @return {object} User
  */
 const getUserById = async (id) => {
-  if (!id) throw new Error('id is required')
+  if (!id) throw new Error('User id is required')
 
   const users = await read({ _id: id }).lean()
 

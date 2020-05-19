@@ -377,15 +377,15 @@ const addProgram = async (req, res) => {
 const retrievePrograms = async (req, res) => {
   try {
     const {
-      params: { id },
+      user: { _id: ownerId },
     } = req
 
-    const programs = await retrieveProgramsByOwnerId(id)
+    const programs = await retrieveProgramsByOwnerId(ownerId)
 
     res.status(200).json(programs)
   } catch (error) {
     res.status(500).json({
-      public_message: 'could not retrieve workout',
+      public_message: 'could not retrieve programs',
       debug_message: error.message,
     })
   }
