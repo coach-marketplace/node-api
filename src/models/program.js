@@ -36,14 +36,6 @@ const programSchema = new Schema({
   content: [programContentSchema],
 
   workouts: [programWorkoutSchema],
-
-  trainees: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-  ],
 })
 
 module.exports = mongoose.model('Program', programSchema)

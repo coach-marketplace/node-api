@@ -1,19 +1,19 @@
 'use strict'
 
-const coachRouter = require('express').Router()
+const coachProgramRouter = require('express').Router()
 
 const { requiredAccessToProgram } = require('../../middleware/access-data')
 const {
   addProgram,
   retrievePrograms,
   assignTraineesToProgram,
-  unassignTraineesToProgram,
+  unassignTraineesFromProgram,
   retrieveProgram,
   editCoachProgram,
   removeCoachProgram,
 } = require('../../controllers/coach')
 
-coachRouter
+coachProgramRouter
   .get('/', retrievePrograms)
   .post('/', addProgram)
   .get('/:programId', requiredAccessToProgram, retrieveProgram)
@@ -23,7 +23,7 @@ coachRouter
   .post(
     '/:programId/unassign',
     requiredAccessToProgram,
-    unassignTraineesToProgram,
+    unassignTraineesFromProgram,
   )
 
-module.exports = coachRouter
+module.exports = coachProgramRouter

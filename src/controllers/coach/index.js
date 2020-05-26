@@ -31,9 +31,12 @@ const {
   retrieveProgramsByOwnerId,
   updateProgram,
   deleteProgram,
-  addTraineesToProgram,
-  removeTraineesFromProgram,
 } = require('../program/handlers')
+const {
+  createAssignments,
+  deleteAssignments,
+  retrieveAssignments,
+} = require('../assignment/handlers.js')
 const { LOCALES } = require('../../_utils/constants')
 
 const addServiceToCoach = async (req, res) => {
@@ -226,6 +229,19 @@ const retrieveCoachCustomers = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       public_message: 'Error in adding customer to coach',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrieveCoachCustomer = async (req, res) => {
+  try {
+    const { customer } = req
+
+    res.status(200).json(customer)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Error in retrieving customer from coach',
       debug_message: error.message,
     })
   }
@@ -442,12 +458,16 @@ const assignTraineesToProgram = async (req, res) => {
   try {
     const {
       program,
-      body: { trainees },
+      body: { traineeIds, startDate },
     } = req
 
-    const updatedProgram = await addTraineesToProgram(program, trainees)
+    const newAssignments = await createAssignments(
+      program._id,
+      traineeIds,
+      startDate,
+    )
 
-    res.status(200).json(updatedProgram)
+    res.status(200).json(newAssignments)
   } catch (error) {
     res.status(500).json({
       public_message: 'Could not assign',
@@ -456,16 +476,36 @@ const assignTraineesToProgram = async (req, res) => {
   }
 }
 
-const unassignTraineesToProgram = async (req, res) => {
+const unassignTraineesFromProgram = async (req, res) => {
   try {
     const {
       program,
-      body: { trainees },
+      body: { assignmentIds },
     } = req
 
-    const updatedProgram = await removeTraineesFromProgram(program, trainees)
+    const assignmentsToDelete = await retrieveAssignments(assignmentIds)
 
-    res.status(200).json(updatedProgram)
+    /**
+     * We keep all assignments who doesn't are from the right program to send
+     * them back as response
+     */
+    const unrelatedAssignments = []
+
+    if (
+      assignmentsToDelete.some((assignmentToDelete) => {
+        if (assignmentToDelete.program._id !== program._id) {
+          unrelatedAssignments.push(assignmentToDelete._id)
+          return true
+        }
+        return false
+      })
+    ) {
+      throw Error('Some assignments id is not for the concerned program')
+    }
+
+    await deleteAssignments(assignmentIds)
+
+    res.status(200).json({ message: 'ok' })
   } catch (error) {
     res.status(500).json({
       public_message: 'Could not assign',
@@ -483,6 +523,7 @@ module.exports = {
   editCoachExercise,
   addCustomerToCoach,
   retrieveCoachCustomers,
+  retrieveCoachCustomer,
   searchUserAsCoach,
   deleteCoachExercise,
   addWorkout,
@@ -493,7 +534,7 @@ module.exports = {
   addProgram,
   retrievePrograms,
   assignTraineesToProgram,
-  unassignTraineesToProgram,
+  unassignTraineesFromProgram,
   retrieveProgram,
   editCoachProgram,
   removeCoachProgram,

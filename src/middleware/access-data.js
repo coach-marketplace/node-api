@@ -3,6 +3,8 @@
 const { getExerciseById } = require('../controllers/exercise/handlers')
 const { retrieveWorkoutById } = require('../controllers/workout/handlers')
 const { retrieveProgramById } = require('../controllers/program/handlers')
+const { getCoachLeadsById } = require('../controllers/contact/handlers')
+const { getUserById } = require('../controllers/user/handlers')
 
 /**
  * hasAccessToExercise
@@ -134,8 +136,65 @@ const requiredAccessToProgram = async (req, res, next) => {
   }
 }
 
+/**
+ * requiredAccessToCustomer
+ *
+ * this middleware ensure that the auth user have access to the customer
+ * that he are requesting.
+ * It assume that you are authenticated
+ */
+const requiredAccessToCustomer = async (req, res, next) => {
+  const {
+    user,
+    params: { customerId },
+  } = req
+
+  if (!user) {
+    res.status(401).json({ message: 'Unauthorized for un-auth user' })
+    return
+  }
+
+  if (!customerId) {
+    res.status(401).json({ message: 'Customer id not provided' })
+    return
+  }
+
+  try {
+    const contact = await getCoachLeadsById(user._id, customerId)
+
+    if (!contact) {
+      res.status(401).json({ message: 'Contact not found' })
+      return
+    }
+
+    const user = await getUserById(customerId)
+    if (!user) {
+      res.status(401).json({ message: 'Customer not found' })
+      return
+    }
+
+    // TODO: check base on verified field in contazct if the coach have
+    // access to user of only basic
+
+    // if (program.userOwner && program.userOwner.toString() !== user._id) {
+    //   res.status(401).json({ message: 'Unauthorized to access these data' })
+    //   return
+    // }
+
+    req.customer = user
+
+    next()
+  } catch (error) {
+    res
+      .status(401)
+      .json({ message: 'Customer not found', debug_message: error.message })
+    return
+  }
+}
+
 module.exports = {
   hasAccessToExercise,
   hasAccessToWorkout,
   requiredAccessToProgram,
+  requiredAccessToCustomer,
 }

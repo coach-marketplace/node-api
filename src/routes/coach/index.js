@@ -12,15 +12,14 @@ const {
   hasAccessToWorkout,
 } = require('../../middleware/access-data')
 
+const coachCustomerRouter = require('./coach-customer')
 const coachProgramRouter = require('./coach-program')
 
 const {
-  addCustomerToCoach,
   addExerciseToCoach,
   editCoachExercise,
   addServiceToCoach,
   getCoachServices,
-  retrieveCoachCustomers,
   retrieveCoachExercises,
   retrieveCoachExercise,
   searchUserAsCoach,
@@ -74,18 +73,6 @@ coachRouter
     deleteCoachExercise,
   )
   .get(
-    '/:id/customers',
-    requireJWTAuth,
-    requireAccessMyData,
-    retrieveCoachCustomers,
-  )
-  .post(
-    '/:id/customers',
-    requireJWTAuth,
-    requireAccessMyData,
-    addCustomerToCoach,
-  )
-  .get(
     '/:id/search-users',
     requireJWTAuth,
     requireAccessMyData,
@@ -113,6 +100,12 @@ coachRouter
     requireAccessMyData,
     hasAccessToWorkout,
     removeWorkout,
+  )
+  .use(
+    '/:id/customers',
+    requireJWTAuth,
+    requireAccessMyData,
+    coachCustomerRouter,
   )
   .use('/:id/programs', requireJWTAuth, requireAccessMyData, coachProgramRouter)
 
