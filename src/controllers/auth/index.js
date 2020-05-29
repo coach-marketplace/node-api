@@ -2,7 +2,7 @@
 
 const queryString = require('query-string')
 
-const { register, registerWithGoogle } = require('./handlers')
+const { register, registerWithGoogle, validateEmail } = require('./handlers')
 const { getUserById, addAccount } = require('../user/handlers')
 const { signToken } = require('../../_utils/jwt')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
@@ -102,4 +102,22 @@ module.exports = {
   },
 
   loginWithGoogle,
+  verifyEmail: async (req, res) => {
+    try {
+      let {
+        params: { userId, token },
+      } = req
+      if (!userId) throw Error('No user id')
+      if (!token) throw Error('No token')
+
+      await validateEmail(userId, token)
+
+      res.status(200).json('ok')
+    } catch (error) {
+      res.status(500).json({
+        public_message: 'We could not verify your email',
+        debug_message: error.message,
+      })
+    }
+  },
 }

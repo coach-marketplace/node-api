@@ -68,7 +68,7 @@ const userSchema = new Schema({
   },
 
   emailConfirmedAt: {
-    type: String,
+    type: Date,
     default: null,
   },
 

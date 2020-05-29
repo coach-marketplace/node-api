@@ -8,7 +8,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env
 
 const CustomSessionStore = require('../_utils/jwt/custom-session-store')
-const { log, logWithGoogle } = require('../controllers/auth/handlers')
+const { log } = require('../controllers/auth/handlers')
 const { getUserByEmail } = require('../controllers/user/handlers')
 
 passport.use(
