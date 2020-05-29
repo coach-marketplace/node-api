@@ -72,10 +72,6 @@ module.exports = {
       res.status(401).json({
         message: 'Email or password incorrect',
       })
-    } else if (!req.user.isEmailVerified) {
-      res.status(401).json({
-        message: 'Email has not been verified',
-      })
     } else {
       const user = await getUserById(req.user._id)
       const token = signToken({ _id: user._id, isAdmin: user.isAdmin })
