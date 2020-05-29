@@ -2,15 +2,16 @@
 
 const { read, create } = require('../user/queries')
 const {
-  getUserByEmail,
-  addAccount,
+  // getUserByEmail,
+  // addAccount,
   getUserById,
   editUser,
 } = require('../user/handlers')
 const { encryptString, compareHash } = require('../../_utils/hashing')
 const { USER_ACCOUNT_TYPE, LOCALE, LOCALES } = require('../../_utils/constants')
-const { generateUniqueToken } = require('../../_utils/helpers')
-const { sendVerificationEmail } = require('../../_utils/emails')
+// const { generateUniqueToken } = require('../../_utils/helpers')
+// const { sendVerificationEmail } = require('../../_utils/emails')
+// TODO: Send email only for register with local method
 
 const getUserLightData = (user) => ({
   _id: user._id,
@@ -137,59 +138,9 @@ const registerWithGoogle = async (profile, isCoach = false) => {
 }
 
 /**
- * Log with google
- *
- * @param {object} googleProfile Google id
- *
- * @returns {object} The logged user
+ * @param {string} userId
+ * @param {string} token
  */
-const logWithGoogle = async (googleProfile) => {
-  const email = googleProfile._json.email
-
-  let user = await getUserByEmail(email)
-
-  if (!user) {
-    // Keep only the 2 first letter (e.g. 'en-GB' -> 'en')
-    const locale = googleProfile._json.locale.substring(1, 3)
-    const lang = locale.includes('fr') ? LOCALE.FR_FR : LOCALE.EN_US
-
-    user = await create({
-      email: googleProfile._json.email,
-      firstName: googleProfile._json.given_name,
-      lastName: googleProfile._json.family_name,
-      lang,
-      isEmailVerified: false,
-      emailToken: generateUniqueToken(),
-      accounts: [
-        {
-          type: USER_ACCOUNT_TYPE.GOOGLE,
-          id: googleProfile._json.sub,
-          avatar: googleProfile._json.picture || null,
-        },
-      ],
-    })
-  } else {
-    // the user exist
-
-    const googleAccount = user.accounts.find(
-      ({ type }) => type === USER_ACCOUNT_TYPE.GOOGLE,
-    )
-
-    if (!googleAccount) {
-      const newAccount = {
-        type: USER_ACCOUNT_TYPE.GOOGLE,
-        id: googleProfile._json.sub,
-        avatar: googleProfile._json.picture || null,
-      }
-      await addAccount(user._id, newAccount)
-    }
-  }
-
-  await sendVerificationEmail(user)
-
-  return getUserLightData(user)
-}
-
 const validateEmail = async (userId, token) => {
   let user = await getUserById(userId)
   if (user.emailToken !== token) {
@@ -205,7 +156,6 @@ const validateEmail = async (userId, token) => {
 
 module.exports = {
   log,
-  logWithGoogle,
   register,
   registerWithGoogle,
   validateEmail,
