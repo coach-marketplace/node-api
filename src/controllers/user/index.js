@@ -282,7 +282,7 @@ const retrieveUserPhysicalMetrics = async (req, res) => {
 const addUserPhysicalMetrics = async (req, res) => {
   try {
     let {
-      body: { height, weight },
+      body: { height, weight, date },
       user,
     } = req
 
@@ -296,6 +296,7 @@ const addUserPhysicalMetrics = async (req, res) => {
       UNIT.WEIGHT.KG,
       height.value,
       UNIT.DISTANCE.CM,
+      date,
     )
 
     res.status(201).json(userPhysicalMetrics)

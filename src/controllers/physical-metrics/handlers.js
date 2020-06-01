@@ -11,6 +11,7 @@ const { WEIGHTS, DISTANCES } = require('../../_utils/constants')
  * @param {string} weightUnit
  * @param {number} height
  * @param {string} heightUnit
+ * @param {string} date
  * @return {object} New physical metrics
  */
 const createUserPhysicalMetrics = async (
@@ -19,12 +20,12 @@ const createUserPhysicalMetrics = async (
   weightUnit,
   height,
   heightUnit,
+  date,
 ) => {
   if (!userId) throw new Error('userId is required')
 
   if (!ObjectId.isValid(userId)) throw new Error('userId is invalid')
 
-  //TODO: do we need always both weight and height ?
   if (!weight) throw new Error('weight is required')
   if (!weightUnit) throw new Error('weightUnit is required')
   if (!WEIGHTS.includes(weightUnit)) throw new Error('weightUnit is invalid')
@@ -33,12 +34,15 @@ const createUserPhysicalMetrics = async (
   if (!heightUnit) throw new Error('heightUnit is required')
   if (!DISTANCES.includes(heightUnit)) throw new Error('heightUnit is invalid')
 
+  if (!date) throw new Error('date is required')
+
   const newPhysicalMetrics = await create(
     userId,
     weight,
     weightUnit,
     height,
     heightUnit,
+    date,
   )
 
   return newPhysicalMetrics

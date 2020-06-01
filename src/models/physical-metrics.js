@@ -16,7 +16,10 @@ const physicalMetricsSchema = new Schema({
   },
 
   height: {
-    value: Number,
+    value: {
+      type: Number,
+      min: 40,
+    },
     unit: {
       type: String,
       enum: [UNIT.DISTANCE.CM, UNIT.DISTANCE.IN],
@@ -24,11 +27,19 @@ const physicalMetricsSchema = new Schema({
   },
 
   weight: {
-    value: Number,
+    value: {
+      type: Number,
+      min: 40,
+    },
     unit: {
       type: String,
       enum: WEIGHTS,
     },
+  },
+
+  date: {
+    type: Date,
+    required: true,
   },
 })
 
