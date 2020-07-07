@@ -1,6 +1,6 @@
 # Backend
 
-This backend is made with NodeJS
+This backend is build using [Node](https://nodejs.org/en/) and [Express](https://expressjs.com/)
 
 ## Prerequisite
 
@@ -23,8 +23,8 @@ npm run start:local
 
 #### Dev:
 
-> Dev is the same of local but the difference is the DB is on Mongo Atlas so
-> you don't need to have it running locally.
+> Dev is the same of local but the difference is the DB is on Mongo Atlas Cloud
+> so you don't need to have it running locally.
 
 ```
 npm run start:dev
@@ -51,11 +51,17 @@ npm run test:cloud
 
 ## Run prettier to format code
 
+[Prettier](https://prettier.io/) is a code formatter will help us to keep 
+the code into the same way between all contributors.
+
 ```
 npm run prettier
 ```
 
 ## Lint code
+
+We use [ESLint](https://eslint.org/) to set some rules, like prettier, 
+you can use IDE extension to make it easy to maintain for you.
 
 ```
 npm run lint
@@ -63,6 +69,9 @@ npm run lint
 
 ## Documentation
 
-We use Swagger to document the API, when the app is running locally, you can go on `http://localhost:5555/doc` to read it.
+> This section is not maintained for now.
 
-You will also find documentation on the Wiki.
+We use Swagger to document the API, when the app is running locally, 
+you can go on `http://localhost:5555/doc` to read it.
+
+You will also find documentation on the Wiki of the repo.
