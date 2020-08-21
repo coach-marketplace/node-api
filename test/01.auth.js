@@ -7,13 +7,13 @@ let chai = require('chai')
 let chaiHttp = require('chai-http')
 
 // eslint-disable-next-line no-unused-vars
-let server = require('../src/server.js')
+let server = require('../../src/server.js')
 
 let should = chai.should()
 
 chai.use(chaiHttp)
 
-var data = require('./shared.js')
+var data = require('./auth/shared.js')
 
 const application = require('../src/app')
 

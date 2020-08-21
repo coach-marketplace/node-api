@@ -10,7 +10,7 @@ module.exports = {
   connect: () => {
     return (
       mongoose
-        .connect(process.env.MONGO_DB_URI, {
+        .connect('mongodb://localhost:27017/Fitigai', {
           useNewUrlParser: true,
           useUnifiedTopology: true,
         })

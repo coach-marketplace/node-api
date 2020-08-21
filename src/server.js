@@ -14,7 +14,7 @@ const { PORT } = process.env
 database.connect().then(() => {
   console.log(`--- Database connected ---`)
 
-  const server = app.listen(PORT)
+  const server = app.listen(PORT || 5555)
   const io = initSockets(server)
 
   io.on('connection', async (socket) => {
@@ -40,7 +40,9 @@ database.connect().then(() => {
       }
     })
   })
-
+  require('dotenv').config({
+    path: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,
+  })
   app.emit('appStarted')
-  console.log(`--- Server in running on http://localhost:${PORT}/ ---`)
+  console.log(`--- Server in running on ${process.env.API_URL} ---`)
 })
