@@ -29,7 +29,7 @@ app
   .use(passport.initialize())
   .use(
     session({
-      secret: process.env.SESSION_SECRET || 'session-secret',
+      secret: process.env.SESSION_SECRET,
       resave: true,
       saveUninitialized: true,
     }),

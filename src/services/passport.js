@@ -3,14 +3,9 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
-process.env.NODE_ENV = 'test'
-// eslint-disable-next-line no-undef
-const {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  JWT_SECRET,
-} = process.env.NODE_ENV
 
+// eslint-disable-next-line no-undef
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_SECRET } = process.env
 const CustomSessionStore = require('../_utils/jwt/custom-session-store')
 const { log } = require('../controllers/auth/handlers')
 const { getUserByEmail } = require('../controllers/user/handlers')
@@ -19,7 +14,7 @@ passport.use(
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: JWT_SECRET || 'secret',
+      secretOrKey: JWT_SECRET,
     },
     async (payload, done) => {
       try {
@@ -52,10 +47,8 @@ passport.use(
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        GOOGLE_CLIENT_ID ||
-        '410290218130-9rprt9p3u2pobvvqkea73nue5s8qfdpf.apps.googleusercontent.com',
-      clientSecret: GOOGLE_CLIENT_SECRET || 'jdVwpq_tqJd8LzS52uGlb-g7',
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: '/v1/auth/google/callback',
       state: false,
       passReqToCallback: true,

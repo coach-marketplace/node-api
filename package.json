@@ -6,7 +6,7 @@
     "lint": "eslint src/**",
     "start:local": "NODE_ENV=local cross-env npm run start",
     "start:dev": "NODE_ENV=dev cross-env npm run start",
-    "start:dev-windows": "NODE_ENV=dev cross-env-shell npm run start",
+    "start:dev-windows": "NODE_ENV=dev cross-env npm run start",
     "start:prod": "node src/server.js",
     "start:stg": "NODE_ENV=staging cross-env npm run start",
     "start": "nodemon --inspect src/server.js",
@@ -14,7 +14,7 @@
     "prettier:test": "prettier --config .prettierrc --write \"test/**/*.js\"",
     "test": "mocha --timeout 20000 --exit",
     "test:local": "NODE_ENV=test mocha --config .mocharc.js",
-    "test:local-windows": "SET NODE_ENV=test && mocha --config .mocharc.js",
+    "test:local-windows": "NODE_ENV=test cross-env  mocha --config .mocharc.js",
     "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js"
   },
   "license": "ISC",
@@ -22,7 +22,6 @@
     "axios": "^0.19.2",
     "bcrypt": "^4.0.0",
     "body-parser": "^1.19.0",
-    "chai-and-then": "^1.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
@@ -44,8 +43,7 @@
     "socket.io": "^2.3.0",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.2",
-    "uuid-token-generator": "^1.0.0",
-    "win-node-env": "^0.4.0"
+    "uuid-token-generator": "^1.0.0"
   },
   "devDependencies": {
     "chai": "*",
@@ -59,6 +57,5 @@
   "engines": {
     "node": "12.13.0",
     "npm": "6.12.0"
-  },
-  "optionalDependencies": {}
+  }
 }
