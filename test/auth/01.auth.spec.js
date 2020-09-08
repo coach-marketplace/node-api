@@ -123,7 +123,7 @@ describe('Test endpoint ==> api/v1/auth/login-local', () => {
       })
   })
   /*
-   * Test Log in Admin
+   * Test Log in admin
    */
   it('Ensure Log in user (admin) is working on login-local', (done) => {
     chai
