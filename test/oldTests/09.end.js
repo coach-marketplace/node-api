@@ -13,7 +13,7 @@ let app = 'http://localhost:' + PORT
 
 let basePath = '/v1/user'
 
-var data = require('./shared.js')
+var data = require('../dummyDB/shared.js')
 
 describe('Cleaning up', () => {
   it('destroy test user (coach)', (done) => {
