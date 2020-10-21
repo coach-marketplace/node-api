@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 const coachProfileSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
 
-  user: {
+  coach: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
