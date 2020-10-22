@@ -519,8 +519,9 @@ const unassignTraineesFromProgram = async (req, res) => {
       debug_message: error.message,
     })
   }
+}
 
-    /**
+  /**
    * COACH PROFILE
    */
 
@@ -591,7 +592,6 @@ const unassignTraineesFromProgram = async (req, res) => {
       })
     }
   }
-}
 
 module.exports = {
   addServiceToCoach,
