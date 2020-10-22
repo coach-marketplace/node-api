@@ -33,7 +33,6 @@ const createNewUser = async (req, res) => {
     if (!email) throw new Error('email is required')
 
     const user = await checkUserExistenceByEmail(email)
-    console.log(user)
 
     if (user) {
       throw new Error('This email is already used')
