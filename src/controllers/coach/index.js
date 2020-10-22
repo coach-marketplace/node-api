@@ -41,7 +41,7 @@ const {
   createCoachProfileHandler,
   retrieveCoachProfileHandler,
   editCoachProfileHanlder,
-  retrieveCoachProfileHandler
+  removeCoachProfileHandler
 } = require('../coach-profile/handlers.js')
 const { LOCALES } = require('../../_utils/constants')
 
@@ -565,7 +565,7 @@ const unassignTraineesFromProgram = async (req, res) => {
     try {
     const { coachProfile, body } = req
 
-    const updatedCoachProfile = await updateProgram(coachProfile._id, body)
+    const updatedCoachProfile = await editCoachProfileHanlder(coachProfile._id, body)
 
     res.status(200).json(updatedCoachProfile)
     } catch(error) {
