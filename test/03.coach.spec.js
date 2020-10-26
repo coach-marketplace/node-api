@@ -24,6 +24,13 @@ let exercise_data = {
   _id: '',
 }
 
+let coachProfileData = {
+  description: "I am a coach",
+  company: "Fitigai SPRL",
+  sports: ["5e12049908735f213b9f1e23"],
+  _id: '',
+}
+
 describe('Test exercises', () => {
   it('create new exercise', (done) => {
     chai
@@ -139,6 +146,63 @@ describe('Test search users', () => {
         res.should.have.status(200)
         res.body.should.be.a('object')
         res.body.email.should.equal(data.customer.email)
+        done()
+      })
+  })
+})
+
+describe('Test coach profile', () => {
+  it('add coach profile', (done) => {
+    chai
+      .request(app)
+      .post(basePath + '/' + data.coach.user._id + '/coach-profile')
+      .set('authorization', data.coach.token)
+      .send({description, company, sports} = coachProfileData)
+      .end((err, res) => {
+        should.not.exist(err)
+        res.should.have.status(201)
+        res.body.should.be.a('object')
+        coachProfileData._id = res.body._id
+        done()
+      })
+  })
+
+  it('read coach profile', (done) => {
+    chai
+      .request(app)
+      .get(basePath + '/' + data.coach.user._id + '/coach-profile')
+      .set('authorization', data.coach.token)
+      .end((err, res) => {
+        should.not.exist(err)
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+        done()
+      })
+  })
+
+  it('update coach profile', (done) => {
+    chai
+      .request(app)
+      .put(basePath + '/' + data.coach.user._id + '/coach-profile/'+coachProfileData._id)
+      .set('authorization', data.coach.token)
+      .send({description, company, sports} = coachProfileData)
+      .end((err, res) => {
+        should.not.exist(err)
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+        done()
+      })
+  })
+
+  it('delete coach profile', (done) => {
+    chai
+      .request(app)
+      .delete(basePath + '/' + data.coach.user._id + '/coach-profile/'+coachProfileData._id)
+      .set('authorization', data.coach.token)
+      .end((err, res) => {
+        should.not.exist(err)
+        res.should.have.status(200)
+        res.body.message.should.equal('ok')
         done()
       })
   })

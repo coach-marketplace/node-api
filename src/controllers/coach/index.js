@@ -587,7 +587,9 @@ const unassignTraineesFromProgram = async (req, res) => {
       } = req
 
       await removeCoachProfileHandler(coachProfileId)
-      
+
+      res.status(200).json({message: "ok"}
+      )
     } catch(error) {
       res.status(500).json({
         public_message: 'Could not delete',

@@ -16,6 +16,7 @@ module.exports = {
     password: 'azerty',
     user: {},
     token: '',
+    coachProfile: '',
   },
   customer: {
     firstName: 'Mamadou',

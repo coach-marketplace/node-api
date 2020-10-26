@@ -90,6 +90,7 @@ describe('creating and updating users', () => {
         done()
       })
   })
+
 })
 
 describe('Getting user infos', () => {
