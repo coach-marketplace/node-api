@@ -109,6 +109,11 @@ coachRouter
     coachCustomerRouter,
   )
   .use('/:id/programs', requireJWTAuth, requireAccessMyData, coachProgramRouter)
-  .use('/:id/coach-profile', requireJWTAuth, requireAccessMyData, coachProfileRouter)
+  .use(
+    '/:id/coach-profile',
+    requireJWTAuth,
+    requireAccessMyData,
+    coachProfileRouter,
+  )
 
 module.exports = coachRouter

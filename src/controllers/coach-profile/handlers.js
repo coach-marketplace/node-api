@@ -5,8 +5,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 const { create, deleteOne, read, updateOne } = require('./queries')
 
 module.exports = {
-
-    /**
+  /**
    *
    * @param {String} coachId required
    * @param {String} description optional
@@ -15,57 +14,55 @@ module.exports = {
    * @param {array} sports Optional - Arrays of sports
    * @return coach profile
    */
-    createCoachProfileHandler: async(
-        coachId,
-        description = "",
-        company = "",
-        sports = []
-    ) => {
+  createCoachProfileHandler: async (
+    coachId,
+    description = '',
+    company = '',
+    sports = [],
+  ) => {
+    if (!coachId) throw new Error('coachId is required')
 
-        if (!coachId) throw new Error('coachId is required')
+    if (!ObjectId.isValid(coachId)) throw new Error('coachId is invalid')
 
-        if (!ObjectId.isValid(coachId)) throw new Error('coachId is invalid')
+    return await create(coachId, description, company, sports)
+  },
 
-        return await create(coachId, description, company, sports)
-    },
-    
-    /**
-     * @param {String} coachId required
-     * @return coach profile
-     */
-    retrieveCoachProfileHandler: async(coachId) => {
-        if (!coachId) throw new Error('coachId is required')
+  /**
+   * @param {String} coachId required
+   * @return coach profile
+   */
+  retrieveCoachProfileHandler: async (coachId) => {
+    if (!coachId) throw new Error('coachId is required')
 
-        if (!ObjectId.isValid(coachId)) throw new Error('coachId is invalid')
-        
-        const cp = await read({coach: coachId})
-        return cp[0]
-    },
+    if (!ObjectId.isValid(coachId)) throw new Error('coachId is invalid')
 
-    /**
-     * @param {String} coachProfileId required
-     * @param {Object} data required
-     * @return updated coach profile
-     */
-    editCoachProfileHandler: async(
-        coachProfileId,
-        data,
-    ) => {
-        if (!coachProfileId) throw new Error('coachProfileId is required')
+    const cp = await read({ coach: coachId })
+    return cp[0]
+  },
 
-        if (!ObjectId.isValid(coachProfileId)) throw new Error('coachProfileId is invalid')
+  /**
+   * @param {String} coachProfileId required
+   * @param {Object} data required
+   * @return updated coach profile
+   */
+  editCoachProfileHandler: async (coachProfileId, data) => {
+    if (!coachProfileId) throw new Error('coachProfileId is required')
 
-        return await updateOne({ _id: coachProfileId }, data, { new: true })
-    },
+    if (!ObjectId.isValid(coachProfileId))
+      throw new Error('coachProfileId is invalid')
 
-    /**
-     * @param {String} coachProfileId required
-     **/
-    removeCoachProfileHandler: async(coachProfileId) => {
-        if (!coachProfileId) throw new Error('coachProfileId is required')
+    return await updateOne({ _id: coachProfileId }, data, { new: true })
+  },
 
-        if (!ObjectId.isValid(coachProfileId)) throw new Error('coachProfileId is invalid')
+  /**
+   * @param {String} coachProfileId required
+   **/
+  removeCoachProfileHandler: async (coachProfileId) => {
+    if (!coachProfileId) throw new Error('coachProfileId is required')
 
-        return await deleteOne(coachProfileId)
-    }
+    if (!ObjectId.isValid(coachProfileId))
+      throw new Error('coachProfileId is invalid')
+
+    return await deleteOne(coachProfileId)
+  },
 }

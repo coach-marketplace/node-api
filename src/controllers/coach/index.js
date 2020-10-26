@@ -41,7 +41,7 @@ const {
   createCoachProfileHandler,
   retrieveCoachProfileHandler,
   editCoachProfileHandler,
-  removeCoachProfileHandler
+  removeCoachProfileHandler,
 } = require('../coach-profile/handlers.js')
 const { LOCALES } = require('../../_utils/constants')
 
@@ -480,7 +480,6 @@ const assignTraineesToProgram = async (req, res) => {
       debug_message: error.message,
     })
   }
-
 }
 
 const unassignTraineesFromProgram = async (req, res) => {
@@ -521,82 +520,86 @@ const unassignTraineesFromProgram = async (req, res) => {
   }
 }
 
-  /**
-   * COACH PROFILE
-   */
+/**
+ * COACH PROFILE
+ */
 
-  const createCoachProfile = async (req, res) => {
-    try {
-      const {
-        body: { description, company, sports },
-        user,
-      } = req
-
-      const newCoachProfile = await createCoachProfileHandler(user._id, description, company, sports)
-
-      res.status(201).json(newCoachProfile)
-    } catch(error) {
-      res.status(500).json({
-        public_message: 'Could not create',
-        debug_message: error.message,
-      })
-    }
-  }
-
-  const retrieveCoachProfile = async (req, res) => {
-      try {
-        const {
-          user
-        } = req
-        if (!user) throw new Error('id is required')
-    
-        const coachProfile = await retrieveCoachProfileHandler(user._id)
-    
-        res.status(200).json(coachProfile)
-
-    } catch(error) {
-      res.status(500).json({
-        public_message: 'Could not retrieve',
-        debug_message: error.message,
-      })
-    }
-  }
-
-  const editCoachProfile = async (req, res) => {
-    try {
-    const { 
-      params: {coachProfileId}, 
-      body 
+const createCoachProfile = async (req, res) => {
+  try {
+    const {
+      body: { description, company, sports },
+      user,
     } = req
 
-    const updatedCoachProfile = await editCoachProfileHandler(coachProfileId, body)
+    const newCoachProfile = await createCoachProfileHandler(
+      user._id,
+      description,
+      company,
+      sports,
+    )
+
+    res.status(201).json(newCoachProfile)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not create',
+      debug_message: error.message,
+    })
+  }
+}
+
+const retrieveCoachProfile = async (req, res) => {
+  try {
+    const { user } = req
+    if (!user) throw new Error('id is required')
+
+    const coachProfile = await retrieveCoachProfileHandler(user._id)
+
+    res.status(200).json(coachProfile)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not retrieve',
+      debug_message: error.message,
+    })
+  }
+}
+
+const editCoachProfile = async (req, res) => {
+  try {
+    const {
+      params: { coachProfileId },
+      body,
+    } = req
+
+    const updatedCoachProfile = await editCoachProfileHandler(
+      coachProfileId,
+      body,
+    )
 
     res.status(200).json(updatedCoachProfile)
-    } catch(error) {
-      res.status(500).json({
-        public_message: 'Could not edit',
-        debug_message: error.message,
-      })
-    }
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not edit',
+      debug_message: error.message,
+    })
   }
+}
 
-  const removeCoachProfile = async (req, res) => {
-    try {
-      const {
-        params: { coachProfileId },
-      } = req
+const removeCoachProfile = async (req, res) => {
+  try {
+    const {
+      params: { coachProfileId },
+    } = req
 
-      await removeCoachProfileHandler(coachProfileId)
+    await removeCoachProfileHandler(coachProfileId)
 
-      res.status(200).json({message: "ok"}
-      )
-    } catch(error) {
-      res.status(500).json({
-        public_message: 'Could not delete',
-        debug_message: error.message,
-      })
-    }
+    res.status(200).json({ message: 'ok' })
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Could not delete',
+      debug_message: error.message,
+    })
   }
+}
 
 module.exports = {
   addServiceToCoach,
@@ -625,5 +628,5 @@ module.exports = {
   createCoachProfile,
   retrieveCoachProfile,
   editCoachProfile,
-  removeCoachProfile
+  removeCoachProfile,
 }

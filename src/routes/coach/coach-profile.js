@@ -15,5 +15,4 @@ coachProfileRouter
   .put('/:coachProfileId', editCoachProfile)
   .delete('/:coachProfileId', removeCoachProfile)
 
-
 module.exports = coachProfileRouter

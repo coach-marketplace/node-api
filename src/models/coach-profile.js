@@ -13,19 +13,19 @@ const coachProfileSchema = new Schema({
   },
 
   description: {
-    type: String
+    type: String,
   },
 
   company: {
-    type: String
+    type: String,
   },
 
-  sports: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Sport',
-  }]
-
-
+  sports: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Sport',
+    },
+  ],
 })
 
 coachProfileSchema.plugin(timestamp)
