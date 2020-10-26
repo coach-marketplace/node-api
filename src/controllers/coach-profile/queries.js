@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose')
 
-const coachProfile = require('../../models/coach-profile')
+const CoachProfile = require('../../models/coach-profile')
 
 module.exports = {
 
@@ -19,7 +19,7 @@ module.exports = {
         company = "", 
         sports = []
     ) => {
-        const newCoachProfile = new coachProfile({
+        const newCoachProfile = new CoachProfile({
             _id: new mongoose.Types.ObjectId(),
             coach: new mongoose.Types.ObjectId(coachId),
             description: description,
@@ -32,10 +32,10 @@ module.exports = {
 
     /**
    * @param {Object} query
-   * @return coachProfile Object
+   * @return CoachProfile Object
    */
     read: async(query = {}) => {
-        return coachProfile.find(query)
+        return CoachProfile.find(query)
     },
 
     /**
@@ -50,7 +50,7 @@ module.exports = {
         options= {},
     ) => {
         
-        return coachProfile.findOneAndUpdate(query, data, options)
+        return CoachProfile.findOneAndUpdate(query, data, options)
     },
 
     /**
@@ -58,6 +58,6 @@ module.exports = {
    * @param {String} id required
    */
     deleteOne: async(id) => {
-        return Program.deleteOne({ _id: { $eq: id } })
+        return CoachProfile.deleteOne({ _id: { $eq: id } })
     }
 }

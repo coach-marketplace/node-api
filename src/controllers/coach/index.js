@@ -40,7 +40,7 @@ const {
 const {
   createCoachProfileHandler,
   retrieveCoachProfileHandler,
-  editCoachProfileHanlder,
+  editCoachProfileHandler,
   removeCoachProfileHandler
 } = require('../coach-profile/handlers.js')
 const { LOCALES } = require('../../_utils/constants')
@@ -546,11 +546,11 @@ const unassignTraineesFromProgram = async (req, res) => {
   const retrieveCoachProfile = async (req, res) => {
       try {
         const {
-          params: { coachProfileId },
+          user
         } = req
-        if (!coachProfileId) throw new Error('coachProfile id is required')
+        if (!user) throw new Error('id is required')
     
-        const coachProfile = await retrieveCoachProfileHandler(coachProfileId)
+        const coachProfile = await retrieveCoachProfileHandler(user._id)
     
         res.status(200).json(coachProfile)
 
@@ -564,9 +564,12 @@ const unassignTraineesFromProgram = async (req, res) => {
 
   const editCoachProfile = async (req, res) => {
     try {
-    const { coachProfile, body } = req
+    const { 
+      params: {coachProfileId}, 
+      body 
+    } = req
 
-    const updatedCoachProfile = await editCoachProfileHanlder(coachProfile._id, body)
+    const updatedCoachProfile = await editCoachProfileHandler(coachProfileId, body)
 
     res.status(200).json(updatedCoachProfile)
     } catch(error) {

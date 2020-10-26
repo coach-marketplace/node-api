@@ -37,8 +37,9 @@ module.exports = {
         if (!coachId) throw new Error('coachId is required')
 
         if (!ObjectId.isValid(coachId)) throw new Error('coachId is invalid')
-
-        return await read({coach: coachId})[0]
+        
+        const cp = await read({coach: coachId})
+        return cp[0]
     },
 
     /**
