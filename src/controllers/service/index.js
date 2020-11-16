@@ -4,6 +4,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, read, searchServices } = require('./queries')
 const { read: readUser } = require('../user/queries')
+const { CURRENCY } = require('../../_utils/constants')
 
 module.exports = {
   /**
@@ -34,7 +35,11 @@ module.exports = {
         title: title,
         description: description,
         price: price,
-        // currency: curr[0]._id,
+        currency: {
+          name: CURRENCY.EUR.NAME,
+          label: CURRENCY.EUR.LABEL,
+          symbol: CURRENCY.EUR.SYMBOL,
+        },
       }
 
       const newService = await create(newServiceData)
