@@ -6,6 +6,7 @@ const { register, registerWithGoogle, validateEmail } = require('./handlers')
 const { getUserById, addAccount } = require('../user/handlers')
 const { signToken } = require('../../_utils/jwt')
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
+const { getUserAvatar } = require('../../services/files')
 
 const signTokenWithUser = (user) =>
   signToken({ _id: user._id, isAdmin: user.isAdmin })
@@ -77,7 +78,10 @@ module.exports = {
       const token = signToken({ _id: user._id, isAdmin: user.isAdmin })
 
       res.status(201).json({
-        user: req.user,
+        user: {
+          ...user,
+          avatar: getUserAvatar(user._id),
+        },
         token: `Bearer ${token}`,
       })
     }

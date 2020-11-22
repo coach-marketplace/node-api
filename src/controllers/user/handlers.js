@@ -13,6 +13,7 @@ const {
 const { USER_ACCOUNT_TYPE } = require('../../_utils/constants')
 const { compareHash, encryptString } = require('../../_utils/hashing')
 const { generateUniqueToken } = require('../../_utils/helpers')
+const { getUserAvatar } = require('../../services/files')
 
 /**
  * Function who will return only exposed fields
@@ -158,7 +159,12 @@ const getUserById = async (id) => {
 
   if (!users.length) throw new Error('User not found')
 
-  return users[0]
+  const user = {
+    ...users[0],
+    avatar: getUserAvatar(users[0]._id),
+  }
+
+  return user
 }
 
 /**

@@ -22,6 +22,8 @@ const {
   createUserPhysicalMetrics,
   getPhysicalMetricsByUserId,
 } = require('../physical-metrics/handlers')
+const { DIRECTORY } = require('../../_utils/constants')
+const { getUserAvatar } = require('../../services/files')
 
 const createNewUser = async (req, res) => {
   try {
@@ -122,7 +124,10 @@ const getMe = async (req, res) => {
   try {
     const user = await getUserById(req.user._id)
 
-    res.status(200).json(user)
+    res.status(200).json({
+      ...user,
+      avatar: getUserAvatar(user._id),
+    })
   } catch (error) {
     res.status(500).json({
       public_message: 'Unauthorized',
@@ -312,7 +317,7 @@ const addAvatar = async (req, res) => {
   }
 
   res.status(200).json({
-    avatar: `${process.env.API_URL}files/avatar/${req.userAvatar}`,
+    avatar: `${process.env.API_URL}/${DIRECTORY.PUBLIC}/${DIRECTORY.AVATAR}/${req.userAvatar}`,
   })
 }
 
