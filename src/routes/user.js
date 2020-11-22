@@ -8,68 +8,68 @@ const {
   requireAccessMyData,
   onlyAdmin,
 } = require('../middleware/auth')
-
-const {
-  getMe,
-  createNewUser,
-  retrieveUsers,
-  retrieveUser,
-  updateUser,
-  deleteUser,
-  changeUserPassword,
-  retrieveUserPhysicalMetrics,
-  addUserPhysicalMetrics,
-  retrieveUserConversation,
-  retrieveUserConversations,
-  retrieveUserConversationMessages,
-  postMessageToConversation,
-  startConversation,
-} = require('../controllers/user')
+const { uploadUserAvatar } = require('../middleware/upload')
+const userController = require('../controllers/user')
 
 userRouter
-  .get('/me', requireJWTAuth, getMe)
-  .post('/', requireJWTAuth, onlyAdmin, createNewUser)
-  .get('/', requireJWTAuth, onlyAdmin, retrieveUsers)
-  .get('/:id', requireJWTAuth, requireAccessMyData, retrieveUser)
-  .put('/:id', requireJWTAuth, requireAccessMyData, updateUser)
-  .delete('/:id', deleteUser)
+  .get('/me', requireJWTAuth, userController.getMe)
+  .post('/', requireJWTAuth, onlyAdmin, userController.createNewUser)
+  .get('/', requireJWTAuth, onlyAdmin, userController.retrieveUsers)
+  .get('/:id', requireJWTAuth, requireAccessMyData, userController.retrieveUser)
+  .put('/:id', requireJWTAuth, requireAccessMyData, userController.updateUser)
+  .delete('/:id', userController.deleteUser)
+  .post(
+    '/:id/avatar',
+    requireJWTAuth,
+    requireAccessMyData,
+    uploadUserAvatar,
+    userController.addAvatar,
+  )
   .post(
     '/:id/change-password',
     requireJWTAuth,
     requireAccessMyData,
-    changeUserPassword,
+    userController.changeUserPassword,
   )
-  .get('/:id/physical-metrics', requireJWTAuth, retrieveUserPhysicalMetrics) //TODO: Require accessmydata?
-  .post('/:id/physical-metrics', requireJWTAuth, addUserPhysicalMetrics) //TODO: Require accessmydata?
+  .get(
+    '/:id/physical-metrics',
+    requireJWTAuth,
+    userController.retrieveUserPhysicalMetrics,
+  ) // TODO: Require accessmydata?
+  .post(
+    '/:id/physical-metrics',
+    requireJWTAuth,
+    userController.addUserPhysicalMetrics,
+  ) // TODO: Require accessmydata?
   .get(
     '/:id/conversations',
     requireJWTAuth,
     requireAccessMyData,
-    retrieveUserConversations,
+    userController.retrieveUserConversations,
   )
   .post(
     '/:id/conversations',
     requireJWTAuth,
     requireAccessMyData,
-    startConversation,
+    userController.startConversation,
   )
   .get(
     '/:id/conversations/:conversationId',
     requireJWTAuth,
     requireAccessMyData,
-    retrieveUserConversation,
+    userController.retrieveUserConversation,
   )
   .get(
     '/:id/conversations/:conversationId/messages',
     requireJWTAuth,
     requireAccessMyData,
-    retrieveUserConversationMessages,
+    userController.retrieveUserConversationMessages,
   )
   .post(
     '/:id/conversations/:conversationId/messages',
     requireJWTAuth,
     requireAccessMyData,
-    postMessageToConversation,
+    userController.postMessageToConversation,
   )
 
 module.exports = userRouter

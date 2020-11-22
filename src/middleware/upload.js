@@ -4,11 +4,14 @@ const multer = require('multer')
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, './static/user-avatars/')
+    callback(null, './static/avatar/')
   },
   filename: (req, file, callback) => {
     const { id } = req.params
-    const [, type] = file.mimetype.split('/')
+    let [, type] = file.mimetype.split('/')
+    if (type === 'jpeg') {
+      type = 'jpg'
+    }
     const newFileName = `${id}.${type}`
     req.userAvatar = newFileName
     callback(null, newFileName)
@@ -32,6 +35,24 @@ const upload = multer({
   fileFilter,
 })
 
+const uploadAvatar = upload.single('avatar')
+
 module.exports = {
-  uploadUserAvatar: upload.single('avatar'),
+  uploadUserAvatar: (req, res, next) => {
+    uploadAvatar(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        res.status(500).json({
+          message: err.message,
+        })
+      } else if (err) {
+        // An unknown error occurred when uploading.
+        res.status(500).json({
+          message: err.message,
+        })
+      }
+
+      next()
+    })
+  },
 }

@@ -4,7 +4,6 @@ const {
   createUser,
   getAllUsers,
   getUserById,
-  getUserByEmail,
   checkUserExistenceByEmail,
   deleteUserById,
   editUser,
@@ -23,8 +22,6 @@ const {
   createUserPhysicalMetrics,
   getPhysicalMetricsByUserId,
 } = require('../physical-metrics/handlers')
-const { encryptString, compareHash } = require('../../_utils/hashing')
-const { USER_ACCOUNT_TYPE, UNIT } = require('../../_utils/constants')
 
 const createNewUser = async (req, res) => {
   try {
@@ -307,7 +304,20 @@ const addUserPhysicalMetrics = async (req, res) => {
   }
 }
 
+const addAvatar = async (req, res) => {
+  if (!req.userAvatar) {
+    res.status(500).json({
+      message: 'Error during upload, retry later',
+    })
+  }
+
+  res.status(200).json({
+    avatar: `${process.env.API_URL}files/avatar/${req.userAvatar}`,
+  })
+}
+
 module.exports = {
+  addAvatar,
   createNewUser,
   retrieveUser,
   retrieveUsers,
