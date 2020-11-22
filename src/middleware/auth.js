@@ -65,7 +65,6 @@ module.exports = {
       res.status(401).json({ message: 'Unauthorized to access these data' })
       return
     }
-
     next()
   },
 

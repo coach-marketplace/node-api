@@ -14,6 +14,7 @@ const {
 
 const coachCustomerRouter = require('./coach-customer')
 const coachProgramRouter = require('./coach-program')
+const coachProfileRouter = require('./coach-profile')
 
 const {
   addExerciseToCoach,
@@ -108,5 +109,11 @@ coachRouter
     coachCustomerRouter,
   )
   .use('/:id/programs', requireJWTAuth, requireAccessMyData, coachProgramRouter)
+  .use(
+    '/:id/coach-profile',
+    requireJWTAuth,
+    requireAccessMyData,
+    coachProfileRouter,
+  )
 
 module.exports = coachRouter

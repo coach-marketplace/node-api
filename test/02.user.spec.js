@@ -76,11 +76,12 @@ describe('creating and updating users', () => {
   it('add new user body data', (done) => {
     chai
       .request(app)
-      .post(basePath + '/' + data.coach._id + '/physical-metrics')
+      .post(basePath + '/' + data.coach.user._id + '/physical-metrics')
       .set('authorization', data.coach.token)
       .send({
         weight: { value: '75', unit: 'kg' },
         height: { value: '175', unit: 'cm' },
+        date: "2020-10-22T12:08:04.161Z",
       })
       .end((err, res) => {
         should.not.exist(err)
@@ -89,6 +90,7 @@ describe('creating and updating users', () => {
         done()
       })
   })
+
 })
 
 describe('Getting user infos', () => {
