@@ -9,6 +9,7 @@ const contactRouter = require('./contact')
 const geoSpatialRouter = require('./geo-spatial')
 const sportRouter = require('./sport')
 const exerciseRouter = require('./exercise')
+const workoutRouter = require('./workout')
 const conversationRouter = require('./conversation')
 
 module.exports = (app) => {
@@ -21,6 +22,7 @@ module.exports = (app) => {
     .use('/v1/contact', contactRouter)
     .use('/v1/geo-spatial', geoSpatialRouter)
     .use('/v1/sport', sportRouter)
-    .use('/v1/exercise', exerciseRouter)
+    .use('/v1/exercises', exerciseRouter)
+    .use('/v1/workouts', workoutRouter)
     .use('/v1/conversation', conversationRouter)
 }

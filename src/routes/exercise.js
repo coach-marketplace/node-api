@@ -2,15 +2,12 @@
 
 const exerciseRouter = require('express').Router()
 
-const {
-  createExercise,
-  retrieveExercise,
-  retrieveExercises,
-} = require('../controllers/exercise')
+const exerciseController = require('../controllers/exercise')
 
+// TODO: protect those route only for admin
 exerciseRouter
-  .get('/', retrieveExercises)
-  .post('/', createExercise)
-  .get('/:id', retrieveExercise)
+  .get('/', exerciseController.getAll)
+  .post('/', exerciseController.create)
+  .get('/:id', exerciseController.getById)
 
 module.exports = exerciseRouter

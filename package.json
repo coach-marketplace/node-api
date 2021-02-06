@@ -12,7 +12,7 @@
     "prettier": "prettier --config .prettierrc --write \"src/**/*.js\"",
     "prettier:test": "prettier --config .prettierrc --write \"test/**/*.js\"",
     "test": "mocha --timeout 20000 --exit",
-    "test:local": "NODE_ENV=test mocha --config .mocharc.js",
+    "test:local": "NODE_ENV=test mocha --config .mocharc.js --exit",
     "test:cloud": "NODE_ENV=test-cloud mocha --config .mocharc.js"
   },
   "license": "ISC",

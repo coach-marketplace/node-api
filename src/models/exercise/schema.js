@@ -4,27 +4,52 @@ const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
 
-const exerciseContentSchema = require('../schemas/exerciseContent')
+const { LOCALE, LOCALES } = require('../../_utils/constants')
+
+const exerciseContentSchema = new Schema({
+  lang: {
+    type: String,
+    default: LOCALE.EN_US,
+    enum: LOCALES,
+    required: true,
+  },
+
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  instructions: {
+    type: String,
+    trim: true,
+  },
+
+  videoUrl: {
+    type: String,
+  },
+
+  sport: {
+    type: String,
+  },
+})
+
+exports.exerciseContentSchema = exerciseContentSchema
 
 const exerciseSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+  _id: Schema.Types.ObjectId,
 
   /**
    * The user responsible of this exercise
    * (could be a organization in the future)
    */
   userOwner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
 
   // TODO: add an organization owner
-
-  sport: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Sport',
-  },
 
   isArchived: {
     type: Boolean,
@@ -45,4 +70,4 @@ const exerciseSchema = new Schema({
 
 exerciseSchema.plugin(timestamp)
 
-module.exports = mongoose.model('Exercise', exerciseSchema)
+exports.exerciseSchema = exerciseSchema

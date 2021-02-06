@@ -4,6 +4,11 @@ const ObjectId = require('mongoose').Types.ObjectId
 
 const { create, deleteOne, read, updateOne } = require('./queries')
 const { LOCALES } = require('../../_utils/constants')
+const Workout = require('../../models/workout')
+
+exports.getAll = async () => await Workout.find()
+
+exports.getById = async (id) => await Workout.find({ _id: id })
 
 /**
  * @param {string} userOwnerId Required
@@ -104,10 +109,10 @@ const deleteWorkout = async (id) => {
   return await deleteOne(id)
 }
 
-module.exports = {
-  createWorkout,
-  retrieveWorkoutsByOwnerId,
-  retrieveWorkoutById,
-  updateWorkout,
-  deleteWorkout,
-}
+// module.exports = {
+//   createWorkout,
+//   retrieveWorkoutsByOwnerId,
+//   retrieveWorkoutById,
+//   updateWorkout,
+//   deleteWorkout,
+// }

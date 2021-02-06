@@ -1,18 +1,18 @@
 'use strict'
 
-const {
-  getAllExercises,
-  createExercise,
-  getExerciseById,
-} = require('./handlers')
-const { getUserById } = require('../user/handlers')
-const { LOCALES } = require('../../_utils/constants')
+// const {
+//   getAllExercises,
+//   createExercise,
+//   getExerciseById,
+// } = require('./handlers')
+// const { getUserById } = require('../user/handlers')
+// const { LOCALES } = require('../../_utils/constants')
 
 exports.getAll = async (req, res) => {
   try {
-    const exercises = await getAllExercises()
+    // const exercises = await getAllExercises()
 
-    res.status(200).json(exercises)
+    res.status(200).json({})
   } catch (error) {
     res.status(500).json({
       public_message: 'Error in getting all exercises',
@@ -26,9 +26,9 @@ exports.getById = async (req, res) => {
     params: { id },
   } = req
   try {
-    const sport = await getExerciseById(id)
+    // const sport = await getExerciseById(id)
 
-    res.status(200).json(sport)
+    res.status(200).json({})
   } catch (error) {
     res.status(500).json({
       public_message: `Error in getting exercise (id: ${id})`,
@@ -53,21 +53,21 @@ exports.create = async (req, res) => {
 
     if (!userOwnerId) throw new Error('userOwnerId is required')
 
-    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
+    // if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-    const userOwner = await getUserById(userOwnerId)
-    const newExercise = await createExercise(
-      userOwner._id.toString(),
-      lang,
-      name,
-      sportId,
-      instructions,
-      videoUrl,
-      isPrivate,
-      isTemplate,
-    )
+    // const userOwner = await getUserById(userOwnerId)
+    // const newExercise = await createExercise(
+    //   userOwner._id.toString(),
+    //   lang,
+    //   name,
+    //   sportId,
+    //   instructions,
+    //   videoUrl,
+    //   isPrivate,
+    //   isTemplate,
+    // )
 
-    res.status(201).json(newExercise)
+    res.status(201).json({})
   } catch (error) {
     res.status(500).json({
       public_message: 'Error in exercise creation',

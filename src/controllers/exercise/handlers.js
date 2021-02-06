@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, read, updateOne, del } = require('./queries')
+const Exercise = require('../../models/exercise')
 const { LOCALES } = require('../../_utils/constants')
 
 /**
@@ -15,7 +15,7 @@ const { LOCALES } = require('../../_utils/constants')
  * @param {boolean} isPrivate Default: false
  * @return Created sport
  */
-const createExercise = async (
+exports.createExercise = async (
   userOwnerId,
   lang,
   name,
@@ -23,6 +23,7 @@ const createExercise = async (
   instructions,
   videoUrl,
   isPrivate = false,
+  isTemplate = false,
 ) => {
   if (!userOwnerId) throw new Error('userOwnerId is required')
 
@@ -35,15 +36,24 @@ const createExercise = async (
 
   if (!name) throw new Error('name is required')
 
-  const newExercise = await create(
-    userOwnerId,
-    sportId,
-    lang,
-    name,
-    instructions,
-    videoUrl,
+  const newExercise = new Exercise({
+    _id: new ObjectId(),
+    userOwner: new ObjectId(userOwnerId),
+    sport: sportId ? new ObjectId(sportId) : null,
+    isArchived: false,
     isPrivate,
-  )
+    isTemplate,
+    content: [
+      {
+        lang,
+        name,
+        instructions,
+        videoUrl,
+      },
+    ],
+  })
+
+  await newExercise.save()
 
   return newExercise
 }
@@ -52,12 +62,12 @@ const createExercise = async (
  * @param {string} id Exercise ID
  * @return Sport
  */
-const getExerciseById = async (id) => {
+exports.getExerciseById = async (id) => {
   if (!id) throw new Error('Id is required')
 
   if (!ObjectId.isValid(id)) throw new Error('Id is incorrect')
 
-  const exercises = await read({ _id: id }).lean()
+  const exercises = await Exercise.find({ _id: id }).lean()
 
   if (!exercises.length) return []
 
@@ -67,10 +77,10 @@ const getExerciseById = async (id) => {
 /**
  * @return List of exercises
  */
-const getAllExercises = async () => await read()
+exports.getAllExercises = async () => await Exercise.find()
 
-const getExercisesByCoachId = async (coachId) => {
-  const results = await read({ userOwner: coachId })
+exports.getExercisesByCoachId = async (coachId) => {
+  const results = await Exercise.find({ userOwner: coachId })
 
   return results
 }
@@ -80,23 +90,18 @@ const getExercisesByCoachId = async (coachId) => {
  * @param {data} data
  * @return {object} Updated exercise
  */
-const editExercise = async (exerciseId, data) => {
-  const updatedExercise = await updateOne({ _id: exerciseId }, data, {
-    new: true,
-  })
+exports.editExercise = async (exerciseId, data) => {
+  const updatedExercise = await Exercise.findOneAndUpdate(
+    { _id: exerciseId },
+    data,
+    {
+      new: true,
+    },
+  )
 
   return updatedExercise
 }
 
-const deleteExercise = async (id) => {
-  return del(id)
-}
-
-module.exports = {
-  createExercise,
-  getExerciseById,
-  getAllExercises,
-  getExercisesByCoachId,
-  editExercise,
-  deleteExercise,
+exports.deleteExercise = async (id) => {
+  return Exercise.deleteOne({ _id: { $eq: id } })
 }

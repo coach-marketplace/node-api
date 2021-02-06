@@ -2,7 +2,7 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { create, deleteOne, read, updateOne } = require('./queries')
+const Program = require('../../models/program')
 const { LOCALES } = require('../../_utils/constants')
 
 /**
@@ -39,18 +39,24 @@ const createProgram = async (
 
   // TODO: check is workouts ids are correct
 
-  const newProgram = await create(
-    userOwnerId,
-    days,
-    lang,
-    title,
-    description,
-    workouts,
-    isArchived,
-    isPrivate,
-  )
+  const newProgramData = {
+    _id: new ObjectId(),
+    userOwner: new ObjectId(userOwnerId),
+    isArchived: isArchived,
+    isPrivate: isPrivate,
+    days: days,
+    content: [
+      {
+        lang,
+        title,
+        description,
+      },
+    ],
+  }
+  workouts && (newProgramData.workouts = workouts)
+  const newProgram = new Program(newProgramData)
 
-  return newProgram
+  return newProgram.save()
 }
 
 /**
@@ -62,7 +68,7 @@ const retrieveProgramsByOwnerId = async (ownerId) => {
 
   if (!ObjectId.isValid(ownerId)) throw new Error('ownerId is incorrect')
 
-  const results = await read({ userOwner: ownerId })
+  const results = await Program.find({ userOwner: ownerId })
 
   return results
 }
@@ -76,7 +82,7 @@ const retrieveProgramById = async (id) => {
 
   if (!ObjectId.isValid(id)) throw new Error('id is incorrect')
 
-  const results = await read({ _id: id })
+  const results = await Program.find({ _id: id })
 
   return results[0]
 }
@@ -91,7 +97,7 @@ const updateProgram = async (id, data) => {
 
   if (!ObjectId.isValid(id)) throw new Error('Program id is incorrect')
 
-  return await updateOne({ _id: id }, data, { new: true })
+  return await Program.findOneAndUpdate({ _id: id }, data, { new: true })
 }
 
 /**
@@ -102,7 +108,7 @@ const deleteProgram = async (id) => {
 
   if (!ObjectId.isValid(id)) throw new Error('Program id is incorrect')
 
-  return await deleteOne(id)
+  return await Program.deleteOne({ _id: { $eq: id } })
 }
 
 module.exports = {
