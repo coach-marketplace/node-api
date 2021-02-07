@@ -11,7 +11,6 @@ const exerciseContentSchema = new Schema({
     type: String,
     default: LOCALE.EN_US,
     enum: LOCALES,
-    required: true,
   },
 
   name: {
@@ -46,7 +45,6 @@ const exerciseSchema = new Schema({
   userOwner: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
   },
 
   // TODO: add an organization owner
@@ -57,6 +55,11 @@ const exerciseSchema = new Schema({
   },
 
   isPrivate: {
+    type: Boolean,
+    default: false,
+  },
+
+  isTemplate: {
     type: Boolean,
     default: false,
   },

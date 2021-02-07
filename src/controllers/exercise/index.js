@@ -1,17 +1,14 @@
 'use strict'
 
-const {
-  getAllExercises,
-  createExercise,
-  getExerciseById,
-} = require('./handlers')
+const ObjectId = require('mongoose').Types.ObjectId
+
 const { getUserById } = require('../user/handlers')
 const { LOCALES } = require('../../_utils/constants')
+const Exercise = require('../../models/exercise')
 
 exports.getAll = async (req, res) => {
   try {
-    console.log('get all exercises...............................')
-    const exercises = await getAllExercises()
+    const exercises = await Exercise.find()
 
     res.status(200).json(exercises)
   } catch (error) {
@@ -27,7 +24,7 @@ exports.getById = async (req, res) => {
     params: { id },
   } = req
   try {
-    const sport = await getExerciseById(id)
+    const sport = await Exercise.find({ _id: id }).lean()
 
     res.status(200).json(sport)
   } catch (error) {
@@ -46,27 +43,33 @@ exports.create = async (req, res) => {
       isTemplate,
       lang,
       name,
-      sportId,
+      sport,
       userOwnerId,
       videoUrl,
     } = req.body
     if (!lang) throw new Error('Lang is required')
-
-    if (!userOwnerId) throw new Error('userOwnerId is required')
-
     if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
 
-    const userOwner = await getUserById(userOwnerId)
-    const newExercise = await createExercise(
-      userOwner._id.toString(),
-      lang,
-      name,
-      sportId,
-      instructions,
-      videoUrl,
-      isPrivate,
-      isTemplate,
-    )
+    let userOwner
+    if (userOwnerId) {
+      userOwner = await getUserById(userOwnerId)
+    }
+    const newExercise = await new Exercise({
+      _id: new ObjectId(),
+      userOwner: userOwner ? new ObjectId(userOwnerId) : undefined,
+      isArchived: false,
+      isPrivate: userOwner ? isPrivate : false,
+      isTemplate: userOwner ? isTemplate : true,
+      content: [
+        {
+          lang,
+          name,
+          instructions,
+          videoUrl,
+          sport,
+        },
+      ],
+    }).save()
 
     res.status(201).json(newExercise)
   } catch (error) {

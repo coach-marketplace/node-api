@@ -43,23 +43,19 @@ class API {
   }
 
   static get(endPoint) {
-    console.log(':::', `${endPoint}`)
-    // console.log(':::', `${this.baseUrl}${endPoint}`)
-    // return this.getClient().get(`${this.baseUrl}${endPoint}`)
     return this.getClient().get(endPoint)
   }
 
   static post(endPoint, body) {
-    // return this.clientWithAuthorization()
-    return this.getClient().post(`${this.baseUrl}${endPoint}`).send(body)
+    return this.getClient().post(endPoint).send(body)
   }
 
   static put(endPoint, body) {
-    return this.getClient().put(`${this.baseUrl}${endPoint}`).send(body)
+    return this.getClient().put(endPoint).send(body)
   }
 
   static delete(endPoint) {
-    return this.getClient().delete(`${this.baseUrl}${endPoint}`)
+    return this.getClient().delete(endPoint)
   }
 }
 

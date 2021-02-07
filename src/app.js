@@ -12,9 +12,10 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const passport = require('passport')
 const session = require('express-session')
+const mongoose = require('mongoose')
 
-// Setup passport authentication
 require('./services/passport')
+const database = require('./database')
 const doc = require('./doc')
 const router = require('./routes')
 const errorController = require('./controllers/error')
@@ -45,5 +46,13 @@ doc(app)
 router(app)
 
 app.use(errorController.send404)
+
+database.connect()
+mongoose.connection.on('connected', () =>
+  console.log('--- Database connected ---'),
+)
+mongoose.connection.on('error', () =>
+  console.log('--- Database connection error ---'),
+)
 
 module.exports = app

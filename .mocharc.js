@@ -7,5 +7,5 @@
 module.exports = {
   spec: 'test/**/*.spec.js',
   recursive: true,
-  // timeout: 20000,
+  // timeout: 5000,
 }
