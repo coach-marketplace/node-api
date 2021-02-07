@@ -10,6 +10,7 @@ const { LOCALES } = require('../../_utils/constants')
 
 exports.getAll = async (req, res) => {
   try {
+    console.log('get all exercises...............................')
     const exercises = await getAllExercises()
 
     res.status(200).json(exercises)

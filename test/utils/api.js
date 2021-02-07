@@ -8,12 +8,12 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.should()
 
-const app = require('../src/app')
+const app = require('../../src/app')
 
 chai.use(chaiHttp)
 
 // TODO: fix set token to continue testing
-class HTTP {
+class API {
   static init() {
     this.client = chai
     this.baseUrl = `/v1/`
@@ -43,7 +43,10 @@ class HTTP {
   }
 
   static get(endPoint) {
-    return this.getClient().get(`${this.baseUrl}${endPoint}`)
+    console.log(':::', `${endPoint}`)
+    // console.log(':::', `${this.baseUrl}${endPoint}`)
+    // return this.getClient().get(`${this.baseUrl}${endPoint}`)
+    return this.getClient().get(endPoint)
   }
 
   static post(endPoint, body) {
@@ -60,6 +63,6 @@ class HTTP {
   }
 }
 
-HTTP.init()
+API.init()
 
-module.exports = HTTP
+module.exports = API

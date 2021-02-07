@@ -3,11 +3,11 @@
 
 const expect = require('chai').expect
 
-const Http = require('./Http.js')
+const API = require('./utils/api.js')
 
-describe('Exercise', () => {
-  it('Should get all exercises', (done) => {
-    Http.ping()
+describe('Ping the app', () => {
+  it('Should receive pong after ping', (done) => {
+    API.ping()
       .then((res) => {
         expect(res.text).to.equal('pong')
         done()
