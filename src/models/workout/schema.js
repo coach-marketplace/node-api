@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const { exerciseSchema } = require('../exercise/schema')
+const { exerciseContentSchema } = require('../exercise/schema')
 
 const {
   DISTANCES,
@@ -64,7 +64,7 @@ const workoutSchema = new Schema({
 
   exercises: [
     {
-      exercise: exerciseSchema,
+      content: exerciseContentSchema,
       /**
        * Quantity of... (could be minutes, seconds, reps,...)
        */

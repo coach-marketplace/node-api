@@ -5,7 +5,7 @@ const expect = require('chai').expect
 
 const API = require('./utils/api.js')
 
-describe('Ping the app', () => {
+describe('00 - Ping the app', () => {
   it('Should receive pong after ping', (done) => {
     API.ping()
       .then((res) => {

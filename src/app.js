@@ -38,11 +38,11 @@ app
 
 if (process.env.NODE_ENV === 'local') {
   app.use(morgan('dev'))
-} else if (process.env.NODE_ENV === 'test') {
-  app.use(morgan('test'))
 }
 
-doc(app)
+if (['local'].includes(process.env.NODE_ENV)) {
+  doc(app)
+}
 router(app)
 
 app.use(errorController.send404)

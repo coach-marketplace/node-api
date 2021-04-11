@@ -22,7 +22,7 @@ module.exports = (app) => {
     .use('/v1/contact', contactRouter)
     .use('/v1/geo-spatial', geoSpatialRouter)
     .use('/v1/sport', sportRouter)
-    .use('/v1/exercises', exerciseRouter)
-    .use('/v1/workouts', workoutRouter)
+    .use('/exercises', exerciseRouter)
+    .use('/workout', workoutRouter)
     .use('/v1/conversation', conversationRouter)
 }

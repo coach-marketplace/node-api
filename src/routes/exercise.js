@@ -9,5 +9,7 @@ exerciseRouter
   .get('/', exerciseController.getAll)
   .post('/', exerciseController.create)
   .get('/:id', exerciseController.getById)
+  .put('/:id', exerciseController.updateOne)
+  .delete('/:id', exerciseController.removeOne)
 
 module.exports = exerciseRouter

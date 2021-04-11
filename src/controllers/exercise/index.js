@@ -2,15 +2,14 @@
 
 const ObjectId = require('mongoose').Types.ObjectId
 
-const { getUserById } = require('../user/handlers')
-const { LOCALES } = require('../../_utils/constants')
 const Exercise = require('../../models/exercise')
 
 exports.getAll = async (req, res) => {
   try {
     const exercises = await Exercise.find()
+    const status = exercises.length === 0 ? 204 : 200
 
-    res.status(200).json(exercises)
+    res.status(status).json(exercises)
   } catch (error) {
     res.status(500).json({
       public_message: 'Error in getting all exercises',
@@ -24,9 +23,10 @@ exports.getById = async (req, res) => {
     params: { id },
   } = req
   try {
-    const sport = await Exercise.find({ _id: id }).lean()
+    const exercise = await Exercise.find({ _id: id }).lean()
+    const status = exercise.length === 0 ? 204 : 200
 
-    res.status(200).json(sport)
+    res.status(status).json(exercise[0])
   } catch (error) {
     res.status(500).json({
       public_message: `Error in getting exercise (id: ${id})`,
@@ -37,41 +37,42 @@ exports.getById = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const {
-      instructions,
-      isPrivate,
-      isTemplate,
-      lang,
-      name,
-      sport,
-      userOwnerId,
-      videoUrl,
-    } = req.body
-    if (!lang) throw new Error('Lang is required')
-    if (!LOCALES.includes(lang)) throw new Error('Lang is invalid')
-
-    let userOwner
-    if (userOwnerId) {
-      userOwner = await getUserById(userOwnerId)
-    }
     const newExercise = await new Exercise({
       _id: new ObjectId(),
-      userOwner: userOwner ? new ObjectId(userOwnerId) : undefined,
-      isArchived: false,
-      isPrivate: userOwner ? isPrivate : false,
-      isTemplate: userOwner ? isTemplate : true,
-      content: [
-        {
-          lang,
-          name,
-          instructions,
-          videoUrl,
-          sport,
-        },
-      ],
+      ...req.body
     }).save()
 
     res.status(201).json(newExercise)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Error in exercise creation',
+      debug_message: error.message,
+    })
+  }
+}
+
+exports.updateOne = async (req, res) => {
+  try {
+    const updatedExercise = await Exercise.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: req.body },
+      { new: true }, // new is use to return the document after updating
+    )
+
+    res.status(200).json(updatedExercise)
+  } catch (error) {
+    res.status(500).json({
+      public_message: 'Error in exercise creation',
+      debug_message: error.message,
+    })
+  }
+}
+
+exports.removeOne = async (req, res) => {
+  try {
+    const updatedExercise = await Exercise.deleteOne({ _id: { $eq: req.params.id } })
+
+    res.status(200).json(updatedExercise)
   } catch (error) {
     res.status(500).json({
       public_message: 'Error in exercise creation',

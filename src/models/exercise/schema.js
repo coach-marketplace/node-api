@@ -59,11 +59,6 @@ const exerciseSchema = new Schema({
     default: false,
   },
 
-  isTemplate: {
-    type: Boolean,
-    default: false,
-  },
-
   /**
    * Translatable content:
    * The content who can be written into different languages
